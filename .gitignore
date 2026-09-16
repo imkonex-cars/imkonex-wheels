@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+.venv/
+node_modules/
+__pycache__/
+.pytest_cache/
+*.pyc
+*.sqlite*
+dist/
+backups/
+runtime/
+.sites-runtime/
+*.dump
+*.log
+artifacts/
