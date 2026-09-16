@@ -1,0 +1,89 @@
+{
+  "use_context": "Clearly marked IMKONEX catalog demo; these images do not establish live inventory, price, fitment, or product availability.",
+  "assets": [
+    {
+      "name": "MICHELIN Primacy 4",
+      "category": "tire",
+      "source_page": "https://www.michelin.co.uk/auto/tyres/michelin-primacy-4",
+      "image_url": "https://dxm.contentcenter.michelin.com/api/wedia/dam/transform/b98rpyxf61b4x4gurpmaro98po/4w-359_3528707773869_tire_michelin_primacy-4_205-slash-55-r16-91v_a_main_1-30_nopad.webp?t=resize&height=500",
+      "filename": "michelin-primacy-4.webp",
+      "dimensions": [
+        500,
+        500
+      ],
+      "background": "transparent",
+      "reuse_notes": "Official Michelin product image. Product page footer states all rights reserved. Reuse license not verified.",
+      "notes": "Manufacturer image shows tire mounted on illustrative rim; it does not establish a rim included with sale."
+    },
+    {
+      "name": "Hankook Winter i*cept evo3 W330",
+      "category": "tire",
+      "source_page": "https://www.discountedwheelwarehouse.com/tires/brands/hankook/winter-icept-evo3-w330",
+      "manufacturer_page": "https://www.hankooktire.com/us/en/tire/wintericept/evo3-w330.html",
+      "image_url": "https://dww-live-media-perma-cdn.b-cdn.net/media/catalog/category/hankook-winter-icept-evo-w330-tires.jpg",
+      "filename": "hankook-w330-card.jpg",
+      "dimensions": [
+        600,
+        600
+      ],
+      "background": "white",
+      "reuse_notes": "Retailer-hosted product image. Model identity also checked on Hankook official page. Reuse license not verified."
+    },
+    {
+      "name": "Triangle SporteX TH201",
+      "category": "tire",
+      "source_page": "https://triangletire.ca/en/plt/tires/th201",
+      "image_url": "https://triangletire.ca/wp-content/uploads/2025/04/TH201-01.png",
+      "filename": "triangle-sportex-th201-card.png",
+      "dimensions": [
+        639,
+        800
+      ],
+      "background": "transparent",
+      "reuse_notes": "Official Triangle Canada product image, offered in the product page Downloads area. Public download is not proof of a reuse license; no reuse license verified.",
+      "notes": "Downscaled from 3184 by 3984 PNG. Manufacturer image shows tire mounted on illustrative rim."
+    },
+    {
+      "name": "Enkei Racing RPF1 — Silver",
+      "category": "wheel",
+      "source_page": "https://www.enkei.co.jp/product/wheels/Racing/RPF1/",
+      "image_url": "https://www.enkei.co.jp/upload/product/wheels/details/RPF1/19%28path%29_RPF1_18_silver.png",
+      "filename": "enkei-rpf1-silver.png",
+      "dimensions": [
+        886,
+        840
+      ],
+      "background": "transparent",
+      "reuse_notes": "Official Enkei manufacturer product image. Reuse license not verified.",
+      "notes": "Manufacturer image caption: Silver, 18 inch."
+    },
+    {
+      "name": "Enkei PerformanceLine PF01 — Sparkle Silver",
+      "category": "wheel",
+      "source_page": "https://www.enkei.co.jp/product/wheels/PerformanceLine/PF01/",
+      "image_url": "https://www.enkei.co.jp/upload/product/wheels/details/PF01/13_PF01%2818%29_SV_w75.png",
+      "filename": "enkei-pf01-sparkle-silver.png",
+      "dimensions": [
+        886,
+        840
+      ],
+      "background": "transparent",
+      "reuse_notes": "Official Enkei manufacturer product image. Reuse license not verified.",
+      "notes": "Manufacturer image caption: Sparkle Silver, 18 inch."
+    },
+    {
+      "name": "Enkei PerformanceLine PF05 — Dark Silver",
+      "category": "wheel",
+      "source_page": "https://www.enkei.co.jp/product/wheels/PerformanceLine/PF05/",
+      "image_url": "https://www.enkei.co.jp/upload/product/wheels/details/PF05/PF05_DarkSilver_1885_W75_19-cata_tk.png",
+      "filename": "enkei-pf05-dark-silver.png",
+      "dimensions": [
+        886,
+        840
+      ],
+      "background": "transparent",
+      "reuse_notes": "Official Enkei manufacturer product image. Reuse license not verified.",
+      "notes": "Manufacturer image caption: Dark Silver, 18 inch, front face."
+    }
+  ]
+}

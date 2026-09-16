@@ -1,0 +1,2513 @@
+{
+  "schemaVersion": 1,
+  "mode": "demo",
+  "updatedAt": "2026-09-14T00:00:00Z",
+  "notice": "Все артикулы, варианты размеров, характеристики, цены, остатки и сроки — синтетические примеры. Фото иллюстрируют модели. Применимость не подтверждена.",
+  "products": [
+    {
+      "kind": "tires",
+      "brand": "Michelin",
+      "model": "Primacy 4",
+      "season": "summer",
+      "image": "assets/products/michelin-primacy-4.webp",
+      "description": "Модель летней шины. На фотографии может быть показан иллюстративный диск: он не входит в комплект шины.",
+      "id": "demo-001",
+      "sku": "DEMO-00001",
+      "isDemo": true,
+      "rank": 1000,
+      "width": 205,
+      "profile": 55,
+      "diameter": 16,
+      "loadIndex": "91",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": false,
+      "offers": [
+        {
+          "id": "o-1-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 2,
+          "price": 10680
+        },
+        {
+          "id": "o-1-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 12,
+          "days": 5,
+          "price": 10500
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Hankook",
+      "model": "Winter i*cept evo3 W330",
+      "season": "winter",
+      "image": "assets/products/hankook-w330-card.jpg",
+      "description": "Модель зимней нешипованной шины. Характеристики конкретного артикула необходимо сверить с поставщиком.",
+      "id": "demo-002",
+      "sku": "DEMO-00002",
+      "isDemo": true,
+      "rank": 999,
+      "width": 205,
+      "profile": 55,
+      "diameter": 16,
+      "loadIndex": "91",
+      "speedIndex": "V",
+      "studded": false,
+      "runflat": false,
+      "xl": false,
+      "offers": [
+        {
+          "id": "o-2-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 1,
+          "price": 9720
+        },
+        {
+          "id": "o-2-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 16,
+          "days": 6,
+          "price": 9540
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Triangle",
+      "model": "SporteX TH201",
+      "season": "summer",
+      "image": "assets/products/triangle-sportex-th201-card.png",
+      "description": "Модель летней шины. Диск на фотографии иллюстративный и не входит в комплект шины.",
+      "id": "demo-003",
+      "sku": "DEMO-00003",
+      "isDemo": true,
+      "rank": 998,
+      "width": 205,
+      "profile": 55,
+      "diameter": 16,
+      "loadIndex": "91",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": false,
+      "offers": [
+        {
+          "id": "o-3-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 2,
+          "price": 6480
+        },
+        {
+          "id": "o-3-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 20,
+          "days": 4,
+          "price": 6300
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "Racing RPF1",
+      "image": "assets/products/enkei-rpf1-silver.png",
+      "color": "Silver",
+      "id": "demo-004",
+      "sku": "DEMO-00004",
+      "isDemo": true,
+      "rank": 997,
+      "wheelWidth": 7,
+      "diameter": 17,
+      "pcd": "5×114.3",
+      "et": 45,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-4-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 1,
+          "price": 24800
+        },
+        {
+          "id": "o-4-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 8,
+          "days": 5,
+          "price": 24620
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF01",
+      "image": "assets/products/enkei-pf01-sparkle-silver.png",
+      "color": "Sparkle Silver",
+      "id": "demo-005",
+      "sku": "DEMO-00005",
+      "isDemo": true,
+      "rank": 996,
+      "wheelWidth": 7,
+      "diameter": 17,
+      "pcd": "5×114.3",
+      "et": 45,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-5-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 2,
+          "price": 22400
+        },
+        {
+          "id": "o-5-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 12,
+          "days": 6,
+          "price": 22220
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF05",
+      "image": "assets/products/enkei-pf05-dark-silver.png",
+      "color": "Dark Silver",
+      "id": "demo-006",
+      "sku": "DEMO-00006",
+      "isDemo": true,
+      "rank": 995,
+      "wheelWidth": 7,
+      "diameter": 17,
+      "pcd": "5×114.3",
+      "et": 45,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-6-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 1,
+          "price": 23900
+        },
+        {
+          "id": "o-6-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 16,
+          "days": 4,
+          "price": 23720
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Michelin",
+      "model": "Primacy 4",
+      "season": "summer",
+      "image": "assets/products/michelin-primacy-4.webp",
+      "description": "Модель летней шины. На фотографии может быть показан иллюстративный диск: он не входит в комплект шины.",
+      "id": "demo-007",
+      "sku": "DEMO-00007",
+      "isDemo": true,
+      "rank": 990,
+      "width": 215,
+      "profile": 55,
+      "diameter": 17,
+      "loadIndex": "91",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": false,
+      "offers": [
+        {
+          "id": "o-7-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 2,
+          "price": 11390
+        },
+        {
+          "id": "o-7-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 20,
+          "days": 5,
+          "price": 11210
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Hankook",
+      "model": "Winter i*cept evo3 W330",
+      "season": "winter",
+      "image": "assets/products/hankook-w330-card.jpg",
+      "description": "Модель зимней нешипованной шины. Характеристики конкретного артикула необходимо сверить с поставщиком.",
+      "id": "demo-008",
+      "sku": "DEMO-00008",
+      "isDemo": true,
+      "rank": 989,
+      "width": 215,
+      "profile": 55,
+      "diameter": 17,
+      "loadIndex": "91",
+      "speedIndex": "V",
+      "studded": false,
+      "runflat": false,
+      "xl": false,
+      "offers": [
+        {
+          "id": "o-8-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 1,
+          "price": 10430
+        },
+        {
+          "id": "o-8-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 8,
+          "days": 6,
+          "price": 10250
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Triangle",
+      "model": "SporteX TH201",
+      "season": "summer",
+      "image": "assets/products/triangle-sportex-th201-card.png",
+      "description": "Модель летней шины. Диск на фотографии иллюстративный и не входит в комплект шины.",
+      "id": "demo-009",
+      "sku": "DEMO-00009",
+      "isDemo": true,
+      "rank": 988,
+      "width": 215,
+      "profile": 55,
+      "diameter": 17,
+      "loadIndex": "91",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": false,
+      "offers": [
+        {
+          "id": "o-9-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 2,
+          "price": 7190
+        },
+        {
+          "id": "o-9-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 12,
+          "days": 4,
+          "price": 7010
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "Racing RPF1",
+      "image": "assets/products/enkei-rpf1-silver.png",
+      "color": "Silver",
+      "id": "demo-010",
+      "sku": "DEMO-00010",
+      "isDemo": true,
+      "rank": 987,
+      "wheelWidth": 7.5,
+      "diameter": 18,
+      "pcd": "5×112",
+      "et": 35,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-10-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 1,
+          "price": 25950
+        },
+        {
+          "id": "o-10-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 16,
+          "days": 5,
+          "price": 25770
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF01",
+      "image": "assets/products/enkei-pf01-sparkle-silver.png",
+      "color": "Sparkle Silver",
+      "id": "demo-011",
+      "sku": "DEMO-00011",
+      "isDemo": true,
+      "rank": 986,
+      "wheelWidth": 7.5,
+      "diameter": 18,
+      "pcd": "5×112",
+      "et": 35,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-11-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 2,
+          "price": 23550
+        },
+        {
+          "id": "o-11-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 20,
+          "days": 6,
+          "price": 23370
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF05",
+      "image": "assets/products/enkei-pf05-dark-silver.png",
+      "color": "Dark Silver",
+      "id": "demo-012",
+      "sku": "DEMO-00012",
+      "isDemo": true,
+      "rank": 985,
+      "wheelWidth": 7.5,
+      "diameter": 18,
+      "pcd": "5×112",
+      "et": 35,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-12-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 1,
+          "price": 25050
+        },
+        {
+          "id": "o-12-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 8,
+          "days": 4,
+          "price": 24870
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Michelin",
+      "model": "Primacy 4",
+      "season": "summer",
+      "image": "assets/products/michelin-primacy-4.webp",
+      "description": "Модель летней шины. На фотографии может быть показан иллюстративный диск: он не входит в комплект шины.",
+      "id": "demo-013",
+      "sku": "DEMO-00013",
+      "isDemo": true,
+      "rank": 980,
+      "width": 225,
+      "profile": 45,
+      "diameter": 17,
+      "loadIndex": "91",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": false,
+      "offers": [
+        {
+          "id": "o-13-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 2,
+          "price": 12100
+        },
+        {
+          "id": "o-13-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 12,
+          "days": 5,
+          "price": 11920
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Hankook",
+      "model": "Winter i*cept evo3 W330",
+      "season": "winter",
+      "image": "assets/products/hankook-w330-card.jpg",
+      "description": "Модель зимней нешипованной шины. Характеристики конкретного артикула необходимо сверить с поставщиком.",
+      "id": "demo-014",
+      "sku": "DEMO-00014",
+      "isDemo": true,
+      "rank": 979,
+      "width": 225,
+      "profile": 45,
+      "diameter": 17,
+      "loadIndex": "91",
+      "speedIndex": "V",
+      "studded": false,
+      "runflat": false,
+      "xl": false,
+      "offers": [
+        {
+          "id": "o-14-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 1,
+          "price": 11140
+        },
+        {
+          "id": "o-14-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 16,
+          "days": 6,
+          "price": 10960
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Triangle",
+      "model": "SporteX TH201",
+      "season": "summer",
+      "image": "assets/products/triangle-sportex-th201-card.png",
+      "description": "Модель летней шины. Диск на фотографии иллюстративный и не входит в комплект шины.",
+      "id": "demo-015",
+      "sku": "DEMO-00015",
+      "isDemo": true,
+      "rank": 978,
+      "width": 225,
+      "profile": 45,
+      "diameter": 17,
+      "loadIndex": "91",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": false,
+      "offers": [
+        {
+          "id": "o-15-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 2,
+          "price": 7900
+        },
+        {
+          "id": "o-15-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 20,
+          "days": 4,
+          "price": 7720
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "Racing RPF1",
+      "image": "assets/products/enkei-rpf1-silver.png",
+      "color": "Silver",
+      "id": "demo-016",
+      "sku": "DEMO-00016",
+      "isDemo": true,
+      "rank": 977,
+      "wheelWidth": 8,
+      "diameter": 18,
+      "pcd": "5×114.3",
+      "et": 40,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-16-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 1,
+          "price": 27100
+        },
+        {
+          "id": "o-16-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 8,
+          "days": 5,
+          "price": 26920
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF01",
+      "image": "assets/products/enkei-pf01-sparkle-silver.png",
+      "color": "Sparkle Silver",
+      "id": "demo-017",
+      "sku": "DEMO-00017",
+      "isDemo": true,
+      "rank": 976,
+      "wheelWidth": 8,
+      "diameter": 18,
+      "pcd": "5×114.3",
+      "et": 40,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-17-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 2,
+          "price": 24700
+        },
+        {
+          "id": "o-17-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 12,
+          "days": 6,
+          "price": 24520
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF05",
+      "image": "assets/products/enkei-pf05-dark-silver.png",
+      "color": "Dark Silver",
+      "id": "demo-018",
+      "sku": "DEMO-00018",
+      "isDemo": true,
+      "rank": 975,
+      "wheelWidth": 8,
+      "diameter": 18,
+      "pcd": "5×114.3",
+      "et": 40,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-18-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 1,
+          "price": 26200
+        },
+        {
+          "id": "o-18-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 16,
+          "days": 4,
+          "price": 26020
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Michelin",
+      "model": "Primacy 4",
+      "season": "summer",
+      "image": "assets/products/michelin-primacy-4.webp",
+      "description": "Модель летней шины. На фотографии может быть показан иллюстративный диск: он не входит в комплект шины.",
+      "id": "demo-019",
+      "sku": "DEMO-00019",
+      "isDemo": true,
+      "rank": 970,
+      "width": 225,
+      "profile": 50,
+      "diameter": 17,
+      "loadIndex": "103",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": false,
+      "offers": [
+        {
+          "id": "o-19-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 2,
+          "days": 2,
+          "price": 12810
+        },
+        {
+          "id": "o-19-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 20,
+          "days": 5,
+          "price": 12630
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Hankook",
+      "model": "Winter i*cept evo3 W330",
+      "season": "winter",
+      "image": "assets/products/hankook-w330-card.jpg",
+      "description": "Модель зимней нешипованной шины. Характеристики конкретного артикула необходимо сверить с поставщиком.",
+      "id": "demo-020",
+      "sku": "DEMO-00020",
+      "isDemo": true,
+      "rank": 969,
+      "width": 225,
+      "profile": 50,
+      "diameter": 17,
+      "loadIndex": "103",
+      "speedIndex": "V",
+      "studded": false,
+      "runflat": false,
+      "xl": false,
+      "offers": [
+        {
+          "id": "o-20-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 2,
+          "days": 1,
+          "price": 11850
+        },
+        {
+          "id": "o-20-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 8,
+          "days": 6,
+          "price": 11670
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Triangle",
+      "model": "SporteX TH201",
+      "season": "summer",
+      "image": "assets/products/triangle-sportex-th201-card.png",
+      "description": "Модель летней шины. Диск на фотографии иллюстративный и не входит в комплект шины.",
+      "id": "demo-021",
+      "sku": "DEMO-00021",
+      "isDemo": true,
+      "rank": 968,
+      "width": 225,
+      "profile": 50,
+      "diameter": 17,
+      "loadIndex": "103",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": false,
+      "offers": [
+        {
+          "id": "o-21-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 2,
+          "days": 2,
+          "price": 8610
+        },
+        {
+          "id": "o-21-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 12,
+          "days": 4,
+          "price": 8430
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "Racing RPF1",
+      "image": "assets/products/enkei-rpf1-silver.png",
+      "color": "Silver",
+      "id": "demo-022",
+      "sku": "DEMO-00022",
+      "isDemo": true,
+      "rank": 967,
+      "wheelWidth": 8,
+      "diameter": 19,
+      "pcd": "5×112",
+      "et": 35,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-22-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 2,
+          "days": 1,
+          "price": 28250
+        },
+        {
+          "id": "o-22-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 16,
+          "days": 5,
+          "price": 28070
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF01",
+      "image": "assets/products/enkei-pf01-sparkle-silver.png",
+      "color": "Sparkle Silver",
+      "id": "demo-023",
+      "sku": "DEMO-00023",
+      "isDemo": true,
+      "rank": 966,
+      "wheelWidth": 8,
+      "diameter": 19,
+      "pcd": "5×112",
+      "et": 35,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-23-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 2,
+          "days": 2,
+          "price": 25850
+        },
+        {
+          "id": "o-23-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 20,
+          "days": 6,
+          "price": 25670
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF05",
+      "image": "assets/products/enkei-pf05-dark-silver.png",
+      "color": "Dark Silver",
+      "id": "demo-024",
+      "sku": "DEMO-00024",
+      "isDemo": true,
+      "rank": 965,
+      "wheelWidth": 8,
+      "diameter": 19,
+      "pcd": "5×112",
+      "et": 35,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-24-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 2,
+          "days": 1,
+          "price": 27350
+        },
+        {
+          "id": "o-24-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 8,
+          "days": 4,
+          "price": 27170
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Michelin",
+      "model": "Primacy 4",
+      "season": "summer",
+      "image": "assets/products/michelin-primacy-4.webp",
+      "description": "Модель летней шины. На фотографии может быть показан иллюстративный диск: он не входит в комплект шины.",
+      "id": "demo-025",
+      "sku": "DEMO-00025",
+      "isDemo": true,
+      "rank": 960,
+      "width": 225,
+      "profile": 45,
+      "diameter": 18,
+      "loadIndex": "103",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": false,
+      "offers": [
+        {
+          "id": "o-25-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 2,
+          "price": 13520
+        },
+        {
+          "id": "o-25-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 12,
+          "days": 5,
+          "price": 13340
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Hankook",
+      "model": "Winter i*cept evo3 W330",
+      "season": "winter",
+      "image": "assets/products/hankook-w330-card.jpg",
+      "description": "Модель зимней нешипованной шины. Характеристики конкретного артикула необходимо сверить с поставщиком.",
+      "id": "demo-026",
+      "sku": "DEMO-00026",
+      "isDemo": true,
+      "rank": 959,
+      "width": 225,
+      "profile": 45,
+      "diameter": 18,
+      "loadIndex": "103",
+      "speedIndex": "V",
+      "studded": false,
+      "runflat": false,
+      "xl": false,
+      "offers": [
+        {
+          "id": "o-26-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 1,
+          "price": 12560
+        },
+        {
+          "id": "o-26-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 16,
+          "days": 6,
+          "price": 12380
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Triangle",
+      "model": "SporteX TH201",
+      "season": "summer",
+      "image": "assets/products/triangle-sportex-th201-card.png",
+      "description": "Модель летней шины. Диск на фотографии иллюстративный и не входит в комплект шины.",
+      "id": "demo-027",
+      "sku": "DEMO-00027",
+      "isDemo": true,
+      "rank": 958,
+      "width": 225,
+      "profile": 45,
+      "diameter": 18,
+      "loadIndex": "103",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": false,
+      "offers": [
+        {
+          "id": "o-27-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 2,
+          "price": 9320
+        },
+        {
+          "id": "o-27-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 20,
+          "days": 4,
+          "price": 9140
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "Racing RPF1",
+      "image": "assets/products/enkei-rpf1-silver.png",
+      "color": "Silver",
+      "id": "demo-028",
+      "sku": "DEMO-00028",
+      "isDemo": true,
+      "rank": 957,
+      "wheelWidth": 8.5,
+      "diameter": 19,
+      "pcd": "5×120",
+      "et": 40,
+      "dia": 72.6,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-28-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 1,
+          "price": 29400
+        },
+        {
+          "id": "o-28-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 8,
+          "days": 5,
+          "price": 29220
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF01",
+      "image": "assets/products/enkei-pf01-sparkle-silver.png",
+      "color": "Sparkle Silver",
+      "id": "demo-029",
+      "sku": "DEMO-00029",
+      "isDemo": true,
+      "rank": 956,
+      "wheelWidth": 8.5,
+      "diameter": 19,
+      "pcd": "5×120",
+      "et": 40,
+      "dia": 72.6,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-29-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 2,
+          "price": 27000
+        },
+        {
+          "id": "o-29-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 12,
+          "days": 6,
+          "price": 26820
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF05",
+      "image": "assets/products/enkei-pf05-dark-silver.png",
+      "color": "Dark Silver",
+      "id": "demo-030",
+      "sku": "DEMO-00030",
+      "isDemo": true,
+      "rank": 955,
+      "wheelWidth": 8.5,
+      "diameter": 19,
+      "pcd": "5×120",
+      "et": 40,
+      "dia": 72.6,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-30-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 1,
+          "price": 28500
+        },
+        {
+          "id": "o-30-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 16,
+          "days": 4,
+          "price": 28320
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Michelin",
+      "model": "Primacy 4",
+      "season": "summer",
+      "image": "assets/products/michelin-primacy-4.webp",
+      "description": "Модель летней шины. На фотографии может быть показан иллюстративный диск: он не входит в комплект шины.",
+      "id": "demo-031",
+      "sku": "DEMO-00031",
+      "isDemo": true,
+      "rank": 950,
+      "width": 235,
+      "profile": 45,
+      "diameter": 18,
+      "loadIndex": "103",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-31-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 2,
+          "price": 14230
+        },
+        {
+          "id": "o-31-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 20,
+          "days": 5,
+          "price": 14050
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Hankook",
+      "model": "Winter i*cept evo3 W330",
+      "season": "winter",
+      "image": "assets/products/hankook-w330-card.jpg",
+      "description": "Модель зимней нешипованной шины. Характеристики конкретного артикула необходимо сверить с поставщиком.",
+      "id": "demo-032",
+      "sku": "DEMO-00032",
+      "isDemo": true,
+      "rank": 949,
+      "width": 235,
+      "profile": 45,
+      "diameter": 18,
+      "loadIndex": "103",
+      "speedIndex": "V",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-32-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 1,
+          "price": 13270
+        },
+        {
+          "id": "o-32-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 8,
+          "days": 6,
+          "price": 13090
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Triangle",
+      "model": "SporteX TH201",
+      "season": "summer",
+      "image": "assets/products/triangle-sportex-th201-card.png",
+      "description": "Модель летней шины. Диск на фотографии иллюстративный и не входит в комплект шины.",
+      "id": "demo-033",
+      "sku": "DEMO-00033",
+      "isDemo": true,
+      "rank": 948,
+      "width": 235,
+      "profile": 45,
+      "diameter": 18,
+      "loadIndex": "103",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-33-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 2,
+          "price": 10030
+        },
+        {
+          "id": "o-33-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 12,
+          "days": 4,
+          "price": 9850
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "Racing RPF1",
+      "image": "assets/products/enkei-rpf1-silver.png",
+      "color": "Silver",
+      "id": "demo-034",
+      "sku": "DEMO-00034",
+      "isDemo": true,
+      "rank": 947,
+      "wheelWidth": 9,
+      "diameter": 20,
+      "pcd": "5×112",
+      "et": 35,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-34-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 1,
+          "price": 30550
+        },
+        {
+          "id": "o-34-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 16,
+          "days": 5,
+          "price": 30370
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF01",
+      "image": "assets/products/enkei-pf01-sparkle-silver.png",
+      "color": "Sparkle Silver",
+      "id": "demo-035",
+      "sku": "DEMO-00035",
+      "isDemo": true,
+      "rank": 946,
+      "wheelWidth": 9,
+      "diameter": 20,
+      "pcd": "5×112",
+      "et": 35,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-35-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 2,
+          "price": 28150
+        },
+        {
+          "id": "o-35-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 20,
+          "days": 6,
+          "price": 27970
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF05",
+      "image": "assets/products/enkei-pf05-dark-silver.png",
+      "color": "Dark Silver",
+      "id": "demo-036",
+      "sku": "DEMO-00036",
+      "isDemo": true,
+      "rank": 945,
+      "wheelWidth": 9,
+      "diameter": 20,
+      "pcd": "5×112",
+      "et": 35,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-36-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 1,
+          "price": 29650
+        },
+        {
+          "id": "o-36-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 8,
+          "days": 4,
+          "price": 29470
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Michelin",
+      "model": "Primacy 4",
+      "season": "summer",
+      "image": "assets/products/michelin-primacy-4.webp",
+      "description": "Модель летней шины. На фотографии может быть показан иллюстративный диск: он не входит в комплект шины.",
+      "id": "demo-037",
+      "sku": "DEMO-00037",
+      "isDemo": true,
+      "rank": 940,
+      "width": 235,
+      "profile": 55,
+      "diameter": 18,
+      "loadIndex": "103",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-37-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 2,
+          "price": 14940
+        },
+        {
+          "id": "o-37-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 12,
+          "days": 5,
+          "price": 14760
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Hankook",
+      "model": "Winter i*cept evo3 W330",
+      "season": "winter",
+      "image": "assets/products/hankook-w330-card.jpg",
+      "description": "Модель зимней нешипованной шины. Характеристики конкретного артикула необходимо сверить с поставщиком.",
+      "id": "demo-038",
+      "sku": "DEMO-00038",
+      "isDemo": true,
+      "rank": 939,
+      "width": 235,
+      "profile": 55,
+      "diameter": 18,
+      "loadIndex": "103",
+      "speedIndex": "V",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-38-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 1,
+          "price": 13980
+        },
+        {
+          "id": "o-38-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 16,
+          "days": 6,
+          "price": 13800
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Triangle",
+      "model": "SporteX TH201",
+      "season": "summer",
+      "image": "assets/products/triangle-sportex-th201-card.png",
+      "description": "Модель летней шины. Диск на фотографии иллюстративный и не входит в комплект шины.",
+      "id": "demo-039",
+      "sku": "DEMO-00039",
+      "isDemo": true,
+      "rank": 938,
+      "width": 235,
+      "profile": 55,
+      "diameter": 18,
+      "loadIndex": "103",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-39-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 2,
+          "price": 10740
+        },
+        {
+          "id": "o-39-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 20,
+          "days": 4,
+          "price": 10560
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "Racing RPF1",
+      "image": "assets/products/enkei-rpf1-silver.png",
+      "color": "Silver",
+      "id": "demo-040",
+      "sku": "DEMO-00040",
+      "isDemo": true,
+      "rank": 937,
+      "wheelWidth": 7,
+      "diameter": 17,
+      "pcd": "5×100",
+      "et": 48,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-40-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 1,
+          "price": 31700
+        },
+        {
+          "id": "o-40-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 8,
+          "days": 5,
+          "price": 31520
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF01",
+      "image": "assets/products/enkei-pf01-sparkle-silver.png",
+      "color": "Sparkle Silver",
+      "id": "demo-041",
+      "sku": "DEMO-00041",
+      "isDemo": true,
+      "rank": 936,
+      "wheelWidth": 7,
+      "diameter": 17,
+      "pcd": "5×100",
+      "et": 48,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-41-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 2,
+          "price": 29300
+        },
+        {
+          "id": "o-41-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 12,
+          "days": 6,
+          "price": 29120
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF05",
+      "image": "assets/products/enkei-pf05-dark-silver.png",
+      "color": "Dark Silver",
+      "id": "demo-042",
+      "sku": "DEMO-00042",
+      "isDemo": true,
+      "rank": 935,
+      "wheelWidth": 7,
+      "diameter": 17,
+      "pcd": "5×100",
+      "et": 48,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-42-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 1,
+          "price": 30800
+        },
+        {
+          "id": "o-42-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 16,
+          "days": 4,
+          "price": 30620
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Michelin",
+      "model": "Primacy 4",
+      "season": "summer",
+      "image": "assets/products/michelin-primacy-4.webp",
+      "description": "Модель летней шины. На фотографии может быть показан иллюстративный диск: он не входит в комплект шины.",
+      "id": "demo-043",
+      "sku": "DEMO-00043",
+      "isDemo": true,
+      "rank": 930,
+      "width": 245,
+      "profile": 45,
+      "diameter": 19,
+      "loadIndex": "103",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-43-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 2,
+          "price": 15650
+        },
+        {
+          "id": "o-43-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 20,
+          "days": 5,
+          "price": 15470
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Hankook",
+      "model": "Winter i*cept evo3 W330",
+      "season": "winter",
+      "image": "assets/products/hankook-w330-card.jpg",
+      "description": "Модель зимней нешипованной шины. Характеристики конкретного артикула необходимо сверить с поставщиком.",
+      "id": "demo-044",
+      "sku": "DEMO-00044",
+      "isDemo": true,
+      "rank": 929,
+      "width": 245,
+      "profile": 45,
+      "diameter": 19,
+      "loadIndex": "103",
+      "speedIndex": "V",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-44-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 1,
+          "price": 14690
+        },
+        {
+          "id": "o-44-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 8,
+          "days": 6,
+          "price": 14510
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Triangle",
+      "model": "SporteX TH201",
+      "season": "summer",
+      "image": "assets/products/triangle-sportex-th201-card.png",
+      "description": "Модель летней шины. Диск на фотографии иллюстративный и не входит в комплект шины.",
+      "id": "demo-045",
+      "sku": "DEMO-00045",
+      "isDemo": true,
+      "rank": 928,
+      "width": 245,
+      "profile": 45,
+      "diameter": 19,
+      "loadIndex": "103",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-45-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 2,
+          "price": 11450
+        },
+        {
+          "id": "o-45-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 12,
+          "days": 4,
+          "price": 11270
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "Racing RPF1",
+      "image": "assets/products/enkei-rpf1-silver.png",
+      "color": "Silver",
+      "id": "demo-046",
+      "sku": "DEMO-00046",
+      "isDemo": true,
+      "rank": 927,
+      "wheelWidth": 8,
+      "diameter": 18,
+      "pcd": "5×120",
+      "et": 35,
+      "dia": 72.6,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-46-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 1,
+          "price": 32850
+        },
+        {
+          "id": "o-46-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 16,
+          "days": 5,
+          "price": 32670
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF01",
+      "image": "assets/products/enkei-pf01-sparkle-silver.png",
+      "color": "Sparkle Silver",
+      "id": "demo-047",
+      "sku": "DEMO-00047",
+      "isDemo": true,
+      "rank": 926,
+      "wheelWidth": 8,
+      "diameter": 18,
+      "pcd": "5×120",
+      "et": 35,
+      "dia": 72.6,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-47-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 2,
+          "price": 30450
+        },
+        {
+          "id": "o-47-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 20,
+          "days": 6,
+          "price": 30270
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF05",
+      "image": "assets/products/enkei-pf05-dark-silver.png",
+      "color": "Dark Silver",
+      "id": "demo-048",
+      "sku": "DEMO-00048",
+      "isDemo": true,
+      "rank": 925,
+      "wheelWidth": 8,
+      "diameter": 18,
+      "pcd": "5×120",
+      "et": 35,
+      "dia": 72.6,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-48-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 1,
+          "price": 31950
+        },
+        {
+          "id": "o-48-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 8,
+          "days": 4,
+          "price": 31770
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Michelin",
+      "model": "Primacy 4",
+      "season": "summer",
+      "image": "assets/products/michelin-primacy-4.webp",
+      "description": "Модель летней шины. На фотографии может быть показан иллюстративный диск: он не входит в комплект шины.",
+      "id": "demo-049",
+      "sku": "DEMO-00049",
+      "isDemo": true,
+      "rank": 920,
+      "width": 255,
+      "profile": 40,
+      "diameter": 19,
+      "loadIndex": "103",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-49-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 2,
+          "price": 16360
+        },
+        {
+          "id": "o-49-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 12,
+          "days": 5,
+          "price": 16180
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Hankook",
+      "model": "Winter i*cept evo3 W330",
+      "season": "winter",
+      "image": "assets/products/hankook-w330-card.jpg",
+      "description": "Модель зимней нешипованной шины. Характеристики конкретного артикула необходимо сверить с поставщиком.",
+      "id": "demo-050",
+      "sku": "DEMO-00050",
+      "isDemo": true,
+      "rank": 919,
+      "width": 255,
+      "profile": 40,
+      "diameter": 19,
+      "loadIndex": "103",
+      "speedIndex": "V",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-50-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 1,
+          "price": 15400
+        },
+        {
+          "id": "o-50-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 16,
+          "days": 6,
+          "price": 15220
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Triangle",
+      "model": "SporteX TH201",
+      "season": "summer",
+      "image": "assets/products/triangle-sportex-th201-card.png",
+      "description": "Модель летней шины. Диск на фотографии иллюстративный и не входит в комплект шины.",
+      "id": "demo-051",
+      "sku": "DEMO-00051",
+      "isDemo": true,
+      "rank": 918,
+      "width": 255,
+      "profile": 40,
+      "diameter": 19,
+      "loadIndex": "103",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-51-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 2,
+          "price": 12160
+        },
+        {
+          "id": "o-51-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 20,
+          "days": 4,
+          "price": 11980
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "Racing RPF1",
+      "image": "assets/products/enkei-rpf1-silver.png",
+      "color": "Silver",
+      "id": "demo-052",
+      "sku": "DEMO-00052",
+      "isDemo": true,
+      "rank": 917,
+      "wheelWidth": 8.5,
+      "diameter": 18,
+      "pcd": "5×114.3",
+      "et": 38,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-52-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 1,
+          "price": 34000
+        },
+        {
+          "id": "o-52-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 8,
+          "days": 5,
+          "price": 33820
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF01",
+      "image": "assets/products/enkei-pf01-sparkle-silver.png",
+      "color": "Sparkle Silver",
+      "id": "demo-053",
+      "sku": "DEMO-00053",
+      "isDemo": true,
+      "rank": 916,
+      "wheelWidth": 8.5,
+      "diameter": 18,
+      "pcd": "5×114.3",
+      "et": 38,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-53-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 2,
+          "price": 31600
+        },
+        {
+          "id": "o-53-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 12,
+          "days": 6,
+          "price": 31420
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF05",
+      "image": "assets/products/enkei-pf05-dark-silver.png",
+      "color": "Dark Silver",
+      "id": "demo-054",
+      "sku": "DEMO-00054",
+      "isDemo": true,
+      "rank": 915,
+      "wheelWidth": 8.5,
+      "diameter": 18,
+      "pcd": "5×114.3",
+      "et": 38,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-54-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 1,
+          "price": 33100
+        },
+        {
+          "id": "o-54-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 16,
+          "days": 4,
+          "price": 32920
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Michelin",
+      "model": "Primacy 4",
+      "season": "summer",
+      "image": "assets/products/michelin-primacy-4.webp",
+      "description": "Модель летней шины. На фотографии может быть показан иллюстративный диск: он не входит в комплект шины.",
+      "id": "demo-055",
+      "sku": "DEMO-00055",
+      "isDemo": true,
+      "rank": 910,
+      "width": 255,
+      "profile": 45,
+      "diameter": 20,
+      "loadIndex": "103",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-55-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 2,
+          "days": 2,
+          "price": 17070
+        },
+        {
+          "id": "o-55-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 2,
+          "days": 5,
+          "price": 16890
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Hankook",
+      "model": "Winter i*cept evo3 W330",
+      "season": "winter",
+      "image": "assets/products/hankook-w330-card.jpg",
+      "description": "Модель зимней нешипованной шины. Характеристики конкретного артикула необходимо сверить с поставщиком.",
+      "id": "demo-056",
+      "sku": "DEMO-00056",
+      "isDemo": true,
+      "rank": 909,
+      "width": 255,
+      "profile": 45,
+      "diameter": 20,
+      "loadIndex": "103",
+      "speedIndex": "V",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-56-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 2,
+          "days": 2,
+          "price": 16110
+        },
+        {
+          "id": "o-56-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 2,
+          "days": 5,
+          "price": 15930
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Triangle",
+      "model": "SporteX TH201",
+      "season": "summer",
+      "image": "assets/products/triangle-sportex-th201-card.png",
+      "description": "Модель летней шины. Диск на фотографии иллюстративный и не входит в комплект шины.",
+      "id": "demo-057",
+      "sku": "DEMO-00057",
+      "isDemo": true,
+      "rank": 908,
+      "width": 255,
+      "profile": 45,
+      "diameter": 20,
+      "loadIndex": "103",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-57-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 2,
+          "days": 2,
+          "price": 12870
+        },
+        {
+          "id": "o-57-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 2,
+          "days": 5,
+          "price": 12690
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "Racing RPF1",
+      "image": "assets/products/enkei-rpf1-silver.png",
+      "color": "Silver",
+      "id": "demo-058",
+      "sku": "DEMO-00058",
+      "isDemo": true,
+      "rank": 907,
+      "wheelWidth": 9,
+      "diameter": 19,
+      "pcd": "5×114.3",
+      "et": 35,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-58-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 2,
+          "days": 2,
+          "price": 35150
+        },
+        {
+          "id": "o-58-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 2,
+          "days": 5,
+          "price": 34970
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF01",
+      "image": "assets/products/enkei-pf01-sparkle-silver.png",
+      "color": "Sparkle Silver",
+      "id": "demo-059",
+      "sku": "DEMO-00059",
+      "isDemo": true,
+      "rank": 906,
+      "wheelWidth": 9,
+      "diameter": 19,
+      "pcd": "5×114.3",
+      "et": 35,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-59-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 2,
+          "days": 2,
+          "price": 32750
+        },
+        {
+          "id": "o-59-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 2,
+          "days": 5,
+          "price": 32570
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF05",
+      "image": "assets/products/enkei-pf05-dark-silver.png",
+      "color": "Dark Silver",
+      "id": "demo-060",
+      "sku": "DEMO-00060",
+      "isDemo": true,
+      "rank": 905,
+      "wheelWidth": 9,
+      "diameter": 19,
+      "pcd": "5×114.3",
+      "et": 35,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-60-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 2,
+          "days": 2,
+          "price": 34250
+        },
+        {
+          "id": "o-60-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 2,
+          "days": 5,
+          "price": 34070
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Michelin",
+      "model": "Primacy 4",
+      "season": "summer",
+      "image": "assets/products/michelin-primacy-4.webp",
+      "description": "Модель летней шины. На фотографии может быть показан иллюстративный диск: он не входит в комплект шины.",
+      "id": "demo-061",
+      "sku": "DEMO-00061",
+      "isDemo": true,
+      "rank": 900,
+      "width": 275,
+      "profile": 40,
+      "diameter": 20,
+      "loadIndex": "103",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-61-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 2,
+          "price": 17780
+        },
+        {
+          "id": "o-61-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 12,
+          "days": 5,
+          "price": 17600
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Hankook",
+      "model": "Winter i*cept evo3 W330",
+      "season": "winter",
+      "image": "assets/products/hankook-w330-card.jpg",
+      "description": "Модель зимней нешипованной шины. Характеристики конкретного артикула необходимо сверить с поставщиком.",
+      "id": "demo-062",
+      "sku": "DEMO-00062",
+      "isDemo": true,
+      "rank": 899,
+      "width": 275,
+      "profile": 40,
+      "diameter": 20,
+      "loadIndex": "103",
+      "speedIndex": "V",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-62-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 1,
+          "price": 16820
+        },
+        {
+          "id": "o-62-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 16,
+          "days": 6,
+          "price": 16640
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Triangle",
+      "model": "SporteX TH201",
+      "season": "summer",
+      "image": "assets/products/triangle-sportex-th201-card.png",
+      "description": "Модель летней шины. Диск на фотографии иллюстративный и не входит в комплект шины.",
+      "id": "demo-063",
+      "sku": "DEMO-00063",
+      "isDemo": true,
+      "rank": 898,
+      "width": 275,
+      "profile": 40,
+      "diameter": 20,
+      "loadIndex": "103",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-63-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 2,
+          "price": 13580
+        },
+        {
+          "id": "o-63-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 20,
+          "days": 4,
+          "price": 13400
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "Racing RPF1",
+      "image": "assets/products/enkei-rpf1-silver.png",
+      "color": "Silver",
+      "id": "demo-064",
+      "sku": "DEMO-00064",
+      "isDemo": true,
+      "rank": 897,
+      "wheelWidth": 9,
+      "diameter": 20,
+      "pcd": "5×120",
+      "et": 40,
+      "dia": 72.6,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-64-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 1,
+          "price": 36300
+        },
+        {
+          "id": "o-64-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 8,
+          "days": 5,
+          "price": 36120
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF01",
+      "image": "assets/products/enkei-pf01-sparkle-silver.png",
+      "color": "Sparkle Silver",
+      "id": "demo-065",
+      "sku": "DEMO-00065",
+      "isDemo": true,
+      "rank": 896,
+      "wheelWidth": 9,
+      "diameter": 20,
+      "pcd": "5×120",
+      "et": 40,
+      "dia": 72.6,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-65-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 2,
+          "price": 33900
+        },
+        {
+          "id": "o-65-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 12,
+          "days": 6,
+          "price": 33720
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF05",
+      "image": "assets/products/enkei-pf05-dark-silver.png",
+      "color": "Dark Silver",
+      "id": "demo-066",
+      "sku": "DEMO-00066",
+      "isDemo": true,
+      "rank": 895,
+      "wheelWidth": 9,
+      "diameter": 20,
+      "pcd": "5×120",
+      "et": 40,
+      "dia": 72.6,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-66-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 1,
+          "price": 35400
+        },
+        {
+          "id": "o-66-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 16,
+          "days": 4,
+          "price": 35220
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Michelin",
+      "model": "Primacy 4",
+      "season": "summer",
+      "image": "assets/products/michelin-primacy-4.webp",
+      "description": "Модель летней шины. На фотографии может быть показан иллюстративный диск: он не входит в комплект шины.",
+      "id": "demo-067",
+      "sku": "DEMO-00067",
+      "isDemo": true,
+      "rank": 890,
+      "width": 285,
+      "profile": 35,
+      "diameter": 21,
+      "loadIndex": "103",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-67-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 2,
+          "price": 18490
+        },
+        {
+          "id": "o-67-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 20,
+          "days": 5,
+          "price": 18310
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Hankook",
+      "model": "Winter i*cept evo3 W330",
+      "season": "winter",
+      "image": "assets/products/hankook-w330-card.jpg",
+      "description": "Модель зимней нешипованной шины. Характеристики конкретного артикула необходимо сверить с поставщиком.",
+      "id": "demo-068",
+      "sku": "DEMO-00068",
+      "isDemo": true,
+      "rank": 889,
+      "width": 285,
+      "profile": 35,
+      "diameter": 21,
+      "loadIndex": "103",
+      "speedIndex": "V",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": [
+        {
+          "id": "o-68-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 1,
+          "price": 17530
+        },
+        {
+          "id": "o-68-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 8,
+          "days": 6,
+          "price": 17350
+        }
+      ]
+    },
+    {
+      "kind": "tires",
+      "brand": "Triangle",
+      "model": "SporteX TH201",
+      "season": "summer",
+      "image": "assets/products/triangle-sportex-th201-card.png",
+      "description": "Модель летней шины. Диск на фотографии иллюстративный и не входит в комплект шины.",
+      "id": "demo-069",
+      "sku": "DEMO-00069",
+      "isDemo": true,
+      "rank": 888,
+      "width": 285,
+      "profile": 35,
+      "diameter": 21,
+      "loadIndex": "103",
+      "speedIndex": "Y",
+      "studded": false,
+      "runflat": false,
+      "xl": true,
+      "offers": []
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "Racing RPF1",
+      "image": "assets/products/enkei-rpf1-silver.png",
+      "color": "Silver",
+      "id": "demo-070",
+      "sku": "DEMO-00070",
+      "isDemo": true,
+      "rank": 887,
+      "wheelWidth": 9.5,
+      "diameter": 20,
+      "pcd": "5×112",
+      "et": 40,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-70-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 8,
+          "days": 1,
+          "price": 37450
+        },
+        {
+          "id": "o-70-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 16,
+          "days": 5,
+          "price": 37270
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF01",
+      "image": "assets/products/enkei-pf01-sparkle-silver.png",
+      "color": "Sparkle Silver",
+      "id": "demo-071",
+      "sku": "DEMO-00071",
+      "isDemo": true,
+      "rank": 886,
+      "wheelWidth": 9.5,
+      "diameter": 20,
+      "pcd": "5×112",
+      "et": 40,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-71-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 12,
+          "days": 2,
+          "price": 35050
+        },
+        {
+          "id": "o-71-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 20,
+          "days": 6,
+          "price": 34870
+        }
+      ]
+    },
+    {
+      "kind": "wheels",
+      "brand": "Enkei",
+      "model": "PerformanceLine PF05",
+      "image": "assets/products/enkei-pf05-dark-silver.png",
+      "color": "Dark Silver",
+      "id": "demo-072",
+      "sku": "DEMO-00072",
+      "isDemo": true,
+      "rank": 885,
+      "wheelWidth": 9.5,
+      "diameter": 20,
+      "pcd": "5×112",
+      "et": 40,
+      "dia": 73.1,
+      "type": "alloy",
+      "description": "Фотография модели диска. Размеры, вылет и крепёж в этой демонстрации условные; они не подтверждают применимость к автомобилю.",
+      "offers": [
+        {
+          "id": "o-72-a",
+          "warehouse": "Демо-склад · Челябинск",
+          "stock": 4,
+          "days": 1,
+          "price": 36550
+        },
+        {
+          "id": "o-72-b",
+          "warehouse": "Демо-склад · Екатеринбург",
+          "stock": 8,
+          "days": 4,
+          "price": 36370
+        }
+      ]
+    }
+  ]
+}
