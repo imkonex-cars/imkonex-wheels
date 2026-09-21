@@ -1,0 +1,41 @@
+IMKONEX CARS — ПОЛНАЯ РАБОЧАЯ ОБЛАСТЬ 0.3.0, WORKSPACE-1
+
+1. Распакуйте IMKONEX_WHEELS_WORKSPACE_v0.3.0.zip в пустую папку.
+   Внутри сразу находятся backend, frontend, data, scripts и другие папки.
+   Вложенного SOURCE_CODE.zip нет.
+
+2. Создайте новый GitHub-репозиторий или откройте нужный существующий.
+   Add file → Upload files: загрузите содержимое распакованной папки,
+   сохраняя вложенные пути. Нажмите Commit changes.
+   В корне должны быть BUILD_RENDER.mjs, package.json и render.yaml.
+   Полный список всех файлов: FILES_MANIFEST.txt.
+   Главная страница находится в frontend/index.html.
+
+3. Render: New → Static Site → подключить репозиторий и нужную ветку.
+   Для существующего сервиса проверьте Repository и Branch.
+   Root Directory: пусто.
+   Build Command: node BUILD_RENDER.mjs
+   Publish Directory: dist
+   Environment → NODE_VERSION: 22
+   Environment → CATALOG_MODE: snapshot
+
+4. Для существующего сервиса после сохранения настроек:
+   Manual Deploy → Clear build cache & deploy.
+   В журнале должна появиться строка:
+   BUILD_OK IMKONEX-WHEELS-0.3.0-WORKSPACE-1 | snapshot | 6 products
+
+5. Откройте адрес, указанный в Render, и нажмите Ctrl+F5.
+   Вверху: «Реальная выборка · 6 товаров».
+   Добавьте /build-info.json к адресу — mode: snapshot, products: 6.
+   Новый сервис получит свой адрес; старый адрес относится к старому сервису.
+
+Папка .github нужна для автопроверок GitHub. Если она не загружается,
+создайте в GitHub файл .github/workflows/ci.yml и вставьте содержимое
+файла из архива. Сама сборка Render может работать без этой папки.
+
+Используйте BUILD_RENDER.mjs из текущего архива.
+Не загружайте node_modules, dist, виртуальное окружение, .env и API-отчёты.
+
+Включены 3 шины и 3 диска по данным от 17.09.2026, 19:23 UTC.
+Автообновление, заказ и оплата пока не подключены.
+Полные сведения: README.md. Фотографии и заголовки: docs/RENDER.md.

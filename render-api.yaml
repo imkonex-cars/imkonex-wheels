@@ -1,0 +1,21 @@
+# Optional second Blueprint. Not needed for the static demonstration.
+services:
+  - type: web
+    name: imkonex-wheels-api-demo
+    runtime: python
+    plan: free
+    region: frankfurt
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.app:app --host 0.0.0.0 --port $PORT --workers 1
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.12
+      - key: DATA_MODE
+        value: demo
+      - key: SERVE_FRONTEND
+        value: "false"
+      - key: ALLOWED_ORIGINS
+        sync: false
+# No supplier credentials or admin token are required for the public demo API.
