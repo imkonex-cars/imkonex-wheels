@@ -1,47 +1,27 @@
-# Render: полный проект WORKSPACE-1
+# Render: рабочая область 0.4.0
 
-Для архива IMKONEX_WHEELS_WORKSPACE_v0.3.0.zip. Исходники расположены обычными папками, главный HTML — frontend/index.html. В корне GitHub должны находиться BUILD_RENDER.mjs, package.json, render.yaml и папки frontend/, data/, scripts/. Полный список — FILES_MANIFEST.txt.
+Используется существующий Static Site imkonex-wheels-demo, репозиторий imkonex-cars/imkonex-union-catalog-mvp, ветка main. Главный HTML исходников — frontend/index.html; публикуемый — dist/index.html.
 
-Создайте **Static Site** из нужного GitHub-репозитория и ветки. Для существующего сервиса проверьте Repository и Branch.
-
-| Настройка | Значение |
+| Поле | Значение |
 |---|---|
-| Root Directory | Пусто |
+| Root Directory | пусто |
 | Build Command | node BUILD_RENDER.mjs |
 | Publish Directory | dist |
 | NODE_VERSION | 22 |
 | CATALOG_MODE | snapshot |
 
-Штатный BUILD_RENDER.mjs фиксирует snapshot и запускает scripts/build.mjs. Старое значение CATALOG_MODE=demo не меняет опубликованную выборку. npm run build вызывает тот же вход. Публикуется только dist; Python, база данных и пароль поставщика для статической выборки не нужны.
+BUILD_RENDER.mjs фиксирует snapshot и собирает data/supplier-snapshot.json; старое CATALOG_MODE=demo не возвращает демонстрационные товары. Статическая сборка не обращается к API поставщика. API-пароль хранится в GitHub Secrets для отдельного workflow, а не в Render.
 
-При изменении существующего сервиса сохраните настройки и выберите Manual Deploy → Clear build cache & deploy. Это пересоберёт связанную ветку с очищенным кешем. Если создаёте новый сервис, используйте адрес, выданный этому сервису; прежний адрес не переносится автоматически. [Документация Render](https://render.com/docs/deploys), [Static Sites](https://render.com/docs/static-sites).
+Первичная установка даст BUILD_OK IMKONEX-WHEELS-0.4.0-WORKSPACE-1 | snapshot | 6 products. Это исходная проверочная выборка с фотографиями. После первого успешного Sync 4tochki catalog число товаров будет определяться API; в /build-info.json появятся dataScope=account_catalog и sync.complete=true.
 
-Ожидаемый журнал:
+Для публикации коммитов workflow используйте Auto-Deploy → On Commit. Альтернативный явный запуск — секрет RENDER_DEPLOY_HOOK_URL в GitHub; в таком варианте Auto-Deploy Render переключается в Off, чтобы не делать две сборки на один коммит. Подключение, первый запуск и расписание: [SYNC_SETUP.md](SYNC_SETUP.md).
 
-```text
-BUILD_OK IMKONEX-WHEELS-0.3.0-WORKSPACE-1 | snapshot | 6 products
-```
+Статус Actions и принятие Deploy Hook не заменяют проверку успешной сборки Render. После публикации откройте https://imkonex-wheels-demo.onrender.com/build-info.json и проверьте version, dataUpdatedAt, dataScope и products. Обновите витрину Ctrl+F5.
 
-На сайте: «Реальная выборка · 6 товаров». В /build-info.json: release=IMKONEX-WHEELS-0.3.0-WORKSPACE-1, products=6, mode=snapshot. На прежнем сервисе URL был https://imkonex-wheels-demo.onrender.com/ ; для нового сервиса используйте выданный ему адрес.
+## Фото и заголовки
 
-## Заголовки и фотографии
+Исходные шесть фотографий хранятся в frontend/assets/products/ и копируются в dist. Массовый импорт добавляет ограниченный кеш оригинальных фото; оставшиеся изображения используют публичные адреса www.4tochki.ru. Поэтому, если Content-Security-Policy задан вручную, в img-src должны быть разрешены собственный домен и https://www.4tochki.ru. Текущий render.yaml уже содержит это разрешение. Простая загрузка YAML не применяет заголовки к вручную созданному сервису автоматически.
 
-Обновление PHOTOS-1 добавляет шесть оригинальных фотографий поставщика в frontend/assets/products/. Сборка копирует их в dist/assets/products/; браузер загружает фото с домена самого каталога. Для исправления фотографий настройки Render менять не требуется. В журнале появится Photos: 6 local, 0 remote, 0 unavailable., а в /build-info.json — photos.local: 6.
+При недоступности фото показывается нейтральная заглушка. Сами оригиналы не генерируются и не изменяются.
 
-Ссылки img_big_my из исходного отчёта при проверке 21.09.2026 возвращали HTTP 200 с пустым телом. Публичные ссылки img_big_pish из того же отчёта вернули шесть изображений 400×400. Они сохранены без изменения байтов. Источники и SHA256: PRODUCT_PHOTO_SOURCES.json.
-
-В render.yaml уже указана политика, разрешающая собственные ресурсы и внешние фото поставщика. Для вручную настроенного Static Site простая загрузка YAML не применяет заголовки автоматически. Если настраиваете Content-Security-Policy отдельно, используйте один заголовок для пути /*:
-
-```text
-default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://api-b2b.pwrs.ru https://www.4tochki.ru; connect-src 'self' https://*.onrender.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'
-```
-
-При ошибке загрузки фото используется нейтральная заглушка. [Заголовки статических сайтов](https://render.com/docs/static-site-headers).
-
-## Что хранить в репозитории
-
-Загрузите файлы из полного архива, сохранив пути. Не помещайте в GitHub dist, node_modules, .venv, .check-venv, .env, приватные API-отчёты, бэкапы или .git. Файл .env.example — безопасный шаблон, он входит в архив.
-
-.github/workflows/ci.yml запускает дополнительные проверки. Для самой команды Render он не обязателен. backend/, Dockerfile, compose.yaml и render-api.yaml сохранены для серверного этапа; текущий Static Site их не запускает.
-
-Публикация в аккаунтах GitHub и Render из этой сессии не выполнялась. В пакет включён снимок 6 товаров на 17.09.2026; автообновление и оформление заказа требуют следующего этапа интеграции.
+Документация: [Static Sites](https://render.com/docs/static-sites), [Deploy Hooks](https://render.com/docs/deploy-hooks), [HTTP Headers](https://render.com/docs/static-site-headers).

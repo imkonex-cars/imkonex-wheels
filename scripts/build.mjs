@@ -6,7 +6,9 @@ const root=fileURLToPath(new URL('../',import.meta.url));
 const {version}=JSON.parse(await readFile(path.join(root,'package.json'),'utf8'));
 const mode=process.env.CATALOG_MODE || 'snapshot';
 if(!['demo','snapshot'].includes(mode))throw new Error('CATALOG_MODE must be demo or snapshot');
-const data=JSON.parse(await readFile(path.join(root,mode==='snapshot'?'data/supplier-snapshot.json':'data/demo-catalog.json'),'utf8'));
+const raw=await readFile(path.join(root,mode==='snapshot'?'data/supplier-snapshot.json':'data/demo-catalog.json'));
+if(raw.length>32000000)throw new Error('Catalog exceeds the static pilot limit of 32 MB');
+const data=JSON.parse(raw);
 if(mode==='snapshot')validateSnapshot(data);
 if(!Array.isArray(data.products)||!data.products.length) throw new Error('Catalog is empty');
 for(const p of data.products){
@@ -33,6 +35,8 @@ try{
   release:`IMKONEX-WHEELS-${version}-WORKSPACE-1`,version,mode,products:data.products.length,
   tyres:data.products.filter(p=>p.kind==='tires').length,wheels:data.products.filter(p=>p.kind==='wheels').length,
   dataUpdatedAt:data.updatedAt,builtAt:new Date().toISOString(),photos,
+  dataScope:data.schemaVersion===3?'account_catalog':'verified_sample',
+  sync:data.sync||null,
  },null,2)+'\n');
  await rm(path.join(root,'dist'),{recursive:true,force:true});
  await rename(stage,path.join(root,'dist'));

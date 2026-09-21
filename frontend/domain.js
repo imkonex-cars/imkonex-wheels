@@ -1,4 +1,5 @@
-export const money = value => new Intl.NumberFormat('ru-RU', {maximumFractionDigits: 2}).format(Number(value) || 0) + ' ₽';
+const rubFormatter = new Intl.NumberFormat('ru-RU', {maximumFractionDigits: 2});
+export const money = value => rubFormatter.format(Number(value) || 0) + ' ₽';
 export const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const normalize = value => String(value ?? '').toLowerCase().replaceAll('ё','е').replace(/[\s/хx×.,-]+/g, '');
 export function retailPrice(base, percent, minimum) {
@@ -8,14 +9,18 @@ export function retailPrice(base, percent, minimum) {
 }
 export function effectiveOffer(product, quantity=1) {
   if (!Number.isInteger(quantity) || quantity<1 || quantity>20) return null;
-  const offers = product.offers.filter(o => o.stock >= quantity && o.price > 0);
-  if (!offers.length) return null;
-  return [...offers].sort((a,b) => ((a.days??Infinity)-(b.days??Infinity)) || (a.price-b.price))[0];
+  let best=null;
+  for(const offer of product.offers){
+    if(offer.stock<quantity||offer.price<=0)continue;
+    if(!best||(offer.days??Infinity)<(best.days??Infinity)
+      ||((offer.days??Infinity)===(best.days??Infinity)&&offer.price<best.price))best=offer;
+  }
+  return best;
 }
 export function formatSize(p) { return p.kind === 'tires' ? `${p.width}/${p.profile} ${p.construction||'R'}${p.diameter}` : `${p.wheelWidth}${p.isDemo===false?'':'J'} × ${p.diameter} · ${p.pcd}`; }
-export function filterProducts(products, filters, {favorites=[], compare=[]}={}) {
+export function filterProducts(products, filters, {favorites=[], compare=[], sort=true}={}) {
   const q=normalize(filters.q);
-  return products.filter(p => {
+  const found=products.filter(p => {
     if (filters.kind && p.kind!==filters.kind) return false;
     const commonSize=p.kind==='tires'?`${p.width}/${p.profile} R${p.diameter}`:'';
     if (q && !normalize([p.brand,p.model,formatSize(p),commonSize,p.sku,p.pcd].join(' ')).includes(q)) return false;
@@ -35,7 +40,9 @@ export function filterProducts(products, filters, {favorites=[], compare=[]}={})
     if (filters.min && price<Number(filters.min)) return false;
     if (filters.max && price>Number(filters.max)) return false;
     return true;
-  }).sort((a,b)=>{
+  });
+  if(!sort)return found;
+  return found.sort((a,b)=>{
     const quantity=filters.inSet?4:1, ao=effectiveOffer(a,quantity), bo=effectiveOffer(b,quantity);
     const ap=ao?.price ?? Infinity, bp=bo?.price ?? Infinity;
     if(filters.sort==='price-up')return ap-bp;
@@ -47,7 +54,22 @@ export function filterProducts(products, filters, {favorites=[], compare=[]}={})
 export function facetOptions(products, filters, key) {
   const copy={...filters,[key]:'',q:'',page:1};
   if (key==='brands') copy.brands=[];
-  return [...new Set(filterProducts(products,copy).map(p=>p[key==='brands'?'brand':key]).filter(v=>v!==undefined&&v!==null))].sort((a,b)=>String(a).localeCompare(String(b),'ru',{numeric:true}));
+  return [...new Set(filterProducts(products,copy,{sort:false}).map(p=>p[key==='brands'?'brand':key]).filter(v=>v!==undefined&&v!==null))].sort((a,b)=>String(a).localeCompare(String(b),'ru',{numeric:true}));
+}
+export function brandCounts(products, filters){
+  const counts=new Map();
+  for(const p of filterProducts(products,{...filters,brands:[]},{sort:false}))counts.set(p.brand,(counts.get(p.brand)||0)+1);
+  return counts;
+}
+export function paginationPages(current,total){
+  const pages=new Set([1,total]);
+  for(let p=Math.max(1,current-2);p<=Math.min(total,current+2);p++)pages.add(p);
+  const result=[];
+  for(const p of [...pages].sort((a,b)=>a-b)){
+    if(result.length&&p-result[result.length-1]>1)result.push(null);
+    result.push(p);
+  }
+  return result;
 }
 export function cartTotals(lines,products) {
   let total=0;let count=0;const issues=[];

@@ -1,0 +1,15 @@
+{
+  "page_size": 100,
+  "detail_batch_size": 50,
+  "max_pages_per_category": 1000,
+  "max_products": 50000,
+  "request_interval_seconds": 1,
+  "max_api_calls": 4000,
+  "max_duration_seconds": 2100,
+  "warehouse_ids": [],
+  "max_drop_fraction": 0.5,
+  "max_public_bytes": 32000000,
+  "photos_per_run": 100,
+  "photo_cache_bytes": 100000000,
+  "photo_time_seconds": 180
+}

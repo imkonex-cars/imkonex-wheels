@@ -1,8 +1,8 @@
-﻿IMKONEX CARS — полная рабочая область 0.3.0, WORKSPACE-1 + PHOTOS-1
-Всего файлов после применения обновления: 84. Пути от корня GitHub-репозитория.
-Архив IMKONEX_PHOTOS_FIX.zip содержит только добавленные и обновлённые файлы.
-Инструкция обновления: docs/PHOTOS_PC1.txt
+﻿IMKONEX CARS — полная рабочая область 0.3.0
+Всего файлов: 76. Все пути указаны от корня GitHub-репозитория.
+Загрузите содержимое архива с сохранением папок.
 Render: Static Site; Root Directory пусто; Build Command node BUILD_RENDER.mjs; Publish Directory dist.
+dist и node_modules создаются локально/на сервере и в этот список не входят.
 
 .env.example
 .github/workflows/ci.yml
@@ -33,8 +33,6 @@ docs/FOURTOCHKI_CATALOG_CHECK_README.txt
 docs/FOURTOCHKI_CHECK_README.txt
 docs/GITHUB_FULL_PC1.txt
 docs/GITHUB_FULL_README.md
-docs/PHOTOS_PC1.txt
-docs/PRODUCT_PHOTO_SOURCES.json
 docs/RENDER.md
 docs/VALIDATION.md
 docs/VALIDATION_0_2.md
@@ -45,12 +43,6 @@ frontend/app.js
 frontend/assets/favicon.svg
 frontend/assets/imkonex-cars.svg
 frontend/assets/product-unavailable.svg
-frontend/assets/products/2398000.png
-frontend/assets/products/R5019.png
-frontend/assets/products/T429599.png
-frontend/assets/products/WHS118147.jpg
-frontend/assets/products/WHS121894.png
-frontend/assets/products/WHS158820.png
 frontend/assets/products/enkei-pf01-sparkle-silver.png
 frontend/assets/products/enkei-pf05-dark-silver.png
 frontend/assets/products/enkei-rpf1-silver.png

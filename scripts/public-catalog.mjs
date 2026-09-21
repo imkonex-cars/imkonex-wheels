@@ -4,11 +4,33 @@ const keys = (value, allowed) => value && typeof value === 'object' && !Array.is
 const finite = (value, min, max) => typeof value === 'number' && Number.isFinite(value) && value >= min && value <= max;
 const word = value => typeof value === 'string' && value.length > 0 && value.length <= 3000;
 export function validateSnapshot(data) {
-  const top = ['schemaVersion','mode','source','updatedAt','priceBasis','notice','products'];
-  if (!keys(data,top) || data.schemaVersion !== 2 || data.mode !== 'snapshot' || data.source !== '4tochki'
+  const bulk=data?.schemaVersion===3;
+  const top = ['schemaVersion','mode','source','updatedAt','priceBasis','notice','products',...(bulk?['sync']:[])];
+  if (!keys(data,top) || ![2,3].includes(data.schemaVersion) || data.mode !== 'snapshot' || data.source !== '4tochki'
     || data.priceBasis !== 'supplier_retail' || !word(data.notice) || !word(data.updatedAt)
     || !Number.isFinite(Date.parse(data.updatedAt)) || !Array.isArray(data.products)
-    || data.products.length < 2 || data.products.length > 6) throw new Error('Invalid public snapshot');
+    || data.products.length < 2 || data.products.length > (bulk?50000:6)) throw new Error('Invalid public snapshot');
+  if(bulk){
+    const s=data.sync, integer=n=>Number.isInteger(n)&&finite(n,0,50000);
+    if(!keys(s,['complete','scope','startedAt','finishedAt','sourceProducts','publishedProducts','excludedProducts','categories','excludedReasons'])
+      ||s.complete!==true||s.scope!=='available_supported_products'||s.finishedAt!==data.updatedAt
+      ||!word(s.startedAt)||!Number.isFinite(Date.parse(s.startedAt))||Date.parse(s.startedAt)>Date.parse(s.finishedAt)
+      ||![s.sourceProducts,s.publishedProducts,s.excludedProducts].every(integer)
+      ||s.publishedProducts!==data.products.length||s.sourceProducts!==s.publishedProducts+s.excludedProducts
+      ||!keys(s.categories,['tires','wheels'])||!keys(s.excludedReasons,['noRetailOffer','unsupportedParameters'])
+      ||!Object.values(s.excludedReasons).every(integer)
+      ||Object.values(s.excludedReasons).reduce((a,b)=>a+b,0)!==s.excludedProducts)throw new Error('Invalid catalog sync metadata');
+    let scanned=0,published=0,excluded=0;
+    for(const kind of ['tires','wheels']){
+      const c=s.categories[kind];
+      if(!keys(c,['published','excluded','pages','pageBase','scanned'])||![c.published,c.excluded,c.scanned].every(integer)
+        ||!Number.isInteger(c.pages)||!finite(c.pages,0,5000)||![0,1].includes(c.pageBase)
+        ||c.scanned!==c.published+c.excluded||c.published!==data.products.filter(p=>p.kind===kind).length)
+        throw new Error('Invalid catalog category totals');
+      scanned+=c.scanned;published+=c.published;excluded+=c.excluded;
+    }
+    if(scanned!==s.sourceProducts||published!==s.publishedProducts||excluded!==s.excludedProducts)throw new Error('Invalid catalog totals');
+  }
   const ids = new Set(), skus = new Set();
   const common = ['id','sku','kind','brand','model','description','image','isDemo','rank','diameter','offers'];
   const tire = ['width','profile','season','construction','loadIndex','speedIndex','studded','xl','runflat'];
@@ -27,7 +49,7 @@ export function validateSnapshot(data) {
         || !/^\/[a-zA-Z0-9_./-]+\.(png|jpg|jpeg|webp)$/.test(url.pathname)) throw new Error('Invalid public image');
     }
     if (p.kind === 'tires') {
-      if (!finite(p.width,100,500) || !finite(p.profile,15,100) || !['summer','winter'].includes(p.season)
+      if (!finite(p.width,100,500) || !finite(p.profile,15,100) || !(bulk?['summer','winter','unknown']:['summer','winter']).includes(p.season)
         || !['R','ZR'].includes(p.construction) || ![p.loadIndex,p.speedIndex].every(word)
         || typeof p.studded !== 'boolean' || ![null,true,false].includes(p.xl)
         || ![null,true,false].includes(p.runflat)) throw new Error('Invalid tire parameters');

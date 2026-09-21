@@ -6,10 +6,10 @@ import subprocess
 import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
-SOURCE_DIRS = ('backend', 'data', 'deploy', 'docs', 'frontend', 'scripts', 'tests', '.github')
+SOURCE_DIRS = ('backend', 'config', 'data', 'deploy', 'docs', 'frontend', 'scripts', 'tests', '.github')
 ROOT_FILES = ('BUILD_RENDER.mjs', 'package.json', 'package-lock.json', 'requirements.txt',
-              'requirements-dev.txt', 'compose.yaml', 'Dockerfile', 'render.yaml',
-              'render-api.yaml', 'README.md', 'START_HERE_PC1.txt', '.env.example', '.gitignore')
+              'requirements-dev.txt', 'requirements-sync.txt', 'compose.yaml', 'Dockerfile', 'render.yaml',
+              'render-api.yaml', 'README.md', 'START_HERE_PC1.txt', 'SYNC_CATALOG_WORKFLOW.txt', '.env.example', '.gitignore')
 EXCLUDED_DIRS = {'__pycache__', '.pytest_cache', 'node_modules', '.venv', '.check-venv', 'results'}
 
 

@@ -5,7 +5,7 @@ import {JSDOM,VirtualConsole} from 'jsdom';
 import {validateSnapshot} from '../scripts/public-catalog.mjs';
 import {effectiveOffer,filterProducts,cartTotals} from '../frontend/domain.js';
 
-const data=JSON.parse(await readFile(new URL('../data/supplier-snapshot.json',import.meta.url)));
+const data=JSON.parse(await readFile(new URL('./fixtures/public-sample.json',import.meta.url)));
 const product=sku=>data.products.find(p=>p.sku===sku);
 test('public sample preserves six verified retail prices and no assumed delivery days',()=>{
  assert.equal(validateSnapshot(data),data);
