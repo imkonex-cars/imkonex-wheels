@@ -1,4 +1,0 @@
-fastapi==0.141.1
-uvicorn==0.53.0
-psycopg[binary]==3.3.5
-zeep==4.3.3
