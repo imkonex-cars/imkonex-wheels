@@ -26,13 +26,17 @@ BUILD_OK IMKONEX-WHEELS-0.3.0-WORKSPACE-1 | snapshot | 6 products
 
 ## Заголовки и фотографии
 
-Фотографии используют HTTPS-ссылки поставщика. В этой среде их доступность не подтверждена. В render.yaml указана подходящая политика. Для вручную настроенного Static Site простая загрузка YAML не применяет заголовки автоматически. В панели HTTP Headers для пути /* установите один Content-Security-Policy:
+Обновление PHOTOS-1 добавляет шесть оригинальных фотографий поставщика в frontend/assets/products/. Сборка копирует их в dist/assets/products/; браузер загружает фото с домена самого каталога. Для исправления фотографий настройки Render менять не требуется. В журнале появится Photos: 6 local, 0 remote, 0 unavailable., а в /build-info.json — photos.local: 6.
+
+Ссылки img_big_my из исходного отчёта при проверке 21.09.2026 возвращали HTTP 200 с пустым телом. Публичные ссылки img_big_pish из того же отчёта вернули шесть изображений 400×400. Они сохранены без изменения байтов. Источники и SHA256: PRODUCT_PHOTO_SOURCES.json.
+
+В render.yaml уже указана политика, разрешающая собственные ресурсы и внешние фото поставщика. Для вручную настроенного Static Site простая загрузка YAML не применяет заголовки автоматически. Если настраиваете Content-Security-Policy отдельно, используйте один заголовок для пути /*:
 
 ```text
 default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://api-b2b.pwrs.ru https://www.4tochki.ru; connect-src 'self' https://*.onrender.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'
 ```
 
-Если политика уже существует, замените её значение. При ошибке загрузки фото используется нейтральная заглушка. [Заголовки статических сайтов](https://render.com/docs/static-site-headers).
+При ошибке загрузки фото используется нейтральная заглушка. [Заголовки статических сайтов](https://render.com/docs/static-site-headers).
 
 ## Что хранить в репозитории
 

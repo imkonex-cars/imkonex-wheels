@@ -27,6 +27,12 @@ test('complete source entry builds snapshot from any working directory and ignor
     assert.match(result.stdout,/BUILD_OK IMKONEX-WHEELS-0\.3\.0-WORKSPACE-1 \| snapshot \| 6 products/);
     const info=JSON.parse(await readFile(path.join(root,'dist/build-info.json'),'utf8'));
     assert.equal(info.mode,'snapshot');assert.equal(info.products,6);assert.equal(info.tyres,3);assert.equal(info.wheels,3);
+    assert.deepEqual(info.photos,{local:6,remote:0,unavailable:0});
+    const snapshot=JSON.parse(await readFile(path.join(root,'data/supplier-snapshot.json'),'utf8'));
+    for(const product of snapshot.products){
+      assert.match(product.image,/^assets\/products\//);
+      assert.deepEqual(await readFile(path.join(root,'dist',product.image)),await readFile(path.join(root,'frontend',product.image)));
+    }
     const files=await readdir(path.join(root,'dist'));
     assert.ok(!files.includes('old-file.txt')&&!files.includes('backend')&&!files.includes('SOURCE_CODE.zip'));
     assert.doesNotMatch(await readFile(path.join(root,'dist/index.html'),'utf8'),/OLD ROOT DEMO PAGE/);

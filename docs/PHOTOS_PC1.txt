@@ -1,0 +1,49 @@
+﻿IMKONEX CARS — ОБНОВЛЕНИЕ ФОТО PHOTOS-1
+
+Для работающей полной сборки WORKSPACE-1, версия 0.3.0.
+Репозиторий: https://github.com/imkonex-cars/imkonex-union-catalog-mvp
+Ветка: main
+
+1. Распакуйте IMKONEX_PHOTOS_FIX.zip.
+2. Откройте корень репозитория GitHub (ветка main).
+3. Нажмите Add file → Upload files.
+4. Перетащите содержимое архива: папки data, docs, frontend, scripts,
+   tests и файлы README.md, FILES_MANIFEST.txt. Сохраните структуру папок.
+   Папки должны оказаться в корне репозитория; не перетаскивайте
+   внешнюю папку IMKONEX_PHOTOS_FIX и не загружайте сам ZIP.
+   Это обновление: оно добавляет фото и заменяет несколько файлов.
+   Остальные файлы проекта оставьте на месте.
+5. Нажмите Commit changes и сохраните изменения в main.
+6. Откройте Render → imkonex-wheels-demo / ваш сервис каталога.
+   Если автопубликация не началась: Manual Deploy → Deploy latest commit.
+   Build Command: node BUILD_RENDER.mjs
+   Publish Directory: dist
+   Root Directory: пусто
+   Настройки менять не требуется, если они уже такие.
+7. Дождитесь успешной публикации. В логе должна быть строка:
+   Photos: 6 local, 0 remote, 0 unavailable.
+8. Откройте https://imkonex-wheels-demo.onrender.com/ и нажмите Ctrl+F5.
+   Проверьте три шины и три диска.
+
+Проверка после публикации:
+https://imkonex-wheels-demo.onrender.com/build-info.json
+В разделе photos: local = 6, remote = 0, unavailable = 0.
+
+Прямая ссылка на одно из новых фото:
+https://imkonex-wheels-demo.onrender.com/assets/products/WHS121894.png
+Должен появиться чёрный диск Venti 1506 с полированными спицами.
+
+ЧТО ИСПРАВЛЕНО
+В исходной выборке использовались адреса img_big_my. При проверке
+они возвращали HTTP 200 с пустым телом. По публичным адресам
+img_big_pish из того же отчёта скачаны все шесть оригинальных фото.
+Они сохранены в frontend/assets/products/ и публикуются вместе с сайтом.
+Каждое изображение проверено декодированием и визуально, размер 400×400.
+Список источников и SHA256: docs/PRODUCT_PHOTO_SOURCES.json.
+
+Цены, остатки и дата выборки относятся к 17.09.2026.
+Автоматическое обновление ассортимента пока не подключено.
+Повторный экспорт API потребует подготовки фото для нового снимка.
+
+Это архив обновления, а не полный проект для пустого репозитория.
+Изменения на GitHub и Render выполняются при загрузке вами этого архива.

@@ -15,6 +15,11 @@ for(const p of data.products){
  else if(mode!=='snapshot')throw new Error('Demo images must be local');
 }
 const api=process.env.PUBLIC_API_BASE||'';
+const photos={
+ local:data.products.filter(p=>p.image.startsWith('assets/products/')).length,
+ remote:data.products.filter(p=>p.image.startsWith('https://')).length,
+ unavailable:data.products.filter(p=>p.image==='assets/product-unavailable.svg').length,
+};
 if(api&&!/^https:\/\/[a-zA-Z0-9.-]+(?::\d+)?(?:\/[a-zA-Z0-9/_-]*)?$/.test(api))throw new Error('PUBLIC_API_BASE must be an HTTPS API URL');
 const catalogScript=`window.IMKONEX_DATA = ${JSON.stringify(data)};\n`;
 await mkdir(path.join(root,'frontend/data'),{recursive:true});
@@ -27,9 +32,10 @@ try{
  await writeFile(path.join(stage,'build-info.json'),JSON.stringify({
   release:`IMKONEX-WHEELS-${version}-WORKSPACE-1`,version,mode,products:data.products.length,
   tyres:data.products.filter(p=>p.kind==='tires').length,wheels:data.products.filter(p=>p.kind==='wheels').length,
-  dataUpdatedAt:data.updatedAt,builtAt:new Date().toISOString(),
+  dataUpdatedAt:data.updatedAt,builtAt:new Date().toISOString(),photos,
  },null,2)+'\n');
  await rm(path.join(root,'dist'),{recursive:true,force:true});
  await rename(stage,path.join(root,'dist'));
 }finally{await rm(stage,{recursive:true,force:true});}
 console.log(`Built dist: ${data.products.length} products. Mode: ${mode}. No client credentials.`);
+if(mode==='snapshot')console.log(`Photos: ${photos.local} local, ${photos.remote} remote, ${photos.unavailable} unavailable.`);

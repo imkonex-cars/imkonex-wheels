@@ -1,0 +1,86 @@
+{
+  "update": "PHOTOS-1",
+  "verifiedOn": "2026-09-21",
+  "source": "Public img_big_pish URLs from the supplier API report dated 2026-09-17. Original bytes, no image edits.",
+  "catalogDataUpdatedAt": "2026-09-17T19:23:46.280116+00:00",
+  "photos": [
+    {
+      "sku": "R5019",
+      "brand": "Yokohama",
+      "model": "Advan Sport V105S",
+      "file": "frontend/assets/products/R5019.png",
+      "sourceField": "img_big_pish",
+      "sourceUrl": "https://www.4tochki.ru/pictures/tyres/Yokohama/Advan_Sport_V105S/big/0.png",
+      "format": "PNG",
+      "width": 400,
+      "height": 400,
+      "bytes": 124315,
+      "sha256": "55b06950eb40f499955d58214f7aa5f2d81a30e1dcc88a0bf3c302f78c9be55a"
+    },
+    {
+      "sku": "2398000",
+      "brand": "Pirelli",
+      "model": "Winter SottoZero Serie III",
+      "file": "frontend/assets/products/2398000.png",
+      "sourceField": "img_big_pish",
+      "sourceUrl": "https://www.4tochki.ru/pictures/tyres/Pirelli/Winter_SottoZero_Serie_III/big/0.png",
+      "format": "PNG",
+      "width": 400,
+      "height": 400,
+      "bytes": 165228,
+      "sha256": "9865727b82423c3e94d396919554097fc252ce404aec7b9b87253f4dc9ace9fd"
+    },
+    {
+      "sku": "T429599",
+      "brand": "Nokian Tyres",
+      "model": "Nordman RS2 SUV",
+      "file": "frontend/assets/products/T429599.png",
+      "sourceField": "img_big_pish",
+      "sourceUrl": "https://www.4tochki.ru/pictures/tyres/Nokian_Tyres/Nordman_RS2_SUV/big/0.png",
+      "format": "PNG",
+      "width": 400,
+      "height": 400,
+      "bytes": 144367,
+      "sha256": "6cfcb9e35e532b4b1a183bda3aaa16179711d5d3d5612c7b021a19e541079fdf"
+    },
+    {
+      "sku": "WHS118147",
+      "brand": "Tech Line",
+      "model": "534",
+      "file": "frontend/assets/products/WHS118147.jpg",
+      "sourceField": "img_big_pish",
+      "sourceUrl": "https://www.4tochki.ru/pictures/wheels/Tech_Line/534/big/Silver.jpg",
+      "format": "JPEG",
+      "width": 400,
+      "height": 400,
+      "bytes": 38310,
+      "sha256": "0a044277ee2843f5cb3e0cf6f071c10f950514f91c221b5129b96a00e82793e6"
+    },
+    {
+      "sku": "WHS121894",
+      "brand": "Venti",
+      "model": "1506",
+      "file": "frontend/assets/products/WHS121894.png",
+      "sourceField": "img_big_pish",
+      "sourceUrl": "https://www.4tochki.ru/pictures/wheels/Tech_Line/Venti_1506/big/BD.png",
+      "format": "PNG",
+      "width": 400,
+      "height": 400,
+      "bytes": 209428,
+      "sha256": "191951fd64f89bd1a0ed9218447992ec503d1801169fca9881e8da02bdf626ad"
+    },
+    {
+      "sku": "WHS158820",
+      "brand": "Trebl",
+      "model": "8337T",
+      "file": "frontend/assets/products/WHS158820.png",
+      "sourceField": "img_big_pish",
+      "sourceUrl": "https://www.4tochki.ru/pictures/wheels/Trebl/8337T/big/Silver.png",
+      "format": "PNG",
+      "width": 400,
+      "height": 400,
+      "bytes": 153792,
+      "sha256": "6d2b6201c1746a7b2d1036b1efb2c32faf16ca858790b51644e93ba2cb08d311"
+    }
+  ]
+}

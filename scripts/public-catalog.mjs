@@ -19,7 +19,8 @@ export function validateSnapshot(data) {
       || p.isDemo !== false || ![p.sku,p.brand,p.model,p.description,p.image].every(word)
       || !finite(p.diameter,10,30) || !finite(p.rank,0,100)) throw new Error('Invalid public product');
     ids.add(p.id); skus.add(`${p.kind}:${p.sku}`);
-    if (p.image !== 'assets/product-unavailable.svg') {
+    const localPhoto = /^assets\/products\/[a-zA-Z0-9][a-zA-Z0-9_-]*\.(png|jpg|jpeg|webp)$/.test(p.image);
+    if (p.image !== 'assets/product-unavailable.svg' && !localPhoto) {
       const url = new URL(p.image);
       if (url.protocol !== 'https:' || !['api-b2b.pwrs.ru','www.4tochki.ru'].includes(url.hostname)
         || url.username || url.password || url.port || url.search || url.hash

@@ -27,6 +27,11 @@ test('static contract rejects accidentally included private fields or foreign ph
   const copy=structuredClone(data);mutate(copy);assert.throws(()=>validateSnapshot(copy));
  }
 });
+test('local photo paths cannot escape the product assets directory',()=>{
+ for(const image of ['assets/products/../private.png','assets/products/%2e%2e/private.png','/assets/products/R5019.png','assets/products/R5019.png?token=secret','assets/products/R5019.svg','assets/products/nested/R5019.png','assets/products\\R5019.png']){
+  const copy=structuredClone(data);copy.products[0].image=image;assert.throws(()=>validateSnapshot(copy),image);
+ }
+});
 
 async function browser(url='https://catalog.imkonex.test/'){
  const errors=[],vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.message));

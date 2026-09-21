@@ -1,4 +1,4 @@
-// Run after npm run build. Supplier photos load from the supplier over HTTPS.
+// Run after npm run build. Local product photos are embedded in the preview.
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import path from 'node:path';
 const types={'.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png','.jpg':'image/jpeg'};
@@ -20,4 +20,4 @@ html=html.replace('<script type="module" src="./app.js"></script>',()=>`<script 
 await mkdir('artifacts',{recursive:true});
 const file=data.mode==='snapshot'?'IMKONEX_WHEELS_REAL_DATA.html':'IMKONEX_WHEELS_PREVIEW.html';
 await writeFile('artifacts/'+file,html);
-console.log(`Standalone preview generated: ${file}. ${data.mode==='snapshot'?'Supplier photos need an internet connection.':'Local assets embedded.'}`);
+console.log(`Standalone preview generated: ${file}. ${data.products.some(p=>p.image.startsWith('https://'))?'External photos need an internet connection.':'Local assets embedded.'}`);
