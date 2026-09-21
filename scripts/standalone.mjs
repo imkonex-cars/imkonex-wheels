@@ -1,0 +1,23 @@
+// Run after npm run build. Supplier photos load from the supplier over HTTPS.
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import path from 'node:path';
+const types={'.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png','.jpg':'image/jpeg'};
+const uri=async file=>`data:${types[path.extname(file)]};base64,${(await readFile(file)).toString('base64')}`;
+const raw=await readFile('dist/data/catalog.js','utf8');
+const data=JSON.parse(raw.slice(raw.indexOf('=')+1).trim().replace(/;$/,'')),map={};
+for(const file of new Set(['assets/product-unavailable.svg',...data.products.map(p=>p.image).filter(p=>p.startsWith('assets/'))]))map[file]=await uri('dist/'+file);
+let html=await readFile('dist/index.html','utf8');
+const css=await readFile('dist/styles.css','utf8');
+html=html.replace('<link rel="stylesheet" href="./styles.css">',()=>`<style>${css}</style>`);
+for(const file of ['assets/imkonex-cars.svg','assets/favicon.svg'])html=html.replaceAll('./'+file,await uri('dist/'+file));
+const safe=value=>JSON.stringify(value).replaceAll('<','\\u003c');
+const config=await readFile('dist/config.js','utf8');
+html=html.replace('<script src="./config.js"></script>',()=>`<script>${config}\nwindow.IMKONEX_IMAGE_MAP=${safe(map)};</script>`);
+html=html.replace('<script src="./data/catalog.js"></script>',()=>`<script>window.IMKONEX_DATA=${safe(data)};</script>`);
+const domain=(await readFile('dist/domain.js','utf8')).replace(/^export /gm,'');
+const app=(await readFile('dist/app.js','utf8')).replace(/^import .*;\n/,'');
+html=html.replace('<script type="module" src="./app.js"></script>',()=>`<script type="module">${domain}\nconst h=escapeHTML;\n${app}</script>`);
+await mkdir('artifacts',{recursive:true});
+const file=data.mode==='snapshot'?'IMKONEX_WHEELS_REAL_DATA.html':'IMKONEX_WHEELS_PREVIEW.html';
+await writeFile('artifacts/'+file,html);
+console.log(`Standalone preview generated: ${file}. ${data.mode==='snapshot'?'Supplier photos need an internet connection.':'Local assets embedded.'}`);

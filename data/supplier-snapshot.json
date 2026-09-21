@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 2,
+  "mode": "snapshot",
+  "source": "4tochki",
+  "updatedAt": "2026-09-17T19:23:46.280116+00:00",
+  "priceBasis": "supplier_retail",
+  "notice": "Выборка реальных товаров из отчёта API. Цены — розничные цены поставщика на дату проверки. Автообновление и оформление заказа не подключены.",
+  "products": [
+    {
+      "id": "4t-tires-R5019",
+      "sku": "R5019",
+      "kind": "tires",
+      "brand": "Yokohama",
+      "model": "Advan Sport V105S",
+      "description": "235/50ZR17 96Y Advan Sport V105S TL",
+      "image": "https://api-b2b.pwrs.ru/66063/pictures/tyres/Yokohama/Advan_Sport_V105S/src/big_0.png",
+      "isDemo": false,
+      "rank": 100,
+      "diameter": 17,
+      "offers": [
+        {
+          "id": "warehouse-2017",
+          "warehouse": "Челябинск 2",
+          "stock": 1,
+          "price": 14890,
+          "days": null
+        }
+      ],
+      "width": 235,
+      "profile": 50,
+      "season": "summer",
+      "construction": "ZR",
+      "loadIndex": "96",
+      "speedIndex": "Y",
+      "studded": false,
+      "xl": null,
+      "runflat": null
+    },
+    {
+      "id": "4t-tires-2398000",
+      "sku": "2398000",
+      "kind": "tires",
+      "brand": "Pirelli",
+      "model": "Winter SottoZero Serie III",
+      "description": "235/40R18 95V XL Winter SottoZero Serie III MO TL",
+      "image": "https://api-b2b.pwrs.ru/66063/pictures/tyres/Pirelli/Winter_SottoZero_Serie_III/src/big_0.png",
+      "isDemo": false,
+      "rank": 99,
+      "diameter": 18,
+      "offers": [
+        {
+          "id": "warehouse-2017",
+          "warehouse": "Челябинск 2",
+          "stock": 1,
+          "price": 33050,
+          "days": null
+        },
+        {
+          "id": "warehouse-2184",
+          "warehouse": "Домодедово (Кучино)",
+          "stock": 7,
+          "price": 33050,
+          "days": null
+        }
+      ],
+      "width": 235,
+      "profile": 40,
+      "season": "winter",
+      "construction": "R",
+      "loadIndex": "95",
+      "speedIndex": "V",
+      "studded": false,
+      "xl": true,
+      "runflat": null
+    },
+    {
+      "id": "4t-tires-T429599",
+      "sku": "T429599",
+      "kind": "tires",
+      "brand": "Nokian Tyres",
+      "model": "Nordman RS2 SUV",
+      "description": "225/60R18 104R XL Nordman RS2 SUV TL",
+      "image": "https://api-b2b.pwrs.ru/66063/pictures/tyres/Nokian_Tyres/Nordman_RS2_SUV/src/big_0.png",
+      "isDemo": false,
+      "rank": 98,
+      "diameter": 18,
+      "offers": [
+        {
+          "id": "warehouse-2017",
+          "warehouse": "Челябинск 2",
+          "stock": 1,
+          "price": 10130,
+          "days": null
+        }
+      ],
+      "width": 225,
+      "profile": 60,
+      "season": "winter",
+      "construction": "R",
+      "loadIndex": "104",
+      "speedIndex": "R",
+      "studded": false,
+      "xl": true,
+      "runflat": null
+    },
+    {
+      "id": "4t-wheels-WHS118147",
+      "sku": "WHS118147",
+      "kind": "wheels",
+      "brand": "Tech Line",
+      "model": "534",
+      "description": "5,5x15/4x100 ET45 D54,1 534 Silver",
+      "image": "https://api-b2b.pwrs.ru/66063/pictures/wheels/Tech_Line/534/src/big_Silver.jpg",
+      "isDemo": false,
+      "rank": 97,
+      "diameter": 15,
+      "offers": [
+        {
+          "id": "warehouse-2017",
+          "warehouse": "Челябинск 2",
+          "stock": 1,
+          "price": 7650,
+          "days": null
+        }
+      ],
+      "wheelWidth": 5.5,
+      "pcd": "4×100",
+      "et": 45,
+      "dia": 54.1,
+      "color": "Silver",
+      "colorDescription": "светло-серебристый",
+      "type": null
+    },
+    {
+      "id": "4t-wheels-WHS121894",
+      "sku": "WHS121894",
+      "kind": "wheels",
+      "brand": "Venti",
+      "model": "1506",
+      "description": "6x15/4x100 ET45 D54,1 1506 BD",
+      "image": "https://api-b2b.pwrs.ru/66063/pictures/wheels/Tech_Line/Venti_1506/src/big_BD.png",
+      "isDemo": false,
+      "rank": 96,
+      "diameter": 15,
+      "offers": [
+        {
+          "id": "warehouse-2017",
+          "warehouse": "Челябинск 2",
+          "stock": 1,
+          "price": 7660,
+          "days": null
+        },
+        {
+          "id": "warehouse-1431",
+          "warehouse": "Екатеринбург",
+          "stock": 1,
+          "price": 7660,
+          "days": null
+        },
+        {
+          "id": "warehouse-1608",
+          "warehouse": "Уфа 2",
+          "stock": 4,
+          "price": 7660,
+          "days": null
+        },
+        {
+          "id": "warehouse-2184",
+          "warehouse": "Домодедово (Кучино)",
+          "stock": 1,
+          "price": 7660,
+          "days": null
+        }
+      ],
+      "wheelWidth": 6,
+      "pcd": "4×100",
+      "et": 45,
+      "dia": 54.1,
+      "color": "BD",
+      "colorDescription": "черный глянцевый с проточкой по лицевой стороне диска",
+      "type": null
+    },
+    {
+      "id": "4t-wheels-WHS158820",
+      "sku": "WHS158820",
+      "kind": "wheels",
+      "brand": "Trebl",
+      "model": "8337T",
+      "description": "6,5x15/5x160 ET60 D65 8337T Silver",
+      "image": "https://api-b2b.pwrs.ru/66063/pictures/wheels/Trebl/8337T/src/big_Silver.png",
+      "isDemo": false,
+      "rank": 95,
+      "diameter": 15,
+      "offers": [
+        {
+          "id": "warehouse-2017",
+          "warehouse": "Челябинск 2",
+          "stock": 1,
+          "price": 6452,
+          "days": null
+        }
+      ],
+      "wheelWidth": 6.5,
+      "pcd": "5×160",
+      "et": 60,
+      "dia": 65,
+      "color": "Silver",
+      "colorDescription": "серебро",
+      "type": null
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102A43">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="IMKONEX CARS — каталог шин и дисков для проверки подбора. Подбор по размеру, сравнение и расчет комплекта.">
+  <title>Шины и диски — IMKONEX CARS</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к каталогу</a>
+  <header class="site-header">
+    <div class="topbar shell">
+      <a href="#catalog" class="brand" aria-label="IMKONEX CARS — каталог"><img src="./assets/imkonex-cars.svg" width="265" height="39" alt="IMKONEX CARS"></a>
+      <span class="brand-caption">ШИНЫ И ДИСКИ</span>
+      <div class="header-spacer"></div>
+      <button class="header-location" id="city-button"><span data-icon="pin"></span><span id="city-label">Челябинск</span><span data-icon="chevron"></span></button>
+      <a class="header-phone" href="tel:88003013688">8 800 301-36-88<span>Бесплатно по России</span></a>
+    </div>
+    <div class="nav-wrap"><nav class="shell main-nav" aria-label="Главная навигация">
+      <a href="#catalog" data-nav="catalog" class="nav-link active">Каталог</a>
+      <a href="#garage" data-nav="garage" class="nav-link">Мой автомобиль</a>
+      <a href="#guide" data-nav="guide" class="nav-link">Как выбрать</a>
+      <span class="nav-spacer"></span>
+      <a href="#favorites" data-nav="favorites" class="nav-action" aria-label="Избранное"><span data-icon="heart"></span><span class="nav-label">Избранное</span><b id="favorites-count" hidden>0</b></a>
+      <a href="#compare" data-nav="compare" class="nav-action" aria-label="Сравнение"><span data-icon="compare"></span><span class="nav-label">Сравнение</span><b id="compare-count" hidden>0</b></a>
+      <a href="#cart" data-nav="cart" class="nav-action" aria-label="Корзина"><span data-icon="bag"></span><span class="nav-label">Корзина</span><b id="cart-count" hidden>0</b></a>
+    </nav></div>
+  </header>
+  <div class="demo-notice"><div class="shell"><span data-icon="info"></span><span id="catalog-notice">Демоверсия. Характеристики, цены и наличие — тестовые. Покупка недоступна.</span><a href="#manager">Кабинет менеджера <span aria-hidden="true">↗</span></a></div></div>
+  <main id="main" tabindex="-1" class="shell"></main>
+  <footer class="site-footer"><div class="shell footer-inner"><div><img src="./assets/imkonex-cars.svg" width="220" height="32" alt="IMKONEX CARS"><p>Автомобили. Колёса. Ваш следующий маршрут.</p></div><div><a href="https://www.imkonex.com/cars/" target="_blank" rel="noopener">Автомобили IMKONEX ↗</a><a href="#guide">Помощь в подборе</a><a href="#manager">Кабинет менеджера</a></div><div><a href="tel:88003013688">8 800 301-36-88</a><a href="mailto:sales@imkonex.com">sales@imkonex.com</a><p>Челябинск, пр. Ленина, 89, офис 522</p></div></div><div class="shell footer-bottom">© 2026 IMKONEX CARS<span id="footer-notice">Учебные предложения не являются офертой</span></div></footer>
+  <dialog id="dialog" aria-labelledby="dialog-title"><div id="dialog-content"></div></dialog>
+  <div id="toast" role="status" aria-live="polite" class="toast"></div>
+  <noscript><p class="shell">Для интерактивного подбора включите JavaScript в браузере.</p></noscript>
+  <script src="./config.js"></script>
+  <script src="./data/catalog.js"></script>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

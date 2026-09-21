@@ -1,0 +1,39 @@
+﻿IMKONEX CARS — ПОЛНАЯ СБОРКА ДЛЯ GITHUB, 0.3.0
+
+ШАГ 1. РАСПАКОВАТЬ
+Распакуйте IMKONEX_WHEELS_FULL_GITHUB_v0.3.0.zip в отдельную папку.
+Внутри 8 файлов. Вложенный SOURCE_CODE.zip распаковывать не нужно.
+
+ШАГ 2. ЗАГРУЗИТЬ
+Откройте репозиторий, подключённый к Render:
+https://github.com/imkonex-cars/svgimkonex-union-catalog-mvp
+Выберите ту же ветку, которая указана в Render → Settings → Branch.
+Сохраните предыдущую копию: Code → Download ZIP.
+В корне репозитория: Add file → Upload files → choose your files.
+Выберите ВСЕ 8 файлов из распакованной папки. Нажмите Commit changes.
+Папки перетаскивать не нужно. index.html и BUILD_RENDER.mjs должны быть
+видны в корне GitHub рядом с package.json.
+
+ШАГ 3. НАСТРОИТЬ RENDER
+Откройте imkonex-wheels-demo → Settings:
+Root Directory: оставить пустым.
+Build Command: node BUILD_RENDER.mjs
+Publish Directory: dist
+NODE_VERSION: 22.
+Для этой сборки не нужны пароль API или переменные режима каталога.
+Нажмите Save Changes.
+
+ШАГ 4. ОПУБЛИКОВАТЬ
+Manual Deploy → Clear build cache & deploy.
+В конце журнала должно появиться:
+BUILD_OK IMKONEX-WHEELS-0.3.0-FULL-1 | snapshot | 6 products
+
+ШАГ 5. ПРОВЕРИТЬ
+Откройте https://imkonex-wheels-demo.onrender.com/ и нажмите Ctrl+F5.
+Вверху: «Реальная выборка · 6 товаров».
+Внизу: «Сборка 0.3.0».
+Сведения о версии: https://imkonex-wheels-demo.onrender.com/build-info.json
+
+Это полная сборка приложения с выборкой из 3 шин и 3 дисков.
+Цены и остатки — из отчёта 17.09.2026. Автообновление пока не подключено.
+Если фотографии не появились, настройки заголовка описаны в README.md.

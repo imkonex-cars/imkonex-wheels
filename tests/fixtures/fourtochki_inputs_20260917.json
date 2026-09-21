@@ -1,0 +1,717 @@
+{
+  "GetWarehouses": {
+    "type": "{Wcf.ClientService.Client.WebAPI.TS3}GetWarehouses",
+    "fields": [
+      {
+        "name": "login",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "password",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "addressId",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}int"
+      }
+    ]
+  },
+  "GetFindTyre": {
+    "type": "{Wcf.ClientService.Client.WebAPI.TS3}GetFindTyre",
+    "fields": [
+      {
+        "name": "login",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "password",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "filter",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://schemas.datacontract.org/2004/07/TS3.Domain.Models.Client.ClientSoapService.SearchTires}FindTyreFilter",
+        "fields": [
+          {
+            "name": "brand_list",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+            "fields": [
+              {
+                "name": "string",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": true,
+                "type": "{http://www.w3.org/2001/XMLSchema}string"
+              }
+            ]
+          },
+          {
+            "name": "code_list",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+            "fields": [
+              {
+                "name": "string",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": true,
+                "type": "{http://www.w3.org/2001/XMLSchema}string"
+              }
+            ]
+          },
+          {
+            "name": "diameter_max",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}decimal"
+          },
+          {
+            "name": "diameter_min",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}decimal"
+          },
+          {
+            "name": "diameter_out_max",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}decimal"
+          },
+          {
+            "name": "diameter_out_min",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}decimal"
+          },
+          {
+            "name": "height_max",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}decimal"
+          },
+          {
+            "name": "height_min",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}decimal"
+          },
+          {
+            "name": "load_index",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+            "fields": [
+              {
+                "name": "string",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": true,
+                "type": "{http://www.w3.org/2001/XMLSchema}string"
+              }
+            ]
+          },
+          {
+            "name": "model_list",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+            "fields": [
+              {
+                "name": "string",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": true,
+                "type": "{http://www.w3.org/2001/XMLSchema}string"
+              }
+            ]
+          },
+          {
+            "name": "quality",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": false,
+            "type": "{http://www.w3.org/2001/XMLSchema}int"
+          },
+          {
+            "name": "reinforced",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}boolean"
+          },
+          {
+            "name": "runflat",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}boolean"
+          },
+          {
+            "name": "season_list",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+            "fields": [
+              {
+                "name": "string",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": true,
+                "type": "{http://www.w3.org/2001/XMLSchema}string"
+              }
+            ]
+          },
+          {
+            "name": "sort",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}int"
+          },
+          {
+            "name": "speed_index",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+            "fields": [
+              {
+                "name": "string",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": true,
+                "type": "{http://www.w3.org/2001/XMLSchema}string"
+              }
+            ]
+          },
+          {
+            "name": "thorn",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}boolean"
+          },
+          {
+            "name": "type_list",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+            "fields": [
+              {
+                "name": "string",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": true,
+                "type": "{http://www.w3.org/2001/XMLSchema}string"
+              }
+            ]
+          },
+          {
+            "name": "width_max",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}decimal"
+          },
+          {
+            "name": "width_min",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}decimal"
+          },
+          {
+            "name": "wrh_list",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfint",
+            "fields": [
+              {
+                "name": "int",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": false,
+                "type": "{http://www.w3.org/2001/XMLSchema}int"
+              }
+            ]
+          },
+          {
+            "name": "include_paid_delivery",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}boolean"
+          },
+          {
+            "name": "axis_apply",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+            "fields": [
+              {
+                "name": "string",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": true,
+                "type": "{http://www.w3.org/2001/XMLSchema}string"
+              }
+            ]
+          },
+          {
+            "name": "sloy_list",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfint",
+            "fields": [
+              {
+                "name": "int",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": false,
+                "type": "{http://www.w3.org/2001/XMLSchema}int"
+              }
+            ]
+          },
+          {
+            "name": "retread",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}boolean"
+          },
+          {
+            "name": "address_id",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}int"
+          }
+        ]
+      },
+      {
+        "name": "page",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": false,
+        "type": "{http://www.w3.org/2001/XMLSchema}int"
+      },
+      {
+        "name": "pageSize",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}int"
+      }
+    ]
+  },
+  "GetFindDisk": {
+    "type": "{Wcf.ClientService.Client.WebAPI.TS3}GetFindDisk",
+    "fields": [
+      {
+        "name": "login",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "password",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "filter",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://schemas.datacontract.org/2004/07/TS3.Domain.Models.Client.ClientSoapService.SearchDiscs}FindDiskFilter",
+        "fields": [
+          {
+            "name": "bolts_count_max",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": false,
+            "type": "{http://www.w3.org/2001/XMLSchema}int"
+          },
+          {
+            "name": "bolts_count_min",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": false,
+            "type": "{http://www.w3.org/2001/XMLSchema}int"
+          },
+          {
+            "name": "bolts_spacing_max",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": false,
+            "type": "{http://www.w3.org/2001/XMLSchema}decimal"
+          },
+          {
+            "name": "bolts_spacing_min",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": false,
+            "type": "{http://www.w3.org/2001/XMLSchema}decimal"
+          },
+          {
+            "name": "brand_list",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+            "fields": [
+              {
+                "name": "string",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": true,
+                "type": "{http://www.w3.org/2001/XMLSchema}string"
+              }
+            ]
+          },
+          {
+            "name": "code_list",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+            "fields": [
+              {
+                "name": "string",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": true,
+                "type": "{http://www.w3.org/2001/XMLSchema}string"
+              }
+            ]
+          },
+          {
+            "name": "color_list",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+            "fields": [
+              {
+                "name": "string",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": true,
+                "type": "{http://www.w3.org/2001/XMLSchema}string"
+              }
+            ]
+          },
+          {
+            "name": "dia_max",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": false,
+            "type": "{http://www.w3.org/2001/XMLSchema}decimal"
+          },
+          {
+            "name": "dia_min",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": false,
+            "type": "{http://www.w3.org/2001/XMLSchema}decimal"
+          },
+          {
+            "name": "diameter_max",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": false,
+            "type": "{http://www.w3.org/2001/XMLSchema}int"
+          },
+          {
+            "name": "diameter_min",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": false,
+            "type": "{http://www.w3.org/2001/XMLSchema}int"
+          },
+          {
+            "name": "et_max",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": false,
+            "type": "{http://www.w3.org/2001/XMLSchema}decimal"
+          },
+          {
+            "name": "et_min",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": false,
+            "type": "{http://www.w3.org/2001/XMLSchema}decimal"
+          },
+          {
+            "name": "model_list",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+            "fields": [
+              {
+                "name": "string",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": true,
+                "type": "{http://www.w3.org/2001/XMLSchema}string"
+              }
+            ]
+          },
+          {
+            "name": "rim_vid_name_list",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+            "fields": [
+              {
+                "name": "string",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": true,
+                "type": "{http://www.w3.org/2001/XMLSchema}string"
+              }
+            ]
+          },
+          {
+            "name": "sort",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}int"
+          },
+          {
+            "name": "type_list",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfint",
+            "fields": [
+              {
+                "name": "int",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": false,
+                "type": "{http://www.w3.org/2001/XMLSchema}int"
+              }
+            ]
+          },
+          {
+            "name": "width_max",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": false,
+            "type": "{http://www.w3.org/2001/XMLSchema}decimal"
+          },
+          {
+            "name": "width_min",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": false,
+            "type": "{http://www.w3.org/2001/XMLSchema}decimal"
+          },
+          {
+            "name": "wrh_list",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfint",
+            "fields": [
+              {
+                "name": "int",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": false,
+                "type": "{http://www.w3.org/2001/XMLSchema}int"
+              }
+            ]
+          },
+          {
+            "name": "include_paid_delivery",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}boolean"
+          },
+          {
+            "name": "address_id",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}int"
+          }
+        ]
+      },
+      {
+        "name": "page",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": false,
+        "type": "{http://www.w3.org/2001/XMLSchema}int"
+      },
+      {
+        "name": "pageSize",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}int"
+      }
+    ]
+  },
+  "GetGoodsInfo": {
+    "type": "{Wcf.ClientService.Client.WebAPI.TS3}GetGoodsInfo",
+    "fields": [
+      {
+        "name": "login",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "password",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "code_list",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+        "fields": [
+          {
+            "name": "string",
+            "minOccurs": 0,
+            "maxOccurs": "unbounded",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}string"
+          }
+        ]
+      }
+    ]
+  },
+  "GetGoodsPriceRestByCode": {
+    "type": "{Wcf.ClientService.Client.WebAPI.TS3}GetGoodsPriceRestByCode",
+    "fields": [
+      {
+        "name": "login",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "password",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "filter",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://schemas.datacontract.org/2004/07/TS3.Domain.Models.Client.ClientSoapService.SearchProductsAndPricesInfo}GoodsPriceRestFilter",
+        "fields": [
+          {
+            "name": "code_list",
+            "minOccurs": 1,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+            "fields": [
+              {
+                "name": "string",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": true,
+                "type": "{http://www.w3.org/2001/XMLSchema}string"
+              }
+            ]
+          },
+          {
+            "name": "wrh_list",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfint",
+            "fields": [
+              {
+                "name": "int",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": false,
+                "type": "{http://www.w3.org/2001/XMLSchema}int"
+              }
+            ]
+          },
+          {
+            "name": "include_paid_delivery",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}boolean"
+          },
+          {
+            "name": "user_address_id",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}int"
+          },
+          {
+            "name": "searchCodeByOccurence",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}boolean"
+          }
+        ]
+      }
+    ]
+  }
+}
