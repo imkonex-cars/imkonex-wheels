@@ -17,7 +17,7 @@ class Supplier:
     def __init__(self):
         self.cost=4567.89; self.stock=20; self.created=[]; self.failure=None; self.fitment_calls=[]
     def purchase(self,codes):
-        return [{'sku':c,'warehouseId':2017,'purchasePrice':self.cost,'stock':self.stock} for c in codes]
+        return [{'sku':c,'warehouseId':2017,'purchasePrice':self.cost,'supplierRetailPrice':8000,'stock':self.stock} for c in codes]
     def fitment(self,stage,p):
         self.fitment_calls.append((stage,p))
         return ['R5019','UNKNOWN'] if stage=='products' else ['Toyota']
@@ -189,6 +189,7 @@ def test_background_markup_refresh_updates_private_costs_only(env):
     app,c,s,path=env;login(c)
     c.put('/api/manager/prices/4t-tires-R5019',json={'mode':'markup','percent':10,'minimum':0})
     s.cost=7000
+    with app.state.store.connect() as con:con.execute('UPDATE purchase SET updated=?',(time.time()-21601,))
     class Stop:
         def is_set(self):return False
         def wait(self,timeout):return False
@@ -197,7 +198,7 @@ def test_background_markup_refresh_updates_private_costs_only(env):
     refresh_markups(app.state.store,s,products,Stop(),lambda:refreshed.append(True))
     assert app.state.store.costs()[('R5019',2017)]['cost']==7000
     assert refreshed==[True]
-    assert all(k[0]=='R5019' for k in app.state.store.costs())
+    assert {k[0] for k in app.state.store.costs()}=={p['sku'] for p in products.values()}
 
 def test_vehicle_requests_match_previously_observed_supplier_wsdl():
     from zeep import xsd

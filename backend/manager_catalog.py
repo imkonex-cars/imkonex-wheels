@@ -30,3 +30,9 @@ def search(products, *, q='',kind='',brand='',season='',width='',profile='',diam
         offers=[o for o in p['offers'] if o['stock']>=min_stock and (ids is None or int(o['id'].removeprefix('warehouse-')) in ids)]
         if offers:out.append({**p,'offers':offers})
     return out
+
+VALUES={'tyreType':None,'axle':'Ось установки','camera':'Камерность','protector':'Тип протектора','layers':'Количество слоёв протектора','loadIndex':None,'speedIndex':None,'construction':'Конструкция','sae':'Вязкость SAE','acea':'ACEA','api':'API','composition':'Состав','fuel':'Тип топлива','apply':'Применение','volume':'Объём, л','subtype':'Тип','wheelWidth':None,'et':None,'dia':None}
+def facet_value(p,k):
+    if p.get(k) is not None:return p[k]
+    label=VALUES.get(k)
+    return next((a['value'] for a in p.get('attributes',[]) if a['label']==label),None) if label else None

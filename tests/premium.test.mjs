@@ -1,3 +1,4 @@
+import {browserBundle} from './browser-bundle.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -12,11 +13,7 @@ async function open({manager=false,data=sample,fetch}={}){
  w.scrollTo=()=>{};w.HTMLElement.prototype.scrollIntoView=()=>{};
  w.HTMLDialogElement.prototype.showModal=function(){this.setAttribute('open','');};
  w.HTMLDialogElement.prototype.close=function(){this.removeAttribute('open');this.dispatchEvent(new w.Event('close'));};
- const domain=(await readFile(new URL('../frontend/domain.js',import.meta.url),'utf8')).replace(/^export /gm,'');
- const shared=(await readFile(new URL('../frontend/share.js',import.meta.url),'utf8')).replace(/^import .*;\n/gm,'').replace(/^export /gm,'');
- const pricing=(await readFile(new URL('../frontend/manager/pricing.js',import.meta.url),'utf8')).replace(/^export /gm,'');
- const app=(await readFile(new URL('../frontend/'+(manager?'manager/manager.js':'app.js'),import.meta.url),'utf8')).replace(/^import .*;\n/gm,'');
- await w.eval('(async()=>{'+domain+'\nconst h=escapeHTML;\n'+shared+'\n'+pricing+'\n'+app+'\n})()');
+ await w.eval(await browserBundle(manager?'manager/manager.js':'app.js'));
  const $=s=>w.document.querySelector(s),tick=()=>new Promise(r=>w.setTimeout(r,20));
  return {dom,w,errors,$,tick,click:async s=>{$(s).click();await tick();},change:async(s,v)=>{$(s).value=v;$(s).dispatchEvent(new w.Event('change',{bubbles:true}));await tick();},submit:async s=>{$(s).dispatchEvent(new w.Event('submit',{bubbles:true,cancelable:true}));await tick();}};
 }
@@ -47,10 +44,10 @@ test('vehicle API failure keeps a visible recoverable error',async()=>{
  }finally{b.dom.window.close();}
 });
 
-test('category controls appear only for actual explicit data',async()=>{
+test('sections remain visible and filter only explicit supplier categories',async()=>{
  const data=structuredClone(sample);data.products[0].vehicleCategory='truck';data.products[1].vehicleCategory='moto';
  const b=await open({data,fetch:async()=>ok({})});try{
-  assert.ok(b.$('[data-category="truck"]'));assert.ok(b.$('[data-category="moto"]'));assert.equal(b.$('[data-category="special"]'),null);
+  assert.ok(b.$('[data-category="truck"]'));assert.ok(b.$('[data-category="moto"]'));assert.ok(b.$('[data-category="special"]'));
   await b.click('[data-category="truck"]');assert.equal(b.w.document.querySelectorAll('.product-card').length,1);
   assert.ok(b.$('.product-card [data-id="4t-tires-R5019"]'));
  }finally{b.dom.window.close();}

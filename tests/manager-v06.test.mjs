@@ -1,3 +1,4 @@
+import {browserBundle} from './browser-bundle.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -6,10 +7,10 @@ import {calculatePrice} from '../frontend/manager/pricing.js';
 import {selectionText} from '../frontend/share.js';
 
 test('bidirectional price, percent and rubles use purchase as markup denominator',()=>{
- const a=calculatePrice(5000,'percent',12,4);assert.deepEqual(a,{sale:5600,profit:600,percent:12,margin:10.71,total:22400,profitTotal:2400});
+ const a=calculatePrice(5000,'percent',12,4);assert.deepEqual(a,{sale:5600,profit:600,floorApplied:false,minimum:5100,percent:12,margin:10.71,total:22400,profitTotal:2400});
  assert.deepEqual(calculatePrice(5000,'profit',600,4),a);assert.deepEqual(calculatePrice(5000,'price',5600,4),a);
  assert.equal(calculatePrice(4567.89,'percent',10).sale,5024.68);
- assert.equal(calculatePrice(5000,'price',4900).profit,-100);
+ assert.equal(calculatePrice(5000,'price',4900).profit,100);
  assert.equal(calculatePrice(0,'percent',15),null);assert.equal(calculatePrice(5000,'price',NaN),null);
 });
 
@@ -33,10 +34,8 @@ test('manager edits all three price fields and sends only selected product IDs a
   else if(url==='/api/selections')data={url:'/s/testtoken',total:24800,lines:[{name:'Test Touring',description:'205/55 R16',sku:'TEST',quantity:4,price:6200,subtotal:24800}]};
   else throw Error(url);
   return {ok:true,json:async()=>data};};
- const files=['domain.js','share.js','manager/pricing.js','manager/manager.js'];let code='';
- for(const file of files)code+=(file==='manager/manager.js'?'const h=escapeHTML;\n':'')+(await readFile(new URL('../frontend/'+file,import.meta.url),'utf8')).replace(/^import .*;\n/gm,'').replace(/^export /gm,'')+'\n';
  try{
-  await w.eval('(async()=>{'+code+'})()');
+  await w.eval(await browserBundle('manager/manager.js'));
   const $=s=>w.document.querySelector(s),tick=()=>new Promise(r=>setTimeout(r,15)),click=async s=>{$(s).click();await tick();};
   const input=(selector,value)=>{const node=$(selector);node.value=String(value);node.dispatchEvent(new w.Event('input',{bubbles:true}));};
   await click('[data-tab="products"]');assert.ok($('.thumb-button img'));assert.match($('.warehouse-pill').getAttribute('style'),/#9ACD32/);

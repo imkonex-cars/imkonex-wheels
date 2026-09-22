@@ -1,3 +1,4 @@
+import {withLoading} from './loading.js';
 import {money} from './domain.js';
 export function selectionText(selection,url){
   return ['IMKONEX CARS · Ваш подбор','',...selection.lines.map((l,i)=>`${i+1}. ${l.name}\n${l.description}\nАртикул: ${l.sku}\n${l.quantity} шт. × ${money(l.price)} = ${money(l.subtotal)}`),
@@ -9,7 +10,7 @@ export async function copyText(text){
   const ok=document.execCommand('copy');el.remove();if(!ok)throw new Error('Выделите и скопируйте текст вручную.');
 }
 export async function createSelection(lines){
-  const r=await fetch('/api/selections',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lines}),signal:AbortSignal.timeout(20000)});
+  const r=await withLoading(()=>fetch('/api/selections',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lines}),signal:AbortSignal.timeout(90000)}));
   if(!r.ok)throw new Error(r.status===409?'Наличие изменилось. Обновите каталог и количество.':'Не удалось сохранить подборку. Повторите позже.');
   return r.json();
 }

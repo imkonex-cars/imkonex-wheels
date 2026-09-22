@@ -26,6 +26,10 @@ class Store:
               CREATE TABLE IF NOT EXISTS offer_prices(product_id TEXT NOT NULL, warehouse INTEGER NOT NULL,
                 rule TEXT NOT NULL, updated REAL NOT NULL, PRIMARY KEY(product_id,warehouse));
               CREATE TABLE IF NOT EXISTS selections(token TEXT PRIMARY KEY,payload TEXT NOT NULL,expires REAL NOT NULL);
+              CREATE TABLE IF NOT EXISTS checkout_quotes(token TEXT PRIMARY KEY,payload TEXT NOT NULL,expires REAL NOT NULL);
+              CREATE TABLE IF NOT EXISTS customer_orders(id TEXT PRIMARY KEY, token_hash TEXT UNIQUE NOT NULL,
+                request_key TEXT UNIQUE NOT NULL, quote_id TEXT UNIQUE NOT NULL, payload TEXT NOT NULL, created REAL NOT NULL);
+
             ''')
             columns={r['name'] for r in con.execute('PRAGMA table_info(purchase)')}
             if 'retail' not in columns: con.execute('ALTER TABLE purchase ADD COLUMN retail REAL')
@@ -158,3 +162,48 @@ class Store:
         with self.connect() as con:
             result = con.execute("UPDATE orders SET status='submitting',updated=? WHERE id=? AND status='draft'", (time.time(),id))
             return result.rowcount == 1
+
+    def save_checkout_quote(self,payload):
+        token=secrets.token_urlsafe(24)
+        with self.connect() as con:
+            con.execute('DELETE FROM checkout_quotes WHERE expires < ?',(time.time(),))
+            con.execute('INSERT INTO checkout_quotes VALUES (?,?,?)',(token,json.dumps(payload),time.time()+600))
+        return token
+
+    def checkout_quote(self,token):
+        with self.connect() as con:row=con.execute('SELECT payload FROM checkout_quotes WHERE token=? AND expires>?',(token,time.time())).fetchone()
+        return json.loads(row['payload']) if row else None
+
+    def customer_by_key(self,key):
+        with self.connect() as con:row=con.execute('SELECT payload FROM customer_orders WHERE request_key=?',(key,)).fetchone()
+        return json.loads(row['payload']) if row else None
+
+    def customer_by_token(self,token):
+        digest=hashlib.sha256(token.encode()).hexdigest()
+        with self.connect() as con:row=con.execute('SELECT payload FROM customer_orders WHERE token_hash=?',(digest,)).fetchone()
+        return json.loads(row['payload']) if row else None
+
+    def save_customer_order(self,payload):
+        with self.connect() as con:
+            con.execute('BEGIN IMMEDIATE')
+            row=con.execute('SELECT payload FROM customer_orders WHERE request_key=? OR quote_id=?',(payload['_key'],payload['_quote'])).fetchone()
+            if row:return json.loads(row['payload'])
+            con.execute('INSERT INTO customer_orders VALUES (?,?,?,?,?,?)',(payload['id'],hashlib.sha256(payload['_token'].encode()).hexdigest(),payload['_key'],payload['_quote'],json.dumps(payload),payload['createdAt']))
+        return payload
+
+    def customer_orders(self):
+        with self.connect() as con:rows=con.execute('SELECT payload FROM customer_orders ORDER BY created DESC LIMIT 200').fetchall()
+        return [json.loads(r['payload']) for r in rows]
+
+    def change_customer_status(self,id,status,note,updated,transitions):
+        with self.connect() as con:
+            con.execute('BEGIN IMMEDIATE')
+            row=con.execute('SELECT payload FROM customer_orders WHERE id=?',(id,)).fetchone()
+            if not row:return 'missing'
+            p=json.loads(row['payload'])
+            if p['updatedAt']!=updated:return 'conflict'
+            if status not in transitions[p['status']]:return 'transition'
+            p.update(status=status,updatedAt=time.time())
+            p['history'].append({'status':status,'at':p['updatedAt'],'note':note})
+            con.execute('UPDATE customer_orders SET payload=? WHERE id=?',(json.dumps(p),id))
+        return 'ok'

@@ -1,3 +1,4 @@
+import {valueFor, advancedKeys, matchesAxle} from './search-model.js';
 const rubFormatter = new Intl.NumberFormat('ru-RU', {maximumFractionDigits: 2});
 export const money = value => rubFormatter.format(Number(value) || 0) + ' ₽';
 export const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -22,12 +23,14 @@ export function filterProducts(products, filters, {favorites=[], compare=[], sor
   const q=normalize(filters.q);
   const found=products.filter(p => {
     if (filters.kind && p.kind!==filters.kind) return false;
-    if(filters.category&&p.vehicleCategory!==filters.category)return false;
+    if(filters.category&&valueFor(p,'category')!==filters.category)return false;
     if(filters.vehicleIds&&!filters.vehicleIds.has(p.id))return false;
     const commonSize=p.kind==='tires'?`${p.width}/${p.profile} R${p.diameter}`:'';
     if (q && !normalize([p.brand,p.model,formatSize(p),commonSize,p.sku,p.pcd].join(' ')).includes(q)) return false;
-    for (const key of ['width','profile','diameter','season','pcd','wheelWidth','et','dia','type']) {
-      if (filters[key] && String(p[key])!==String(filters[key])) return false;
+    if(filters.staggered && p.kind==='tires' && !matchesAxle(p,filters,'front') && !matchesAxle(p,filters,'rear'))return false;
+    for (const key of ['width','profile','diameter','season','pcd','wheelWidth','et','dia','type',...advancedKeys]) {
+      if(filters.staggered&&['width','profile','diameter'].includes(key))continue;
+      if (filters[key] && String(valueFor(p,key))!==String(filters[key])) return false;
     }
     if (filters.brands?.length && !filters.brands.includes(p.brand)) return false;
     if (filters.studded && !p.studded) return false;
@@ -35,7 +38,9 @@ export function filterProducts(products, filters, {favorites=[], compare=[], sor
     if (filters.xl && !p.xl) return false;
     if (filters.onlyFavorites && !favorites.includes(p.id)) return false;
     if (filters.onlyCompare && !compare.includes(p.id)) return false;
-    const offer = effectiveOffer(p, filters.inSet ? 4 : 1);
+    const requested=filters.staggered?2:Number(filters.minStock)|| (filters.inSet?4:1);
+    const offer = effectiveOffer(p, requested);
+    if((filters.staggered||Number(filters.minStock)>0)&&!offer)return false;
     if (filters.inSet && !offer) return false;
     if (filters.fast && (!offer || offer.days==null || offer.days>3)) return false;
     const price=offer?.price ?? Infinity;
@@ -45,7 +50,7 @@ export function filterProducts(products, filters, {favorites=[], compare=[], sor
   });
   if(!sort)return found;
   return found.sort((a,b)=>{
-    const quantity=filters.inSet?4:1, ao=effectiveOffer(a,quantity), bo=effectiveOffer(b,quantity);
+    const quantity=filters.staggered?2:Number(filters.minStock)||(filters.inSet?4:1), ao=effectiveOffer(a,quantity), bo=effectiveOffer(b,quantity);
     const ap=ao?.price ?? Infinity, bp=bo?.price ?? Infinity;
     if(filters.sort==='price-up')return ap-bp;
     if(filters.sort==='price-down')return !ao?1:!bo?-1:bp-ap;
@@ -56,7 +61,7 @@ export function filterProducts(products, filters, {favorites=[], compare=[], sor
 export function facetOptions(products, filters, key) {
   const copy={...filters,[key]:'',q:'',page:1};
   if (key==='brands') copy.brands=[];
-  return [...new Set(filterProducts(products,copy,{sort:false}).map(p=>p[key==='brands'?'brand':key]).filter(v=>v!==undefined&&v!==null))].sort((a,b)=>String(a).localeCompare(String(b),'ru',{numeric:true}));
+  return [...new Set(filterProducts(products,copy,{sort:false}).map(p=>valueFor(p,key==='brands'?'brand':key)).filter(v=>v!==undefined&&v!==null))].sort((a,b)=>String(a).localeCompare(String(b),'ru',{numeric:true}));
 }
 export function brandCounts(products, filters){
   const counts=new Map();
@@ -88,8 +93,8 @@ export function cartTotals(lines,products) {
 export function fitmentMessage() {return 'Применимость не подтверждена. Нужна проверка параметров автомобиля.';}
 export function parseFilters(search='') {
  const p=new URLSearchParams(search); const f={kind:['wheels','tubes','sensors','consumables','oils'].includes(p.get('kind'))?p.get('kind'):'tires',sort:p.get('sort')||'recommended',brands:p.getAll('brand')};
- for(const k of ['q','category','width','profile','diameter','season','pcd','wheelWidth','et','dia','min','max','type']) f[k]=p.get(k)||'';
- for(const k of ['inSet','fast','studded','runflat','xl'])f[k]=p.get(k)==='1';
+ for(const k of ['q','category','width','profile','diameter','season','pcd','wheelWidth','et','dia','min','max','type','rearWidth','rearProfile','rearDiameter','minStock',...advancedKeys]) f[k]=p.get(k)||'';
+ for(const k of ['inSet','fast','studded','runflat','xl','staggered','sameModel'])f[k]=p.get(k)==='1';
  return f;
 }
 export function serializeFilters(f) {

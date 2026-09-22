@@ -1,4 +1,4 @@
-"""Same-origin storefront and authenticated manager portal, version 0.6.0."""
+"""Same-origin storefront and authenticated manager portal, version 0.7.0."""
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
 from decimal import Decimal, ROUND_CEILING, ROUND_HALF_UP
@@ -36,7 +36,7 @@ class Login(Input):
 
 
 class Rule(Input):
-    mode: Literal['supplier', 'fixed', 'markup', 'profit']
+    mode: Literal['supplier', 'fixed', 'markup', 'profit', 'discount']
     price: float = Field(default=0, ge=0, le=100000000)
     percent: float = Field(default=0, ge=0, le=1000)
     minimum: float = Field(default=0, ge=0, le=1000000)
@@ -89,21 +89,11 @@ def warehouse_id(offer):
         raise HTTPException(409, 'warehouse_mapping_unavailable') from None
 
 
-def sale_price(offer, rule, cost, now=None):
-    fresh=cost and (now if now is not None else time.time())-cost['updated']<=86400
-    if not rule or rule['mode']=='supplier':
-        return cost['retail'] if fresh and cost.get('retail') and cost['retail']>0 else offer['price']
-    if rule['mode']=='fixed':return rule['price']
-    if not fresh or cost['cost']<=0:return None
-    base=Decimal(str(cost['cost']))
-    gain=Decimal(str(rule['amount'])) if rule['mode']=='profit' else max(base*Decimal(str(rule['percent']))/100,Decimal(str(rule['minimum'])))
-    step=Decimal(str(rule.get('roundTo',10)))
-    result=((base+gain)/step).quantize(Decimal('1'),rounding=ROUND_CEILING if step==10 else ROUND_HALF_UP)*step
-    return float(result) if 0<result<=100000000 else None
+from .pricing import sale_price, price_result, policy_for, category, CATEGORIES, fresh_cost
 
 
 def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None, local=False):
-    app = FastAPI(title='IMKONEX', version='0.6.0', docs_url=None, redoc_url=None, openapi_url=None)
+    app = FastAPI(title='IMKONEX', version='0.7.0', docs_url=None, redoc_url=None, openapi_url=None)
     app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=5)
     store = Store(db_path or os.getenv('MANAGER_DB_PATH', str(ROOT/'runtime/manager.sqlite3')))
     api = supplier or PortalSupplier()
@@ -119,7 +109,7 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
     lock = threading.RLock()
     fitment_cache = {}
     details_cache = {}
-    rendered = {'data': None, 'until': 0}
+    rendered = {'data': None, 'until': 0, 'generation':0}
     app.state.store, app.state.supplier = store, api
     from .site_shell import SiteShell, ORIGINS
     from .manager_catalog import search, fallback_warehouse
@@ -129,7 +119,10 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
     app.state.site_shell=site_shell
 
     def all_rules():return store.rules(),store.offer_rules()
-    def chosen_rule(p,wid,rules,offer_rules):return offer_rules.get((p['id'],wid),rules.get(p['id']))
+    def chosen_rule(p,wid,rules,offer_rules):
+        return offer_rules.get((p['id'],wid),rules.get(p['id'],policy_for(p,policies)))
+
+    policies=store.setting('category_pricing',{})
 
     base_warehouses={}
     for p in catalog['products']:
@@ -175,6 +168,7 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
     def invalidate():
         with lock:
             rendered['until'] = 0
+            rendered['generation'] += 1
 
     @asynccontextmanager
     async def lifespan(app):
@@ -191,6 +185,7 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
         with lock:
             if rendered['until'] > time.time():
                 return rendered['data']
+            generation=rendered['generation']
         rules, offer_rules = all_rules()
         costs=store.costs()
         products = []
@@ -204,10 +199,10 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
                 price = sale_price(o, chosen_rule(p,wid,rules,offer_rules), cost)
                 if price is not None:
                     offers.append({**o, 'price': price, 'stock':cost['stock'] if cost and time.time()-cost['updated']<=86400 else o['stock']})
-            products.append({**p, 'offers': offers})
+            products.append({**p, 'vehicleCategory':category(p), 'offers': offers})
         result = {**catalog, 'products': products}
         with lock:
-            rendered.update(data=result, until=time.time()+15)
+            if rendered['generation']==generation:rendered.update(data=result, until=time.time()+15)
         return result
 
     def product(id):
@@ -227,10 +222,11 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
         offers=[]
         for o in p['offers']:
             wid=warehouse_id(o);cost=costs.get((p['sku'],wid))
-            rule=chosen_rule(p,wid,rules,offer_rules);sale=sale_price(o,rule,cost)
+            rule=chosen_rule(p,wid,rules,offer_rules);computed=price_result(o,rule,cost);sale=computed['price']
             gain=round(sale-cost['cost'],2) if sale is not None and cost and cost['cost']>0 else None
             offers.append({**o,'warehouseId':wid,'warehouseInfo':meta[wid],
                 'priceRule':rule or {'mode':'supplier'},'salePrice':sale,
+                'minimumPrice':computed['floor'],'floorApplied':computed['adjusted'],
                 'purchasePrice':cost['cost'] if cost else None,
                 'supplierRetailPrice':cost.get('retail') if cost else None,
                 'purchaseCheckedAt':cost['updated'] if cost else None,
@@ -238,7 +234,7 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
                 'liveStock':cost['stock'] if cost and time.time()-cost['updated']<=86400 else None,'profit':gain,
                 'markupPercent':round(gain/cost['cost']*100,2) if gain is not None else None,
                 'marginPercent':round(gain/sale*100,2) if gain is not None and sale else None})
-        return {**p,'offers':offers,'priceRule':rules.get(p['id']) or {'mode':'supplier'}}
+        return {**p,'vehicleCategory':category(p),'offers':offers,'priceRule':rules.get(p['id']) or {'mode':'supplier'}}
 
     @app.middleware('http')
     async def headers(request, call_next):
@@ -259,7 +255,7 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
         response.headers.update({'X-Content-Type-Options':'nosniff', 'X-Frame-Options':'DENY',
             'Referrer-Policy':'strict-origin-when-cross-origin',
             'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://www.4tochki.ru https://api-b2b.pwrs.ru data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"})
-        if request.url.path.startswith(('/api/manager','/manager','/api/selections','/s/')):
+        if request.url.path.startswith(('/api/manager','/manager','/api/selections','/s/','/api/shop','/order/')):
             response.headers['Cache-Control']='no-store'
             response.headers['X-Robots-Tag']='noindex, nofollow'
         if request.url.path in ('/data/catalog.js','/config.js'):
@@ -270,6 +266,7 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
                 response.headers['Access-Control-Allow-Origin']=incoming
                 response.headers['Vary']='Origin'
             response.headers['Cache-Control']='public, max-age=60'
+        if request.url.path.startswith(('/api/shop','/order/')):response.headers['Referrer-Policy']='no-referrer'
         return response
 
     @app.exception_handler(RequestValidationError)
@@ -283,11 +280,11 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
 
     @app.get('/health')
     def health():
-        return {'status':'ok','version':'0.6.0'}
+        return {'status':'ok','version':'0.7.0'}
 
     @app.get('/config.js')
     def runtime_config():
-        value = {'mode':'snapshot','version':'0.6.0','apiBase':'','portal':True}
+        value = {'mode':'snapshot','version':'0.7.0','apiBase':'','portal':True}
         return Response('window.IMKONEX_CONFIG = Object.freeze('+json.dumps(value)+');', media_type='text/javascript')
 
     @app.get('/data/catalog.js')
@@ -314,15 +311,18 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
     @app.post('/api/selections')
     def make_selection(body:Selection,request:Request):
         origin(request);throttle(request,'selection',30,3600)
-        current={p['id']:p for p in public_catalog()['products']};lines=[];pairs=set()
+        selected=[product(l.productId) for l in body.lines]
+        costs=purchase(list(dict.fromkeys(p['sku'] for p in selected)))
+        current=quoted_products([p['id'] for p in selected],costs);lines=[];pairs=set();used={}
         for line in body.lines:
             pair=(line.productId,line.warehouseId)
             if pair in pairs:raise HTTPException(422,'duplicate_selection_line')
             pairs.add(pair);p=current.get(line.productId)
             if not p:raise HTTPException(404,'product_not_found')
-            offers=[o for o in p['offers'] if o['stock']>=line.quantity and (line.warehouseId is None or warehouse_id(o)==line.warehouseId)]
+            offers=[o for o in p['offers'] if o['stock']-used.get((p['id'],warehouse_id(o)),0)>=line.quantity and (line.warehouseId is None or warehouse_id(o)==line.warehouseId)]
             if not offers:raise HTTPException(409,'selection_stock_changed')
             o=min(offers,key=lambda x:(x.get('days') if x.get('days') is not None else 999,x['price']))
+            pair=(p['id'],warehouse_id(o));used[pair]=used.get(pair,0)+line.quantity
             lines.append({'productId':p['id'],'sku':p['sku'],'name':p['brand']+' '+p['model'],
                           'description':p['description'],'image':p['image'],'quantity':line.quantity,
                           'price':o['price'],'subtotal':round(o['price']*line.quantity,2)})
@@ -399,15 +399,18 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
 
     @app.get('/api/manager/status')
     def status(session=Depends(authenticated)):
-        return {'version':'0.6.0','products':len(by_id),'updatedAt':catalog['updatedAt'],
+        return {'version':'0.7.0','products':len(by_id),'updatedAt':catalog['updatedAt'],
                 'supplierConfigured':api.configured,'ordersEnabled':os.getenv('SUPPLIER_ORDERS_ENABLED')=='true',
                 'rules':len(store.rules())+len(store.offer_rules()),'orders':len(store.order_list()),
+                'purchaseSync':store.setting('purchase_sync',{}),'customerOrders':len(store.customer_orders()),
                 'navigationCheckedAt':site_shell.value.get('checkedAt'), 'navigationStatus':'cached' if site_shell.last_error else 'ready'}
 
     @app.get('/api/manager/catalog-filters')
-    def manager_filters(session=Depends(authenticated)):
-        fields=['kind','brand','season','width','profile','diameter','pcd']
-        return {'warehouses':warehouse_list(),'facets':{k:sorted({str(p[k]) for p in by_id.values() if p.get(k) is not None}) for k in fields}}
+    def manager_filters(kind:str='',category_filter:str='',session=Depends(authenticated)):
+        from .manager_catalog import VALUES, facet_value
+        fields=['kind','brand','season','width','profile','diameter','pcd','wheelWidth','et','dia',*VALUES]
+        selected=[p for p in by_id.values() if (not kind or p['kind']==kind) and (not category_filter or category(p)==category_filter)]
+        return {'warehouses':warehouse_list(),'facets':{k:sorted({str(facet_value(p,k)) for p in selected if facet_value(p,k) is not None}) for k in fields}}
 
     @app.post('/api/manager/warehouses/refresh')
     def refresh_warehouses(request:Request,session=Depends(authenticated)):
@@ -417,8 +420,12 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
 
     @app.get('/api/manager/products')
     def manager_products(q:str=Query('',max_length=200),page:int=Query(1,ge=1),kind:str='',brand:str='',season:str='',
-                         width:str='',profile:str='',diameter:str='',pcd:str='',warehouses:str=Query('',max_length=4000),
-                         min_stock:int=Query(1,ge=1,le=1000),session=Depends(authenticated)):
+                         width:str='',profile:str='',diameter:str='',pcd:str='',category_filter:str='',warehouses:str=Query('',max_length=4000),
+                         min_stock:int=Query(1,ge=1,le=1000),features:str=Query('{}',max_length=3000),session=Depends(authenticated)):
+        from .manager_catalog import VALUES,facet_value
+        try:feature_values=json.loads(features)
+        except ValueError:raise HTTPException(422,'invalid_request') from None
+        if not isinstance(feature_values,dict) or any(k not in VALUES or not isinstance(v,str) for k,v in feature_values.items()):raise HTTPException(422,'invalid_request')
         costs=store.costs()
         # Availability filters honor the latest private cache where fresh.
         available=[]
@@ -427,7 +434,7 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
             for o in p['offers']:
                 c=costs.get((p['sku'],warehouse_id(o)))
                 offers.append({**o,'stock':c['stock'] if c and time.time()-c['updated']<=86400 else o['stock']})
-            available.append({**p,'offers':offers})
+            if (not category_filter or category(p)==category_filter) and all(not v or str(facet_value(p,k))==v for k,v in feature_values.items()):available.append({**p,'offers':offers})
         rows=search(available,q=q,kind=kind,brand=brand,season=season,width=width,profile=profile,diameter=diameter,pcd=pcd,warehouses=warehouses,min_stock=min_stock)
         shown=rows[(page-1)*20:page*20];rules,offer_rules=all_rules()
         return {'total':len(rows),'page':page,'items':[manager_product(p,rules,costs,offer_rules) for p in shown]}
@@ -448,14 +455,18 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
         if body.mode=='fixed' and body.price<=0:
             raise HTTPException(422,'positive_price_required')
         if warehouse is not None and not any(warehouse_id(o)==warehouse for o in p['offers']):raise HTTPException(409,'warehouse_mapping_unavailable')
-        if body.mode in ('markup','profit'):
+        if body.mode in ('markup','profit','fixed','discount','supplier'):
             costs=purchase([p['sku']])
             if not any(r['cost']>0 and r['stock']>0 and (warehouse is None or r['warehouse']==warehouse) for r in costs.values()):
                 raise HTTPException(409,'purchase_price_unavailable')
         if warehouse is None:store.set_rule(id,None if body.mode=='supplier' else body.model_dump())
         else:store.set_offer_rule(id,warehouse,body.model_dump())
         invalidate()
-        return {'ok':True}
+        return {'ok':True, 'items':[manager_product(p,store.rules(),store.costs([p['sku']]))]}
+
+    @app.delete('/api/manager/prices/{id}')
+    def inherit_price(id:str,warehouse:int=Query(gt=0),session=Depends(authenticated)):
+        product(id);store.set_offer_rule(id,warehouse,None);invalidate();return {'ok':True}
 
     @app.get('/api/manager/orders')
     def order_list(session=Depends(authenticated)):
@@ -554,6 +565,70 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
         return RedirectResponse('/manager/', status_code=307)
 
     # Only the compiled frontend is reachable. runtime/, backend/, .env and data/ are not mounted.
+    @app.get('/api/manager/pricing')
+    def category_prices(session=Depends(authenticated)):
+        costs=store.costs();groups=[]
+        for key,label in CATEGORIES.items():
+            ps=[p for p in by_id.values() if key=='all' or category(p)==key or p['kind']==key]
+            rows=[]
+            for p in ps:
+                for o in p['offers']:
+                    c=costs.get((p['sku'],warehouse_id(o)))
+                    if fresh_cost(c) and c.get('retail') and c['retail']>0 and c['stock']>0:rows.append(c)
+            total_retail=sum(c['retail'] for c in rows)
+            groups.append({'category':key,'label':label,'products':len(ps),'checkedOffers':len(rows),
+                'supplierDiscount':round((1-sum(c['cost'] for c in rows)/total_retail)*100,2) if total_retail else None,
+                'rule':policies.get(key), 'minimumGain':100})
+        return {'groups':groups,'sync':store.setting('purchase_sync',{})}
+
+    @app.post('/api/manager/pricing/{key}/preview')
+    def preview_policy(key:str,body:Rule,session=Depends(authenticated)):
+        if key not in CATEGORIES or body.mode not in ('supplier','markup','discount'):raise HTTPException(422,'invalid_request')
+        if body.mode=='discount' and body.percent>100:raise HTTPException(422,'invalid_request')
+        rows=[];unknown=0;overridden=0;adjusted=0;affected=0;costs=store.costs();rules,offer_rules=all_rules()
+        for p in by_id.values():
+            if not (key=='all' or category(p)==key or p['kind']==key):continue
+            for o in p['offers']:
+                wid=warehouse_id(o)
+                # More specific rules retain precedence; report them explicitly.
+                inherited=key=='all' and (category(p) in policies or p['kind'] in policies) or key==p['kind'] and category(p)!=key and category(p) in policies
+                if p['id'] in rules or (p['id'],wid) in offer_rules or inherited:overridden+=1;continue
+                c=costs.get((p['sku'],wid));result=price_result(o,body.model_dump(),c)
+                if result['price'] is None:unknown+=1;continue
+                affected+=1;adjusted+=int(result['adjusted'])
+                if len(rows)<12:rows.append({'sku':p['sku'],'warehouse':o['warehouse'],'purchase':c['cost'],'retail':c.get('retail'),'sale':result['price'],'gain':round(result['price']-c['cost'],2),'floorApplied':result['adjusted']})
+        return {'affected':affected,'unknown':unknown,'overridden':overridden,'floorApplied':adjusted,'examples':rows}
+
+    @app.put('/api/manager/pricing/{key}')
+    def save_policy(key:str,body:Rule,session=Depends(authenticated)):
+        if key not in CATEGORIES or body.mode not in ('supplier','markup','discount'):raise HTTPException(422,'invalid_request')
+        if body.mode=='discount' and body.percent>100:raise HTTPException(422,'invalid_request')
+        with lock:
+            policies[key]=body.model_dump();store.set_setting('category_pricing',policies)
+        store.audit('category_price_changed',key);invalidate();return {'ok':True}
+
+    @app.delete('/api/manager/pricing/{key}')
+    def remove_policy(key:str,session=Depends(authenticated)):
+        if key not in CATEGORIES:raise HTTPException(422,'invalid_request')
+        with lock:
+            policies.pop(key,None);store.set_setting('category_pricing',policies)
+        store.audit('category_price_reset',key);invalidate();return {'ok':True}
+
+    def quoted_products(ids,costs):
+        # Transactional checkout must not read a public cache being rebuilt by another request.
+        rules,offer_rules=all_rules();result={}
+        for pid in ids:
+            p=product(pid);offers=[]
+            for o in p['offers']:
+                wid=warehouse_id(o);cost=costs.get((p['sku'],wid))
+                value=sale_price(o,chosen_rule(p,wid,rules,offer_rules),cost)
+                if value is not None and cost['stock']>0:offers.append({**o,'price':value,'stock':cost['stock']})
+            result[pid]={**p,'offers':offers}
+        return result
+
+    from .shop import install_shop
+    install_shop(app,store,by_id,purchase,quoted_products,authenticated,origin,throttle)
+
     app.mount('/',StaticFiles(directory=ROOT/'dist',html=True,check_dir=False),name='storefront')
     return app
 

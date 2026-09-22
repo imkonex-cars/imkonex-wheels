@@ -1,3 +1,4 @@
+import {browserBundle} from './browser-bundle.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -19,11 +20,7 @@ async function browser(){
  const html=(await readFile(new URL('../frontend/index.html',import.meta.url),'utf8')).replace(/<script[^>]*>[\s\S]*?<\/script>/g,'');
  const dom=new JSDOM(html,{url:'https://demo.imkonex.test/',runScripts:'outside-only',virtualConsole:vc});
  const w=dom.window;w.IMKONEX_DATA=data;w.IMKONEX_CONFIG={mode:'demo',apiBase:''};w.scrollTo=()=>{};w.HTMLElement.prototype.scrollIntoView=()=>{};w.HTMLDialogElement.prototype.showModal=function(){this.setAttribute('open','');};w.HTMLDialogElement.prototype.close=function(){this.removeAttribute('open');};
- const domain=(await readFile(new URL('../frontend/domain.js',import.meta.url),'utf8')).replace(/^export /gm,'');
- const shared=(await readFile(new URL('../frontend/share.js',import.meta.url),'utf8')).replace(/^import .*;\n/gm,'').replace(/^export /gm,'');
- const pricing=(await readFile(new URL('../frontend/manager/pricing.js',import.meta.url),'utf8')).replace(/^export /gm,'');
- const app=(await readFile(new URL('../frontend/app.js',import.meta.url),'utf8')).replace(/^import .*;\n/gm,'');
- w.eval(domain+'\nconst h=escapeHTML;\n'+shared+'\n'+pricing+'\n'+app);
+ await w.eval(await browserBundle('app.js'));
  return {w,dom,errors,$:s=>w.document.querySelector(s),click:s=>w.document.querySelector(s).click(),route:async path=>{w.location.hash=path;await new Promise(r=>w.setTimeout(r,10));}};
 }
 

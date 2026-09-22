@@ -1,3 +1,5 @@
+import {bundleBrowser} from './browser-bundle.mjs';
+import {pathToFileURL} from 'node:url';
 // Run after npm run build. Local product photos are embedded in the preview.
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import path from 'node:path';
@@ -14,10 +16,16 @@ const safe=value=>JSON.stringify(value).replaceAll('<','\\u003c');
 const config=await readFile('dist/config.js','utf8');
 html=html.replace('<script src="./config.js"></script>',()=>`<script>${config}\nwindow.IMKONEX_IMAGE_MAP=${safe(map)};</script>`);
 html=html.replace('<script src="./data/catalog.js"></script>',()=>`<script>window.IMKONEX_DATA=${safe(data)};</script>`);
-const domain=(await readFile('dist/domain.js','utf8')).replace(/^export /gm,'');
-const shared=(await readFile('dist/share.js','utf8')).replace(/^import .*;\n/gm,'').replace(/^export /gm,'');
-const app=(await readFile('dist/app.js','utf8')).replace(/^import .*;\n/gm,'');
-html=html.replace('<script type="module" src="./app.js"></script>',()=>`<script type="module">${domain}\nconst h=escapeHTML;\n${shared}\n${app}</script>`);
+const code=await bundleBrowser('app.js',pathToFileURL(path.resolve('dist')+'/'));
+html=html.replace('<script type="module" src="./app.js"></script>',()=>`<script>${code.replaceAll('</script','<\\/script')}</script>`);
+for(const file of ['premium.css','shop.css','shared/bridge.css']){
+ const content=await readFile('dist/'+file,'utf8');
+ html=html.replace(`<link rel="stylesheet" href="./${file}">`,()=>`<style>${content}</style>`);
+}
+html=html.replace(/<script[^>]*src="\.\/shared\/shell.js"[^>]*><\/script>/g,'');
+for(const file of ['assets/products/R5019.png','assets/products/WHS121894.png']){
+ try{const image=await uri('dist/'+file);html=html.replaceAll('./'+file,image);}catch{}
+}
 await mkdir('artifacts',{recursive:true});
 const file=data.mode==='snapshot'?'IMKONEX_WHEELS_REAL_DATA.html':'IMKONEX_WHEELS_PREVIEW.html';
 await writeFile('artifacts/'+file,html);

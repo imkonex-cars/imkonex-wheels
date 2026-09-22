@@ -75,7 +75,7 @@ def test_rounding_and_formula_modes():
     cost={'cost':4567.89,'updated':time.time()}
     assert sale_price({'price':9000},{'mode':'markup','percent':10,'minimum':0,'roundTo':.01},cost)==5024.68
     assert sale_price({'price':9000},{'mode':'profit','amount':700,'roundTo':.01},cost)==5267.89
-    assert sale_price({'price':9000},{'mode':'profit','amount':-5000,'roundTo':.01},cost) is None
+    assert sale_price({'price':9000},{'mode':'profit','amount':-5000,'roundTo':.01},cost)==4667.89
     assert sale_price({'price':9000},{'mode':'markup','percent':10,'minimum':700},cost)==5270
 
 def test_product_characteristics_are_public_whitelisted_and_cached(context):

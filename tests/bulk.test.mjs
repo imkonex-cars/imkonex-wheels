@@ -1,3 +1,4 @@
+import {browserBundle} from './browser-bundle.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -47,9 +48,7 @@ test('24,000 products render 12 cards, hide technical details and reach last pag
   w.HTMLElement.prototype.scrollIntoView=()=>{};
   w.HTMLDialogElement.prototype.showModal=function(){this.setAttribute('open','');};
   w.HTMLDialogElement.prototype.close=function(){this.removeAttribute('open');};
-  const domain=(await readFile(new URL('../frontend/domain.js',import.meta.url),'utf8')).replace(/^export /gm,'');
-  const app=(await readFile(new URL('../frontend/app.js',import.meta.url),'utf8')).replace(/^import .*;\n/gm,'');
-  const start=performance.now();w.eval(domain+'\nconst h=escapeHTML;\n'+app);
+  const start=performance.now();await w.eval(await browserBundle('app.js'));
   const $=s=>w.document.querySelector(s);
   assert.equal(w.document.querySelectorAll('.product-card').length,12);
   assert.ok(w.document.querySelectorAll('.pagination button').length<=7);

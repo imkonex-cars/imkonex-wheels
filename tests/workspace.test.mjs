@@ -1,3 +1,5 @@
+import {browserBundle} from './browser-bundle.mjs';
+import {pathToFileURL} from 'node:url';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile,writeFile,cp,mkdir,mkdtemp,rm,readdir} from 'node:fs/promises';
@@ -25,7 +27,7 @@ test('complete source entry builds snapshot from any working directory and ignor
     await writeFile(path.join(root,'index.html'),'OLD ROOT DEMO PAGE');
     await mkdir(path.join(root,'dist'));await writeFile(path.join(root,'dist','old-file.txt'),'old');
     const result=run(root);assert.equal(result.status,0,result.stdout+result.stderr);
-    assert.match(result.stdout,/BUILD_OK IMKONEX-WHEELS-0\.6\.0-WORKSPACE-1 \| snapshot \| 6 products/);
+    assert.match(result.stdout,/BUILD_OK IMKONEX-WHEELS-0\.7\.0-WORKSPACE-1 \| snapshot \| 6 products/);
     const info=JSON.parse(await readFile(path.join(root,'dist/build-info.json'),'utf8'));
     assert.equal(info.mode,'snapshot');assert.equal(info.products,6);assert.equal(info.tyres,3);assert.equal(info.wheels,3);
     assert.deepEqual(info.photos,{local:6,remote:0,unavailable:0});
@@ -69,15 +71,12 @@ test('published source workspace loads six real products and calculates a comple
     w.HTMLDialogElement.prototype.close=function(){this.removeAttribute('open');};
     for(const script of w.document.querySelectorAll('script[src]')){
       let code=await readFile(path.join(dist,script.getAttribute('src')),'utf8');
-      if(script.type==='module'){
-        const domain=(await readFile(path.join(dist,'domain.js'),'utf8')).replace(/^export /gm,'');
-        code=domain+'\nconst h=escapeHTML;\n'+code.replace(/^import .*;\n/gm,'');
-      }
+      if(script.type==='module')code=await browserBundle(script.getAttribute('src'),pathToFileURL(dist+'/'));
       w.eval(code);
     }
     const $=s=>w.document.querySelector(s);
     assert.equal(w.IMKONEX_DATA.products.length,6);assert.equal(w.IMKONEX_CONFIG.mode,'snapshot');
-    assert.equal($('#catalog-notice'),null);assert.match($('.hero h1').textContent,/Уверенность/);
+    assert.equal($('#catalog-notice'),null);assert.match($('.hero h1').textContent,/Ваш маршрут/);
     w.location.hash='catalog?kind=wheels&inSet=1';await new Promise(r=>w.setTimeout(r,10));
     assert.equal(w.document.querySelectorAll('.product-card').length,1);assert.match($('.stock-row').textContent,/В наличии/);
     $('[data-action="add"][data-id="4t-wheels-WHS121894"]').click();

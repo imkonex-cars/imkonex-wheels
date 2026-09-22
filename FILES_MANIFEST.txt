@@ -1,4 +1,4 @@
-IMKONEX WHEELS 0.6.0 — complete source inventory
+IMKONEX WHEELS 0.7.0 — complete source inventory
 .dockerignore
 .env.example
 .github/workflows/ci
@@ -28,9 +28,11 @@ backend/portal.py
 backend/portal_jobs.py
 backend/portal_store.py
 backend/portal_supplier.py
+backend/pricing.py
 backend/product_attributes.py
 backend/repository.py
 backend/schema.sql
+backend/shop.py
 backend/site_shell.py
 backend/supplier.py
 backend/supplier_check.py
@@ -54,12 +56,14 @@ docs/PRODUCT_PHOTO_SOURCES.json
 docs/RENDER.md
 docs/SYNC_SETUP.md
 docs/UPDATE_v0.6.0.md
+docs/UPDATE_v0.7.0.md
 docs/VALIDATION.md
 docs/VALIDATION_0_2.md
 docs/VALIDATION_0_3.md
 docs/VALIDATION_0_4.md
 docs/VALIDATION_WORKSPACE.md
 docs/VERIFICATION_v0.5.0.md
+docs/VERIFICATION_v0.7.0.md
 docs/VPS.md
 frontend/app.js
 frontend/assets/favicon.svg
@@ -180,11 +184,16 @@ frontend/assets/products/triangle-sportex-th201-card.png
 frontend/config.js
 frontend/domain.js
 frontend/index.html
+frontend/loading.js
 frontend/manager/index.html
+frontend/manager/management.js
 frontend/manager/manager.css
 frontend/manager/manager.js
 frontend/manager/pricing.js
+frontend/order/index.html
+frontend/order/status.js
 frontend/premium.css
+frontend/search-model.js
 frontend/selection/index.html
 frontend/selection/selection.css
 frontend/selection/selection.js
@@ -197,6 +206,8 @@ frontend/shared/bridge.css
 frontend/shared/fallback.json
 frontend/shared/shell.css
 frontend/shared/shell.js
+frontend/shop.css
+frontend/shop.js
 frontend/styles.css
 package-lock.json
 package.json
@@ -208,6 +219,7 @@ requirements-sync.txt
 requirements.txt
 scripts/backup-manager.py
 scripts/backup.sh
+scripts/browser-bundle.mjs
 scripts/build.mjs
 scripts/check-4tochki.cmd
 scripts/check-catalog.cmd
@@ -221,6 +233,7 @@ scripts/start-portal.py
 scripts/sync-summary.py
 scripts/trigger-render.py
 scripts/validate-public.mjs
+tests/browser-bundle.mjs
 tests/bulk.test.mjs
 tests/fixtures/fourtochki_inputs_20260917.json
 tests/fixtures/public-sample.json
@@ -228,6 +241,7 @@ tests/frontend.test.mjs
 tests/full_release.test.mjs
 tests/manager-v06.test.mjs
 tests/premium.test.mjs
+tests/shop-v07.test.mjs
 tests/snapshot.test.mjs
 tests/test_api.py
 tests/test_catalog_check.py
@@ -235,6 +249,7 @@ tests/test_catalog_sync.py
 tests/test_categories.py
 tests/test_export_snapshot.py
 tests/test_portal.py
+tests/test_shop_v07.py
 tests/test_supplier_check.py
 tests/test_supplier_schema_imports.py
 tests/test_v06.py
