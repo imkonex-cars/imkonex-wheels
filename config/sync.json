@@ -11,5 +11,7 @@
   "max_public_bytes": 32000000,
   "photos_per_run": 100,
   "photo_cache_bytes": 100000000,
-  "photo_time_seconds": 180
+  "photo_time_seconds": 180,
+  "extended_categories": true,
+  "include_tubes": true
 }

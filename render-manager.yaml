@@ -1,0 +1,28 @@
+# Separate Web Service: deploy intentionally after reviewing the selected paid plan.
+services:
+  - type: web
+    name: imkonex-wheels-portal
+    runtime: docker
+    plan: 1c-2g
+    dockerfilePath: ./Dockerfile.portal
+    dockerContext: .
+    numInstances: 1
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    disk:
+      name: manager-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: MANAGER_DB_PATH
+        value: /var/data/manager.sqlite3
+      - key: MANAGER_LOGIN
+        value: manager
+      - key: MANAGER_PASSWORD
+        sync: false
+      - key: FOURTOCHKI_LOGIN
+        sync: false
+      - key: FOURTOCHKI_PASSWORD
+        sync: false
+      - key: SUPPLIER_ORDERS_ENABLED
+        value: "false"

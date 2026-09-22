@@ -25,7 +25,7 @@ test('complete source entry builds snapshot from any working directory and ignor
     await writeFile(path.join(root,'index.html'),'OLD ROOT DEMO PAGE');
     await mkdir(path.join(root,'dist'));await writeFile(path.join(root,'dist','old-file.txt'),'old');
     const result=run(root);assert.equal(result.status,0,result.stdout+result.stderr);
-    assert.match(result.stdout,/BUILD_OK IMKONEX-WHEELS-0\.4\.0-WORKSPACE-1 \| snapshot \| 6 products/);
+    assert.match(result.stdout,/BUILD_OK IMKONEX-WHEELS-0\.5\.0-WORKSPACE-1 \| snapshot \| 6 products/);
     const info=JSON.parse(await readFile(path.join(root,'dist/build-info.json'),'utf8'));
     assert.equal(info.mode,'snapshot');assert.equal(info.products,6);assert.equal(info.tyres,3);assert.equal(info.wheels,3);
     assert.deepEqual(info.photos,{local:6,remote:0,unavailable:0});
@@ -77,9 +77,9 @@ test('published source workspace loads six real products and calculates a comple
     }
     const $=s=>w.document.querySelector(s);
     assert.equal(w.IMKONEX_DATA.products.length,6);assert.equal(w.IMKONEX_CONFIG.mode,'snapshot');
-    assert.match($('#catalog-notice').textContent,/Реальная выборка.*6 товаров/);
+    assert.equal($('#catalog-notice'),null);assert.match($('.hero h1').textContent,/Уверенность/);
     w.location.hash='catalog?kind=wheels&inSet=1';await new Promise(r=>w.setTimeout(r,10));
-    assert.equal(w.document.querySelectorAll('.product-card').length,1);assert.match($('.warehouse-label').textContent,/Уфа 2/);
+    assert.equal(w.document.querySelectorAll('.product-card').length,1);assert.match($('.stock-row').textContent,/В наличии/);
     $('[data-action="add"][data-id="4t-wheels-WHS121894"]').click();
     w.location.hash='cart';await new Promise(r=>w.setTimeout(r,10));
     assert.match($('.summary-total').textContent,/30\s*640/);assert.deepEqual(errors,[]);

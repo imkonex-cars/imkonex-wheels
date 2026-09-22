@@ -7,7 +7,8 @@ const root=path.dirname(fileURLToPath(import.meta.url));
 const required=[
   'package.json','scripts/build.mjs','scripts/public-catalog.mjs',
   'data/supplier-snapshot.json','frontend/index.html','frontend/app.js',
-  'frontend/domain.js','frontend/styles.css','frontend/config.js',
+  'frontend/domain.js','frontend/styles.css','frontend/premium.css','frontend/config.js',
+  'frontend/manager/index.html','frontend/manager/manager.js','frontend/manager/manager.css',
   'frontend/assets/favicon.svg','frontend/assets/imkonex-cars.svg',
   'frontend/assets/product-unavailable.svg',
 ];

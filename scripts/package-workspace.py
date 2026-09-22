@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SOURCE_DIRS = ('backend', 'config', 'data', 'deploy', 'docs', 'frontend', 'scripts', 'tests', '.github')
 ROOT_FILES = ('BUILD_RENDER.mjs', 'package.json', 'package-lock.json', 'requirements.txt',
               'requirements-dev.txt', 'requirements-sync.txt', 'compose.yaml', 'Dockerfile', 'render.yaml',
-              'render-api.yaml', 'README.md', 'START_HERE_PC1.txt', 'SYNC_CATALOG_WORKFLOW.txt', '.env.example', '.gitignore')
+              'render-api.yaml', 'render-manager.yaml', 'Dockerfile.portal', '.dockerignore', 'UPGRADE_v0.5.0.txt', 'README.md', 'START_HERE_PC1.txt', 'SYNC_CATALOG_WORKFLOW.txt', '.env.example', '.gitignore')
 EXCLUDED_DIRS = {'__pycache__', '.pytest_cache', 'node_modules', '.venv', '.check-venv', 'results'}
 
 
@@ -38,7 +38,7 @@ def main():
     manifest = (f'IMKONEX CARS — полная рабочая область {version}\n'
                 f'Всего файлов: {len(names)}. Все пути указаны от корня GitHub-репозитория.\n'
                 'Загрузите содержимое архива с сохранением папок.\n'
-                'Render: Static Site; Root Directory пусто; Build Command node BUILD_RENDER.mjs; Publish Directory dist.\n'
+                'Render: витрина Static Site или Web Service Dockerfile.portal с постоянным диском для кабинета.\n'
                 'dist и node_modules создаются локально/на сервере и в этот список не входят.\n\n'
                 + '\n'.join(names) + '\n')
     (target / 'FILES_MANIFEST.txt').write_text(manifest, encoding='utf-8-sig')

@@ -713,5 +713,271 @@
         ]
       }
     ]
+  },
+  "GetMarkaAvto": {
+    "type": "{Wcf.ClientService.Client.WebAPI.TS3}GetMarkaAvto",
+    "fields": [
+      {
+        "name": "login",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "password",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      }
+    ]
+  },
+  "GetModelAvto": {
+    "type": "{Wcf.ClientService.Client.WebAPI.TS3}GetModelAvto",
+    "fields": [
+      {
+        "name": "login",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "password",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "marka",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      }
+    ]
+  },
+  "GetYearAvto": {
+    "type": "{Wcf.ClientService.Client.WebAPI.TS3}GetYearAvto",
+    "fields": [
+      {
+        "name": "login",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "password",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "marka",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "model",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      }
+    ]
+  },
+  "GetModificationAvto": {
+    "type": "{Wcf.ClientService.Client.WebAPI.TS3}GetModificationAvto",
+    "fields": [
+      {
+        "name": "login",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "password",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "marka",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "model",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "year_beg",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": false,
+        "type": "{http://www.w3.org/2001/XMLSchema}int"
+      },
+      {
+        "name": "year_end",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": false,
+        "type": "{http://www.w3.org/2001/XMLSchema}int"
+      }
+    ]
+  },
+  "GetGoodsByCar": {
+    "type": "{Wcf.ClientService.Client.WebAPI.TS3}GetGoodsByCar",
+    "fields": [
+      {
+        "name": "login",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "password",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "filter",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://schemas.datacontract.org/2004/07/TS3.Domain.Models.Client.ClientSoapService.SearchProductsBySpecs}GetGoodsByCarFilter",
+        "fields": [
+          {
+            "name": "marka",
+            "minOccurs": 1,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}string"
+          },
+          {
+            "name": "model",
+            "minOccurs": 1,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}string"
+          },
+          {
+            "name": "modification",
+            "minOccurs": 1,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}string"
+          },
+          {
+            "name": "podbor_type",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfint",
+            "fields": [
+              {
+                "name": "int",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": false,
+                "type": "{http://www.w3.org/2001/XMLSchema}int"
+              }
+            ]
+          },
+          {
+            "name": "season_list",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+            "fields": [
+              {
+                "name": "string",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": true,
+                "type": "{http://www.w3.org/2001/XMLSchema}string"
+              }
+            ]
+          },
+          {
+            "name": "thorn",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}boolean"
+          },
+          {
+            "name": "type",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+            "fields": [
+              {
+                "name": "string",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": true,
+                "type": "{http://www.w3.org/2001/XMLSchema}string"
+              }
+            ]
+          },
+          {
+            "name": "wrh_list",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfint",
+            "fields": [
+              {
+                "name": "int",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": false,
+                "type": "{http://www.w3.org/2001/XMLSchema}int"
+              }
+            ]
+          },
+          {
+            "name": "year_beg",
+            "minOccurs": 1,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}string"
+          },
+          {
+            "name": "year_end",
+            "minOccurs": 1,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}string"
+          },
+          {
+            "name": "address_id",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}int"
+          }
+        ]
+      }
+    ]
   }
 }

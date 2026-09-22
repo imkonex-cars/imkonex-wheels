@@ -6,5 +6,5 @@
         Referrer-Policy strict-origin-when-cross-origin
         X-Robots-Tag "noindex, nofollow"
     }
-    reverse_proxy app:8000
+    reverse_proxy app:10000
 }

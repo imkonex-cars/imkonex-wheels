@@ -47,53 +47,25 @@ async function browser(url='https://catalog.imkonex.test/'){
  w.eval(domain+'\nconst h=escapeHTML;\n'+app);
  return {w,dom,errors,$:s=>w.document.querySelector(s),click:s=>w.document.querySelector(s).click(),route:async path=>{w.location.hash=path;await new Promise(r=>w.setTimeout(r,10));}};
 }
-test('real tire selection, set calculation and saved quote retain price provenance',async()=>{
+
+test('real snapshot supports exact selection, stock limits and private-free storefront',async()=>{
  const b=await browser();try{
   assert.equal(b.w.document.querySelectorAll('.product-card').length,3);
-  assert.match(b.$('#catalog-notice').textContent,/Реальная выборка/);
-  assert.match(b.$('.data-summary-date').textContent,/17.09.2026/);
-  assert.equal(b.$('[data-filter="fast"]'),null);
-  b.click('[data-action="detail"][data-id="4t-tires-2398000"]');
-  assert.match(b.$('#dialog-content').textContent,/Домодедово/);
-  assert.match(b.$('#dialog-content').textContent,/Срок уточняется/);
-  assert.doesNotMatch(b.$('#dialog-content').textContent,/0–1 дн\./);
-  b.click('#dialog [data-action="add"]');
-  await b.route('cart');assert.match(b.$('.summary-total').textContent,/132\s*200/);
-  assert.match(b.$('.cart-info').textContent,/Домодедово/);
-  b.click('[data-action="quote"]');
-  const quote=JSON.parse(b.w.localStorage.getItem('imx:snapshot:requests'))[0];
-  assert.equal(quote.priceBasis,'supplier_retail');assert.equal(quote.mode,'snapshot');
-  assert.equal(quote.lines[0].sku,'2398000');assert.equal(quote.sourceUpdatedAt,data.updatedAt);
-  await b.route('manager');assert.equal(b.w.document.querySelectorAll('.manager-table tbody tr').length,1);
-  assert.doesNotMatch(b.$('#main').textContent,/OLD-DEMO|36 шин/);assert.deepEqual(b.errors,[]);
- }finally{b.dom.window.close();}
-});
-test('rim filters, Ufa stock limit, comparison and image fallback work',async()=>{
- const b=await browser();try{
-  await b.route('catalog?kind=wheels&inSet=1');
+  assert.equal(b.$('#catalog-notice'),null);assert.equal(b.$('.data-summary'),null);
+  assert.doesNotMatch(b.$('#main').textContent,/4точки|выгрузка|6 товаров|проверка каталога/i);
+  b.click('[data-action="detail"][data-id="4t-tires-2398000"]');b.click('#dialog [data-action="add"]');
+  await b.route('cart');assert.match(b.$('.summary-total').textContent,/132\s*200/);assert.match(b.$('.warehouse-label').textContent,/Домодедово/);
+  b.click('[data-action="clear-cart"]');await b.route('catalog?kind=wheels&inSet=1');
   assert.equal(b.w.document.querySelectorAll('.product-card').length,1);
-  assert.match(b.$('.warehouse-label').textContent,/Уфа 2/);
-  b.click('[data-action="compare"]');await b.route('compare');
-  assert.match(b.$('.comparison-table').textContent,/Уточняется/);
-  b.click('[data-action="add"]');await b.route('cart');
-  assert.match(b.$('.summary-total').textContent,/30\s*640/);
+  b.click('[data-action="add"]');await b.route('cart');assert.match(b.$('.summary-total').textContent,/30\s*640/);
   b.click('[data-action="quantity"][data-delta="1"]');assert.equal(b.$('.quantity-control span').textContent,'4');
-  await b.route('catalog?kind=wheels&q=WHS158820');
-  assert.equal(b.w.document.querySelectorAll('.product-card').length,1);
-  assert.equal(b.$('.product-tag').textContent.trim(),'Колёсный диск');
-  const img=b.$('.product-visual img');img.dispatchEvent(new b.w.Event('error'));
-  assert.match(img.src,/product-unavailable\.svg$/);assert.match(img.alt,/недоступно/);
   assert.deepEqual(b.errors,[]);
  }finally{b.dom.window.close();}
 });
-test('local file preview switches category and keeps calculations when persistent storage is unavailable',async()=>{
+test('local file preview keeps selection with unavailable persistent storage',async()=>{
  const b=await browser('file:///C:/Users/Admin/Downloads/catalog.html');try{
-  b.click('[data-action="category"][data-kind="wheels"]');
-  await new Promise(r=>b.w.setTimeout(r,10));
-  assert.equal(b.w.document.querySelectorAll('.product-card').length,3);
-  b.click('[data-action="add"][data-id="4t-wheels-WHS121894"]');
-  await b.route('cart');b.click('[data-action="quote"]');await b.route('manager');
-  assert.equal(b.w.document.querySelectorAll('.manager-table tbody tr').length,1);
-  assert.match(b.$('.manager-table').textContent,/30\s*640/);assert.deepEqual(b.errors,[]);
+  b.click('[data-action="segment"][data-kind="wheels"]');assert.equal(b.w.document.querySelectorAll('.product-card').length,3);
+  b.click('[data-action="add"][data-id="4t-wheels-WHS121894"]');await b.route('cart');
+  assert.match(b.$('.summary-total').textContent,/30\s*640/);assert.deepEqual(b.errors,[]);
  }finally{b.dom.window.close();}
 });

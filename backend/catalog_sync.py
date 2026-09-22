@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parent.parent
 GROUPS = {
     'tires': ('GetFindTyre', 'TyrePriceRest', 'tyreList', 'TyreContainer'),
     'wheels': ('GetFindDisk', 'DiskPriceRest', 'rimList', 'RimContainer'),
+    'tubes': ('GetFindCamera', 'CameraPriceRest', 'cameraList', 'CameraContainer'),
 }
 
 
@@ -85,10 +86,14 @@ def product_id(kind, code):
     return f'4t-{kind}-{safe}'
 
 
-def request_arguments(name, login, password, *, page=1, page_size=100, codes=(), warehouse_ids=()):
+def request_arguments(name, login, password, *, page=1, page_size=100, codes=(), warehouse_ids=(), extended=False):
     args = {'login': login, 'password': password}
-    if name in ('GetFindTyre', 'GetFindDisk'):
+    if name in ('GetFindTyre', 'GetFindDisk', 'GetFindCamera'):
         args.update(filter={}, page=page, pageSize=page_size)
+        if name == 'GetFindCamera':
+            args['filter']['subtype_id_list'] = {'int': [0]}
+        if extended and name == 'GetFindTyre':
+            args['filter']['quality'] = 0
         if warehouse_ids:
             args['filter']['wrh_list'] = {'int': list(warehouse_ids)}
     elif name == 'GetGoodsInfo':
@@ -110,17 +115,19 @@ class LiveSupplier:
             raise SyncError('credentials_missing')
         self.config, self.calls = config, 0
         self.client = create_check_client()
-        self.client.transport.session.headers['User-Agent'] = 'IMKONEX-CATALOG-SYNC/0.4.0'
+        self.client.transport.session.headers['User-Agent'] = 'IMKONEX-CATALOG-SYNC/0.5.0'
         self.deadline = time.monotonic() + config['max_duration_seconds']
         self.client.transport.deadline = self.deadline
         self.last_call = 0
         self.operations = self.client.service._binding._operations
-        for name in ('GetWarehouses', 'GetFindTyre', 'GetFindDisk', 'GetGoodsInfo'):
+        required = ['GetWarehouses', 'GetFindTyre', 'GetFindDisk', 'GetGoodsInfo']
+        if config.get('include_tubes'): required.append('GetFindCamera')
+        for name in required:
             if name not in self.operations:
                 raise SyncError('required_operation_missing')
             args = request_arguments(name, '__login__', '__password__',
                                      codes=['__code__'], page_size=config['page_size'],
-                                     warehouse_ids=config['warehouse_ids'])
+                                     warehouse_ids=config['warehouse_ids'], extended=config.get('extended_categories', False))
             validate_payload(self.operations[name].input.body.type, args)
 
     def __call__(self, name, **options):
@@ -130,7 +137,7 @@ class LiveSupplier:
         from .catalog_check import validate_payload
         args = request_arguments(name, self.login, self.password,
                                  page_size=self.config['page_size'],
-                                 warehouse_ids=self.config['warehouse_ids'], **options)
+                                 warehouse_ids=self.config['warehouse_ids'], extended=self.config.get('extended_categories', False), **options)
         validate_payload(self.operations[name].input.body.type, args)
         for attempt in range(3):
             if self.calls >= self.config['max_api_calls'] or time.monotonic() >= self.deadline:
@@ -190,7 +197,9 @@ def search_pages(call, kind, config, stats):
     try:
         one = get(1)
     except ProviderError:
-        if zero is not None and zero[0] == 1 and zero[1]:
+        if zero is not None and zero[0] == 0 and not zero[1]:
+            one = (0, [])
+        elif zero is not None and zero[0] == 1 and zero[1]:
             one = (1, [])
         else:
             raise
@@ -300,6 +309,7 @@ def collect_catalog(call, config):
         raise SyncError('configured_warehouse_not_available')
     products, categories, excluded = [], {}, Counter()
     for kind, (_, _, container, item) in GROUPS.items():
+        if kind == 'tubes' and not config.get('include_tubes'): continue
         stats = categories[kind] = {'published': 0, 'excluded': 0}
         for rows in search_pages(call, kind, config, stats):
             batch_size = config['detail_batch_size']
@@ -312,7 +322,9 @@ def collect_catalog(call, config):
                     raise SyncError('incomplete_or_duplicate_product_details')
                 for row in batch:
                     try:
-                        p = public_product(kind, mapped[code_of(row)], row, warehouses, config['warehouse_ids'])
+                        from .catalog_types import extended_product
+                        convert = extended_product if config.get('extended_categories') else public_product
+                        p = convert(kind, mapped[code_of(row)], row, warehouses, config['warehouse_ids'])
                     except UnsupportedProduct:
                         p = None
                         excluded['unsupportedParameters'] += 1
@@ -326,10 +338,10 @@ def collect_catalog(call, config):
                         stats['published'] += 1
                 if sum(c.get('scanned', 0) for c in categories.values()) > config['max_products']:
                     raise SyncError('product_budget_exceeded')
-    if not products or any(c['published'] == 0 for c in categories.values()):
+    if not products or any(categories[k]['published'] == 0 for k in ('tires','wheels')):
         raise SyncError('empty_catalog_or_category')
     finished = utc_now()
-    return {'schemaVersion': 3, 'mode': 'snapshot', 'source': '4tochki',
+    return {'schemaVersion': 4 if config.get('extended_categories') else 3, 'mode': 'snapshot', 'source': '4tochki',
             'updatedAt': finished, 'priceBasis': 'supplier_retail',
             'notice': 'Товары с розничной ценой и наличием по последней успешной выгрузке API. '
                       'Показаны поддержанные размеры и характеристики. Наличие, цена и доставка '
@@ -343,7 +355,7 @@ def collect_catalog(call, config):
 
 
 def check_drop(data, previous, maximum, allow=False):
-    if allow or not previous or previous.get('schemaVersion') != 3:
+    if allow or not previous or previous.get('schemaVersion') not in (3,4):
         return
     for kind in GROUPS:
         old = sum(p['kind'] == kind for p in previous['products'])
@@ -359,7 +371,12 @@ def load_config(path):
               'max_api_calls': (10, 10000), 'max_duration_seconds': (60, 3000),
               'max_public_bytes': (10000, 32000000), 'photos_per_run': (0, 500),
               'photo_cache_bytes': (1000000, 200000000), 'photo_time_seconds': (0, 300)}
-    if set(data) != set(bounds) | {'request_interval_seconds', 'warehouse_ids', 'max_drop_fraction'}:
+    optional = {'extended_categories', 'include_tubes'}
+    if any(type(data[k]) is not bool for k in optional if k in data):
+        raise SyncError('invalid_sync_config')
+    if data.get('include_tubes') and not data.get('extended_categories'):
+        raise SyncError('invalid_sync_config')
+    if set(data) - optional != set(bounds) | {'request_interval_seconds', 'warehouse_ids', 'max_drop_fraction'}:
         raise SyncError('invalid_sync_config')
     for key, (low, high) in bounds.items():
         if type(data[key]) is not int or not low <= data[key] <= high:
@@ -419,7 +436,7 @@ def main():
     parser.add_argument('--allow-large-drop', action='store_true')
     args = parser.parse_args()
     report_path = ROOT / 'runtime/sync-summary.json'
-    report = {'version': '0.4.0', 'startedAt': utc_now(), 'status': 'failed', 'published': False}
+    report = {'version': '0.5.0', 'startedAt': utc_now(), 'status': 'failed', 'published': False}
     supplier = None
     try:
         config = load_config(args.config)

@@ -1,37 +1,22 @@
 name: imkonex-wheels
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.portal
     restart: unless-stopped
     env_file: .env
+    environment:
+      PORT: "10000"
+      MANAGER_DB_PATH: /var/data/manager.sqlite3
     ports:
-      - "127.0.0.1:8080:8000"
-    depends_on:
-      db:
-        condition: service_healthy
+      - "127.0.0.1:8080:10000"
+    volumes:
+      - manager_data:/var/data
     mem_limit: 2g
-    cpus: 2
+    cpus: 1
     security_opt:
       - no-new-privileges:true
-    logging:
-      options:
-        max-size: 10m
-        max-file: "3"
-  db:
-    image: postgres:17-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: imkonex
-      POSTGRES_USER: imkonex
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: [CMD-SHELL, "pg_isready -U imkonex -d imkonex"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    mem_limit: 2g
     logging:
       options:
         max-size: 10m
@@ -50,25 +35,7 @@ services:
       - caddy_data:/data
       - caddy_config:/config
     depends_on: [app]
-  worker:
-    build: .
-    profiles: [sync]
-    restart: unless-stopped
-    env_file: .env
-    command: [python, -m, backend.worker]
-    healthcheck:
-      disable: true
-    volumes:
-      - ./runtime/feeds:/feeds:ro
-    depends_on:
-      db:
-        condition: service_healthy
-    mem_limit: 2g
-    logging:
-      options:
-        max-size: 10m
-        max-file: "3"
 volumes:
-  postgres_data:
+  manager_data:
   caddy_data:
   caddy_config:

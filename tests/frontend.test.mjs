@@ -24,26 +24,23 @@ async function browser(){
  w.eval(domain+'\nconst h=escapeHTML;\n'+app);
  return {w,dom,errors,$:s=>w.document.querySelector(s),click:s=>w.document.querySelector(s).click(),route:async path=>{w.location.hash=path;await new Promise(r=>w.setTimeout(r,10));}};
 }
-test('catalog, favorite, detail, cart, quote and manager work end to end',async()=>{const b=await browser();try{
+
+test('public catalog favorites, comparison, complete cart and image fallback work',async()=>{const b=await browser();try{
  assert.equal(b.w.document.querySelectorAll('.product-card').length,12);
  b.click('[data-action="favorite"][data-id="demo-001"]');assert.equal(b.$('#favorites-count').textContent,'1');
  b.click('[data-action="detail"][data-id="demo-001"]');assert.equal(b.$('#dialog').open,true);
  b.click('#dialog [data-action="add"]');assert.equal(b.$('#cart-count').textContent,'4');
  await b.route('cart');assert.match(b.$('.summary-total').textContent,/42\s*720/);
- b.click('[data-action="quote"]');assert.match(b.$('#dialog-title').textContent,/сохранена/);
- await b.route('manager');assert.equal(b.w.document.querySelectorAll('.manager-table tbody tr').length,1);
- assert.deepEqual(b.errors,[]);
- }finally{b.dom.window.close();}});
-test('filter URL, category switch and comparison limit are interactive',async()=>{const b=await browser();try{
+ assert.equal(b.$('[data-action="download-quote"]').disabled,false);
  await b.route('catalog?kind=tires&width=205&profile=55&diameter=16');assert.equal(b.w.document.querySelectorAll('.product-card').length,3);
  b.click('[data-action="compare"][data-id="demo-001"]');b.click('[data-action="compare"][data-id="demo-002"]');
- await b.route('compare');assert.equal(b.w.document.querySelectorAll('.compare-head').length,2);
+ await b.route('compare');assert.equal(b.w.document.querySelectorAll('.compare-table thead img').length,2);
  await b.route('catalog?kind=wheels');b.click('[data-action="compare"]');assert.match(b.$('#toast').textContent,/одной категории/);
- b.click('[data-action="add"]');assert.equal(b.$('#cart-count').textContent,'4');assert.deepEqual(b.errors,[]);
+ const img=b.$('.product-visual img');img.dispatchEvent(new b.w.Event('error'));assert.match(img.src,/product-unavailable/);
+ assert.deepEqual(b.errors,[]);
  }finally{b.dom.window.close();}});
-test('garage uses user-entered size and escapes saved model names',async()=>{const b=await browser();try{
- b.w.localStorage.setItem('imx:garage',JSON.stringify({brand:'<img src=x onerror=alert(1)>',model:'Camry',year:'2022',width:'225',profile:'45',diameter:'18'}));
- await b.route('garage');assert.equal(b.$('[name="brand"]').value,'<img src=x onerror=alert(1)>');assert.equal(b.$('.garage-layout img'),null);
- b.$('#garage-form').dispatchEvent(new b.w.Event('submit',{bubbles:true,cancelable:true}));await new Promise(r=>b.w.setTimeout(r,10));
- assert.equal(b.$('[data-filter="width"]').value,'225');assert.match(b.$('#toast').textContent,/не подтверждена/);assert.deepEqual(b.errors,[]);
+test('static vehicle selection offers contact without pretending a live match',async()=>{const b=await browser();try{
+ await b.route('garage');assert.ok(b.$('.vehicle-offline'));assert.equal(b.$('[data-vehicle="make"]'),null);
+ assert.equal(b.$('.vehicle-offline a').getAttribute('href'),'tel:88003013688');
+ assert.equal(b.$('#catalog-notice'),null);assert.doesNotMatch(b.$('#main').textContent,/4точки|выгрузка|товаров|проверка каталога/i);
  }finally{b.dom.window.close();}});

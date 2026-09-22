@@ -38,7 +38,7 @@ test('paging stays bounded and brand totals respect filters without sorting ever
  assert.equal([...counts.values()].reduce((a,b)=>a+b,0),filterProducts(data.products,filters).length);
 });
 
-test('24,000 products render 12 cards, show freshness and reach last page and exact SKU',async()=>{
+test('24,000 products render 12 cards, hide technical details and reach last page and exact SKU',async()=>{
  const data=catalog(24000),errors=[],vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.message));
  const html=(await readFile(new URL('../frontend/index.html',import.meta.url),'utf8')).replace(/<script[^>]*>[\s\S]*?<\/script>/g,'');
  const dom=new JSDOM(html,{url:'https://imkonex.test/',runScripts:'outside-only',virtualConsole:vc}),w=dom.window;
@@ -53,14 +53,14 @@ test('24,000 products render 12 cards, show freshness and reach last page and ex
   const $=s=>w.document.querySelector(s);
   assert.equal(w.document.querySelectorAll('.product-card').length,12);
   assert.ok(w.document.querySelectorAll('.pagination button').length<=7);
-  assert.match($('#catalog-notice').textContent,/Каталог поставщика.*24000/);
-  assert.match($('.data-summary').textContent,/Последняя успешная выгрузка/);
-  assert.doesNotMatch($('.data-summary').textContent,/ещё не подключено|выборка из отчёта/);
+  assert.equal($('#catalog-notice'),null);
+  assert.equal($('.data-summary'),null);
+  assert.doesNotMatch($('#main').textContent,/24000|выгрузка|Каталог поставщика/);
   $('[data-action="page"][data-page="1000"]').click();
-  assert.match($('.pagination').textContent,/11989–12000 из 12000/);
+  assert.equal($('.pagination [aria-current]').textContent,'1000');
   w.location.hash='catalog?kind=wheels&q=BULK23999';await new Promise(r=>w.setTimeout(r,10));
   assert.equal(w.document.querySelectorAll('.product-card').length,1);
-  assert.match($('.product-code').textContent,/BULK23999/);
+  assert.ok($('[data-id=\"4t-wheels-BULK23999\"]')); 
   assert.deepEqual(errors,[]);
   console.log(`Large-catalog DOM check: ${Math.round(performance.now()-start)} ms for initial render, last page and exact search.`);
  }finally{dom.window.close();}

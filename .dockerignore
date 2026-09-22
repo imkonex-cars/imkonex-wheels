@@ -1,0 +1,13 @@
+.git
+node_modules
+.venv
+runtime
+backups
+results
+artifacts
+dist
+*.zip
+*.sqlite*
+.env
+.env.*
+**/__pycache__

@@ -15,7 +15,7 @@ from zeep.transports import Transport
 
 HOST='api-b2b.4tochki.ru'
 WSDL=f'https://{HOST}/WCF/ClientService.svc?wsdl'
-READ_OPERATIONS=frozenset({'GetFindTyre','GetFindDisk','GetGoodsPriceRestByCode','GetGoodsInfo','GetGoodsByCar','GetMarkaAvto','GetModelAvto','GetYearAvto','GetModificationAvto','GetWarehouses','GetDeliveryPeriod','GetPrice','GetRest'})
+READ_OPERATIONS=frozenset({'GetFindTyre','GetFindDisk','GetFindCamera','GetGoodsPriceRestByCode','GetGoodsInfo','GetGoodsByCar','GetMarkaAvto','GetModelAvto','GetYearAvto','GetModificationAvto','GetWarehouses','GetDeliveryPeriod','GetPrice','GetRest'})
 
 def secure_url(url):
     parsed=urlsplit(url)

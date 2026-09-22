@@ -12,7 +12,7 @@ const data=JSON.parse(raw);
 if(mode==='snapshot')validateSnapshot(data);
 if(!Array.isArray(data.products)||!data.products.length) throw new Error('Catalog is empty');
 for(const p of data.products){
- if(!p.id||!['tires','wheels'].includes(p.kind))throw new Error(`Invalid product ${p.id}`);
+ if(!p.id||!['tires','wheels','tubes'].includes(p.kind))throw new Error(`Invalid product ${p.id}`);
  if(p.image.startsWith('assets/'))await readFile(path.join(root,'frontend',p.image));
  else if(mode!=='snapshot')throw new Error('Demo images must be local');
 }
@@ -29,13 +29,13 @@ await writeFile(path.join(root,'frontend/data/catalog.js'),catalogScript);
 const stage=await mkdtemp(path.join(root,'.imkonex-source-build-'));
 try{
  await cp(path.join(root,'frontend'),stage,{recursive:true});
- await writeFile(path.join(stage,'config.js'),`window.IMKONEX_CONFIG = Object.freeze(${JSON.stringify({mode,apiBase:api,version})});\n`);
+ await writeFile(path.join(stage,'config.js'),`window.IMKONEX_CONFIG = Object.freeze(${JSON.stringify({mode,apiBase:api,version,portal:false})});\n`);
  await writeFile(path.join(stage,'robots.txt'),'User-agent: *\nDisallow: /\n');
  await writeFile(path.join(stage,'build-info.json'),JSON.stringify({
   release:`IMKONEX-WHEELS-${version}-WORKSPACE-1`,version,mode,products:data.products.length,
   tyres:data.products.filter(p=>p.kind==='tires').length,wheels:data.products.filter(p=>p.kind==='wheels').length,
   dataUpdatedAt:data.updatedAt,builtAt:new Date().toISOString(),photos,
-  dataScope:data.schemaVersion===3?'account_catalog':'verified_sample',
+  dataScope:[3,4].includes(data.schemaVersion)?'account_catalog':'verified_sample',
   sync:data.sync||null,
  },null,2)+'\n');
  await rm(path.join(root,'dist'),{recursive:true,force:true});
