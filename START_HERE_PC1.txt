@@ -1,41 +1,72 @@
-IMKONEX CARS — ПОЛНАЯ РАБОЧАЯ ОБЛАСТЬ 0.3.0, WORKSPACE-1
+﻿IMKONEX CARS — ОБНОВЛЕНИЕ 0.4.0: МАССОВАЯ ВЫГРУЗКА
 
-1. Распакуйте IMKONEX_WHEELS_WORKSPACE_v0.3.0.zip в пустую папку.
-   Внутри сразу находятся backend, frontend, data, scripts и другие папки.
-   Вложенного SOURCE_CODE.zip нет.
+Это полный проект. Загрузите его поверх работающей версии с сохранением папок.
+До первого успешного запуска выгрузки на сайте останется проверенная выборка
+из 6 товаров с фотографиями. Это ожидаемое поведение.
 
-2. Создайте новый GitHub-репозиторий или откройте нужный существующий.
-   Add file → Upload files: загрузите содержимое распакованной папки,
-   сохраняя вложенные пути. Нажмите Commit changes.
-   В корне должны быть BUILD_RENDER.mjs, package.json и render.yaml.
-   Полный список всех файлов: FILES_MANIFEST.txt.
-   Главная страница находится в frontend/index.html.
+1. РАСПАКУЙТЕ АРХИВ И ОБНОВИТЕ GITHUB
+   https://github.com/imkonex-cars/imkonex-wheels
+   Ветка main → Add file → Upload files.
+   Перетащите содержимое распакованной папки, сохранив вложенные пути.
+   Корневой BUILD_RENDER.mjs должен быть в корне GitHub.
+   Сохраните Commit changes.
+   При ограничении числа файлов загрузите двумя частями: сначала файлы корня
+   и backend, config, data, deploy, docs, frontend; затем scripts, tests, .github.
 
-3. Render: New → Static Site → подключить репозиторий и нужную ветку.
-   Для существующего сервиса проверьте Repository и Branch.
-   Root Directory: пусто.
-   Build Command: node BUILD_RENDER.mjs
-   Publish Directory: dist
-   Environment → NODE_VERSION: 22
-   Environment → CATALOG_MODE: snapshot
+2. ПРОВЕРЬТЕ WORKFLOW
+   Должен существовать файл .github/workflows/sync-catalog.yml.
+   Если папка .github не загрузилась: Add file → Create new file.
+   Имя файла: .github/workflows/sync-catalog.yml
+   Скопируйте ВСЁ содержимое SYNC_CATALOG_WORKFLOW.txt из архива.
+   Сохраните Commit changes.
 
-4. Для существующего сервиса после сохранения настроек:
-   Manual Deploy → Clear build cache & deploy.
-   В журнале должна появиться строка:
-   BUILD_OK IMKONEX-WHEELS-0.3.0-WORKSPACE-1 | snapshot | 6 products
+3. ДОБАВЬТЕ ДОСТУП К API В ЗАКРЫТЫЕ НАСТРОЙКИ GITHUB
+   Repository → Settings → Secrets and variables → Actions → Secrets.
+   New repository secret — создайте два секрета:
+   FOURTOCHKI_LOGIN       ваш действующий логин API «4точки»
+   FOURTOCHKI_PASSWORD    ваш действующий пароль API «4точки»
+   Значения вводятся только в эти поля; код и файлы проекта их не содержат.
 
-5. Откройте адрес, указанный в Render, и нажмите Ctrl+F5.
-   Вверху: «Реальная выборка · 6 товаров».
-   Добавьте /build-info.json к адресу — mode: snapshot, products: 6.
-   Новый сервис получит свой адрес; старый адрес относится к старому сервису.
+4. ПРОВЕРЬТЕ RENDER
+   Используйте существующий Static Site imkonex-wheels-demo.
+   Repository: imkonex-cars/imkonex-wheels; Branch: main.
+   Root Directory: пусто; Build Command: node BUILD_RENDER.mjs
+   Publish Directory: dist; Auto-Deploy: On Commit.
+   Если нужен явный вызов публикации из Actions через Deploy Hook,
+   следуйте отдельному варианту в docs/SYNC_SETUP.md.
 
-Папка .github нужна для автопроверок GitHub. Если она не загружается,
-создайте в GitHub файл .github/workflows/ci.yml и вставьте содержимое
-файла из архива. Сама сборка Render может работать без этой папки.
+5. ЗАПУСТИТЕ ПЕРВУЮ ВЫГРУЗКУ
+   GitHub → Actions → Sync 4tochki catalog → Run workflow → main.
+   Оставьте dry_run и allow_large_drop выключенными.
+   Нажмите Run workflow и дождитесь результата.
+   Ожидаемая строка: SYNC_OK ... products; all search pages read; retail prices only.
+   Затем должен пройти шаг Build the public site и запись коммита.
+   Число товаров определяется ответами вашего API; заранее оно не задаётся.
 
-Используйте BUILD_RENDER.mjs из текущего архива.
-Не загружайте node_modules, dist, виртуальное окружение, .env и API-отчёты.
+6. ПРОВЕРЬТЕ ПУБЛИКАЦИЮ
+   Дождитесь успешной сборки Render.
+   https://imkonex-wheels-demo.onrender.com/build-info.json
+   version: 0.4.0
+   dataScope: account_catalog
+   sync.complete: true
+   products: фактическое число подготовленных товаров.
+   На странице появится «Каталог поставщика» и время выгрузки. Нажмите Ctrl+F5.
+   Если dataScope: verified_sample — опубликована исходная выборка,
+   а массовая выгрузка ещё не попала на сайт.
+   Если Render не начал сборку коммита — Manual Deploy → Deploy latest commit.
+   Для дальнейших автоматических публикаций настройте Deploy Hook по инструкции.
 
-Включены 3 шины и 3 диска по данным от 17.09.2026, 19:23 UTC.
-Автообновление, заказ и оплата пока не подключены.
-Полные сведения: README.md. Фотографии и заголовки: docs/RENDER.md.
+7. ВКЛЮЧИТЕ РАСПИСАНИЕ ПОСЛЕ УСПЕШНОГО ПЕРВОГО ЗАПУСКА
+   GitHub → Settings → Secrets and variables → Actions → Variables.
+   New repository variable:
+   Name: CATALOG_AUTO_SYNC
+   Value: true
+   Начальное расписание: 07:23 и 19:23 Челябинск, ежедневно.
+   Возможны задержки GitHub. Частоту пока оставьте такой до проверки лимитов API.
+   Чтобы остановить расписание, измените значение переменной на false.
+
+Если ошибка: откройте красный запуск Actions, найдите первый шаг с ошибкой
+и передайте его журнал. Достаточно кода SYNC_FAILED; пароль и значения
+Secrets передавать не нужно. Предыдущая рабочая выборка сохраняется.
+
+Полная инструкция, Deploy Hook, ошибки и лимиты: docs/SYNC_SETUP.md.

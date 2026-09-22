@@ -1,7 +1,7 @@
 ﻿IMKONEX CARS — ОБНОВЛЕНИЕ ФОТО PHOTOS-1
 
 Для работающей полной сборки WORKSPACE-1, версия 0.3.0.
-Репозиторий: https://github.com/imkonex-cars/imkonex-union-catalog-mvp
+Репозиторий: https://github.com/imkonex-cars/imkonex-wheels
 Ветка: main
 
 1. Распакуйте IMKONEX_PHOTOS_FIX.zip.

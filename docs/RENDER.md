@@ -1,6 +1,6 @@
 # Render: рабочая область 0.4.0
 
-Используется существующий Static Site imkonex-wheels-demo, репозиторий imkonex-cars/imkonex-union-catalog-mvp, ветка main. Главный HTML исходников — frontend/index.html; публикуемый — dist/index.html.
+Используется существующий Static Site imkonex-wheels-demo, репозиторий imkonex-cars/imkonex-wheels, ветка main. Главный HTML исходников — frontend/index.html; публикуемый — dist/index.html.
 
 | Поле | Значение |
 |---|---|

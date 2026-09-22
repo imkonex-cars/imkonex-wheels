@@ -6,7 +6,7 @@
 
 ШАГ 2. ЗАГРУЗИТЬ
 Откройте репозиторий, подключённый к Render:
-https://github.com/imkonex-cars/svgimkonex-union-catalog-mvp
+https://github.com/imkonex-cars/imkonex-wheels
 Выберите ту же ветку, которая указана в Render → Settings → Branch.
 Сохраните предыдущую копию: Code → Download ZIP.
 В корне репозитория: Add file → Upload files → choose your files.

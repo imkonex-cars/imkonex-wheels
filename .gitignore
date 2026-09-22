@@ -19,3 +19,4 @@ runtime/
 *.log
 artifacts/
 .imkonex-source-build-*/
+.catalog-sync-*/

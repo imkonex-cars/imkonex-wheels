@@ -12,7 +12,7 @@ Workflow запрашивает contents: write только для сохран
 
 ## Два способа публикации Render
 
-**Вариант A — существующий Auto-Deploy.** В Render проверьте подключение к imkonex-cars/imkonex-union-catalog-mvp, ветку main и Auto-Deploy → On Commit. Workflow записывает новый коммит. Проверьте, что Render действительно начал его сборку. Если этого не произошло, запустите Manual Deploy → Deploy latest commit, затем используйте вариант B для следующих выгрузок.
+**Вариант A — существующий Auto-Deploy.** В Render проверьте подключение к imkonex-cars/imkonex-wheels, ветку main и Auto-Deploy → On Commit. Workflow записывает новый коммит. Проверьте, что Render действительно начал его сборку. Если этого не произошло, запустите Manual Deploy → Deploy latest commit, затем используйте вариант B для следующих выгрузок.
 
 **Вариант B — Deploy Hook.** В Render откройте свой Static Site → Settings → Deploy Hook и скопируйте секретный URL. В GitHub Secrets добавьте RENDER_DEPLOY_HOOK_URL со всем этим URL. В Render переключите Auto-Deploy в Off, чтобы коммит и hook не запускали две сборки. Workflow вызовет hook только после успешного git push. После ручных изменений кода запускайте Manual Deploy в Render либо новый Sync 4tochki catalog. Код 200/202 означает принятие запроса, окончательный результат смотрите в журнале Render.
 

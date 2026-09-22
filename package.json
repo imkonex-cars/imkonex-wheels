@@ -1,6 +1,6 @@
 {
   "name": "imkonex-wheels",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "node BUILD_RENDER.mjs",
-    "test": "node --test tests/frontend.test.mjs tests/snapshot.test.mjs tests/workspace.test.mjs",
+    "test": "node --test tests/frontend.test.mjs tests/snapshot.test.mjs tests/workspace.test.mjs tests/bulk.test.mjs",
     "check": "node --check frontend/app.js && node --check frontend/domain.js",
     "start": "python3 -m http.server 4173 --directory dist"
   },
