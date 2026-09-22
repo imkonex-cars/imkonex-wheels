@@ -23,7 +23,12 @@ class Store:
                 created REAL NOT NULL, updated REAL NOT NULL);
               CREATE TABLE IF NOT EXISTS audit(id INTEGER PRIMARY KEY, event TEXT NOT NULL, subject TEXT NOT NULL, created REAL NOT NULL);
               CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY,value TEXT NOT NULL);
+              CREATE TABLE IF NOT EXISTS offer_prices(product_id TEXT NOT NULL, warehouse INTEGER NOT NULL,
+                rule TEXT NOT NULL, updated REAL NOT NULL, PRIMARY KEY(product_id,warehouse));
+              CREATE TABLE IF NOT EXISTS selections(token TEXT PRIMARY KEY,payload TEXT NOT NULL,expires REAL NOT NULL);
             ''')
+            columns={r['name'] for r in con.execute('PRAGMA table_info(purchase)')}
+            if 'retail' not in columns: con.execute('ALTER TABLE purchase ADD COLUMN retail REAL')
         self.path.chmod(0o600)
 
     @contextmanager
@@ -98,8 +103,37 @@ class Store:
         with self.connect() as con:
             # A missing product is out of stock; remove stale cached availability.
             con.executemany('DELETE FROM purchase WHERE sku=?', [(c,) for c in codes])
-            con.executemany('INSERT INTO purchase VALUES (?,?,?,?,?)',
-                [(o['sku'],o['warehouseId'],o['purchasePrice'],o['stock'],now) for o in offers])
+            con.executemany('INSERT INTO purchase(sku,warehouse,cost,stock,updated,retail) VALUES (?,?,?,?,?,?)',
+                [(o['sku'],o['warehouseId'],o['purchasePrice'],o['stock'],now,o.get('supplierRetailPrice')) for o in offers])
+
+    def offer_rules(self):
+        with self.connect() as con:
+            return {(r['product_id'],r['warehouse']):json.loads(r['rule']) for r in con.execute('SELECT * FROM offer_prices')}
+
+    def set_offer_rule(self, product_id, warehouse, rule):
+        with self.connect() as con:
+            if rule is None: con.execute('DELETE FROM offer_prices WHERE product_id=? AND warehouse=?',(product_id,warehouse))
+            else: con.execute('INSERT INTO offer_prices VALUES (?,?,?,?) ON CONFLICT(product_id,warehouse) DO UPDATE SET rule=excluded.rule,updated=excluded.updated',
+                              (product_id,warehouse,json.dumps(rule),time.time()))
+        self.audit('offer_price_changed',product_id+':'+str(warehouse))
+
+    def setting(self, key, default=None):
+        with self.connect() as con: row=con.execute('SELECT value FROM settings WHERE key=?',(key,)).fetchone()
+        return json.loads(row['value']) if row else default
+
+    def set_setting(self,key,value):
+        with self.connect() as con: con.execute('INSERT INTO settings VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value',(key,json.dumps(value)))
+
+    def save_selection(self, payload):
+        token=secrets.token_urlsafe(24);expires=time.time()+7*86400
+        with self.connect() as con:
+            con.execute('DELETE FROM selections WHERE expires < ?',(time.time(),))
+            con.execute('INSERT INTO selections VALUES (?,?,?)',(token,json.dumps(payload),expires))
+        return token,expires
+
+    def selection(self, token):
+        with self.connect() as con: row=con.execute('SELECT payload,expires FROM selections WHERE token=? AND expires>?',(token,time.time())).fetchone()
+        return {**json.loads(row['payload']),'expiresAt':row['expires']} if row else None
 
     def create_order(self, draft):
         now = time.time()

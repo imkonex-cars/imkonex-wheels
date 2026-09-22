@@ -1,6 +1,7 @@
 """Public extended categories from explicit supplier types, never size guesses."""
 from .export_snapshot import number, text, public_offers
 from .catalog_photos import public_photo_url
+from .product_attributes import product_attributes
 
 TYPE_CATEGORY = {'car':'passenger','vned':'passenger','cartruck':'truck','truck':'truck',
                  'moto':'moto','quadbike':'moto','specteh':'special','selhoz':'special',
@@ -15,7 +16,9 @@ def extended_product(kind, detail, search, warehouses, warehouse_ids):
     from .catalog_sync import public_product, product_id, code_of, rows_at, SyncError, UnsupportedProduct
     if kind == 'wheels':
         p=public_product(kind,detail,search,warehouses,warehouse_ids)
-        if p is not None:p['vehicleCategory']='wheels'
+        if p is not None:
+            p['vehicleCategory']='wheels'
+            p['attributes']=product_attributes(kind,detail)
         return p
     code=code_of(detail)
     if code!=code_of(search):raise SyncError('article_mapping_mismatch')
@@ -52,6 +55,7 @@ def extended_product(kind, detail, search, warehouses, warehouse_ids):
                      studded=detail.get('thorn') if type(detail.get('thorn')) is bool else None,
                      xl=True if str(detail.get('tonnage','')).upper()=='XL' else None,
                      runflat=detail.get('runflat') if type(detail.get('runflat')) is bool else None)
+        p['attributes']=product_attributes(kind,detail)
         return p
     except (ValueError,TypeError):
         raise UnsupportedProduct('unsupported_product_parameters') from None

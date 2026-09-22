@@ -48,7 +48,7 @@ test('24,000 products render 12 cards, hide technical details and reach last pag
   w.HTMLDialogElement.prototype.showModal=function(){this.setAttribute('open','');};
   w.HTMLDialogElement.prototype.close=function(){this.removeAttribute('open');};
   const domain=(await readFile(new URL('../frontend/domain.js',import.meta.url),'utf8')).replace(/^export /gm,'');
-  const app=(await readFile(new URL('../frontend/app.js',import.meta.url),'utf8')).replace(/^import .*;\n/,'');
+  const app=(await readFile(new URL('../frontend/app.js',import.meta.url),'utf8')).replace(/^import .*;\n/gm,'');
   const start=performance.now();w.eval(domain+'\nconst h=escapeHTML;\n'+app);
   const $=s=>w.document.querySelector(s);
   assert.equal(w.document.querySelectorAll('.product-card').length,12);

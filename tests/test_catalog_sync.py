@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parent.parent
 
 def config():
     result = sync.load_config(ROOT / 'config/sync.json')
-    result.update(extended_categories=False, include_tubes=False, page_size=5, detail_batch_size=3, photos_per_run=0, photo_time_seconds=1)
+    result.update(extended_categories=False, include_tubes=False, include_accessories=False, page_size=5, detail_batch_size=3, photos_per_run=0, photo_time_seconds=1)
     return result
 
 

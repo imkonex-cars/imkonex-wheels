@@ -1,0 +1,4456 @@
+:host{display:block;font-family:Arial,sans-serif;color:#122536}button{font:inherit}a{color:inherit}img{max-width:100%}
+
+
+/* =========================================================
+   IMKONEX GLOBAL HEADER
+   BLOCK 02 — FINAL DESKTOP CSS
+========================================================= */
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+.imx-global-header{
+
+    --imx-blue:#0D1B2A;
+    --imx-blue-light:#10283B;
+    --imx-blue-deep:#071522;
+
+    --imx-green:#55AE3B;
+    --imx-green-light:#79C953;
+
+    --imx-header-height:82px;
+    --imx-header-scroll-height:72px;
+
+    --imx-container:1240px;
+
+    position:relative;
+
+    z-index:99999;
+
+    width:100%;
+
+    color:#FFFFFF;
+
+    font-family:inherit;
+
+}
+
+
+.imx-global-header *,
+.imx-global-header *::before,
+.imx-global-header *::after{
+    box-sizing:border-box;
+}
+
+
+.imx-global-header a{
+    text-decoration:none;
+}
+
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.imx-gh__shell{
+
+    position:fixed;
+
+    z-index:99999;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:var(--imx-header-height);
+
+    background:
+
+        radial-gradient(
+            circle at 82% -140%,
+            rgba(85,174,59,.19),
+            transparent 38%
+        ),
+
+        linear-gradient(
+            135deg,
+            #0B1927 0%,
+            var(--imx-blue) 54%,
+            var(--imx-blue-deep) 100%
+        );
+
+    border-bottom:
+        1px solid rgba(255,255,255,.10);
+
+    box-shadow:
+        0 8px 32px rgba(0,0,0,.12);
+
+    transition:
+        height .28s ease,
+        background .28s ease,
+        box-shadow .28s ease;
+
+}
+
+
+.imx-global-header::after{
+
+    content:"";
+
+    display:block;
+
+    height:var(--imx-header-height);
+
+}
+
+
+.imx-global-header.is-scrolled
+.imx-gh__shell{
+
+    height:var(--imx-header-scroll-height);
+
+    background:
+        rgba(8,22,34,.975);
+
+    backdrop-filter:
+        blur(18px) saturate(140%);
+
+    -webkit-backdrop-filter:
+        blur(18px) saturate(140%);
+
+    box-shadow:
+        0 12px 38px rgba(0,0,0,.17);
+
+}
+
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.imx-gh__container{
+
+    width:100%;
+    height:100%;
+
+    max-width:var(--imx-container);
+
+    margin:0 auto;
+
+    padding:0 20px;
+
+    display:grid;
+
+    grid-template-columns:
+        auto minmax(0,1fr) auto;
+
+    align-items:center;
+
+    gap:22px;
+
+}
+
+
+
+/* =========================================================
+   BRAND
+========================================================= */
+
+.imx-gh__brandslot{
+
+    display:flex;
+
+    align-items:center;
+
+    min-width:137px;
+
+}
+
+
+.imx-gh__brand{
+
+    position:relative;
+
+    display:flex;
+
+    align-items:center;
+
+    padding:6px 0;
+
+    transition:
+        transform .32s cubic-bezier(.16,1,.3,1),
+        filter .32s ease;
+
+}
+
+
+.imx-gh__brand--main{
+    width:137px;
+}
+
+
+.imx-gh__brand--cars{
+
+    display:none;
+
+    width:188px;
+
+}
+
+
+:host
+.imx-gh__brand--main{
+    display:none;
+}
+
+
+:host
+.imx-gh__brand--cars{
+    display:flex;
+}
+
+
+
+/* LOGOS */
+
+.imx-gh__logo-stack{
+
+    position:relative;
+
+    display:block;
+
+    width:100%;
+
+}
+
+
+.imx-gh__brand-logo{
+
+    display:block;
+
+    width:100%;
+    height:auto;
+
+    object-fit:contain;
+
+    transition:
+        opacity .30s ease,
+        transform .38s cubic-bezier(.16,1,.3,1);
+
+}
+
+
+.imx-gh__brand-logo--base{
+
+    position:relative;
+
+    z-index:1;
+
+    opacity:1;
+
+}
+
+
+.imx-gh__brand-logo--active{
+
+    position:absolute;
+
+    z-index:2;
+
+    top:0;
+    left:0;
+
+    opacity:0;
+
+    pointer-events:none;
+
+}
+
+
+.imx-gh__brand:hover{
+
+    transform:translateY(-2px);
+
+    filter:
+        drop-shadow(
+            0 10px 22px rgba(85,174,59,.20)
+        );
+
+}
+
+
+.imx-gh__brand:hover
+.imx-gh__brand-logo--base{
+
+    opacity:0;
+
+    transform:scale(.985);
+
+}
+
+
+.imx-gh__brand:hover
+.imx-gh__brand-logo--active{
+
+    opacity:1;
+
+    transform:scale(1.035);
+
+}
+
+
+.imx-gh__brand:focus-visible
+.imx-gh__brand-logo--base{
+    opacity:0;
+}
+
+
+.imx-gh__brand:focus-visible
+.imx-gh__brand-logo--active{
+    opacity:1;
+}
+
+
+
+/* LOGO SHINE */
+
+.imx-gh__brand-shine{
+
+    position:absolute;
+
+    z-index:4;
+
+    top:-55%;
+    left:-65%;
+
+    width:32%;
+    height:210%;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transform:rotate(13deg);
+
+    background:
+        linear-gradient(
+            110deg,
+            transparent,
+            rgba(255,255,255,.04),
+            rgba(255,255,255,.42),
+            rgba(255,255,255,.04),
+            transparent
+        );
+
+}
+
+
+.imx-gh__brand:hover
+.imx-gh__brand-shine{
+
+    animation:
+        imxHeaderLogoShine
+        .78s cubic-bezier(.16,1,.3,1)
+        forwards;
+
+}
+
+
+@keyframes imxHeaderLogoShine{
+
+    0%{
+        left:-65%;
+        opacity:0;
+    }
+
+    18%{
+        opacity:.75;
+    }
+
+    100%{
+        left:140%;
+        opacity:0;
+    }
+
+}
+
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+.imx-gh__nav{
+
+    min-width:0;
+    height:100%;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:1px;
+
+}
+
+
+.imx-gh__item{
+
+    position:relative;
+
+    height:100%;
+
+}
+
+
+.imx-gh__link{
+
+    position:relative;
+
+    height:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    padding:0 10px;
+
+    color:
+        rgba(255,255,255,.94) !important;
+
+    background:none;
+
+    border:0;
+
+    outline:0;
+
+    cursor:pointer;
+
+    font-family:inherit;
+
+    font-size:15px;
+
+    line-height:1;
+
+    font-weight:550;
+
+    letter-spacing:-.015em;
+
+    white-space:nowrap;
+
+    transition:
+        color .2s ease;
+
+}
+
+
+.imx-gh__link svg{
+
+    width:9px;
+    height:6px;
+
+    flex:0 0 auto;
+
+    transition:
+        transform .22s ease;
+
+}
+
+
+
+/* ACTIVE LINE */
+
+.imx-gh__link::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:10px;
+    right:10px;
+
+    bottom:15px;
+
+    height:2px;
+
+    opacity:0;
+
+    border-radius:99px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--imx-green),
+            var(--imx-green-light)
+        );
+
+    transform:scaleX(.35);
+
+    transition:
+        opacity .2s ease,
+        transform .2s ease;
+
+}
+
+
+.imx-global-header.is-scrolled
+.imx-gh__link::after{
+    bottom:12px;
+}
+
+
+.imx-gh__link:hover{
+    color:#FFFFFF !important;
+}
+
+
+.imx-gh__link:hover::after{
+
+    opacity:1;
+
+    transform:scaleX(1);
+
+}
+
+
+
+/* VED ACTIVE */
+
+:host(.ved-page)
+#imxVedMenu > .imx-gh__trigger{
+
+    color:#FFFFFF !important;
+
+    font-weight:600;
+
+}
+
+
+:host(.ved-page)
+#imxVedMenu > .imx-gh__trigger::after{
+
+    opacity:1;
+
+    transform:scaleX(1);
+
+}
+
+
+
+/* CARS ACTIVE */
+
+:host
+#imxCarsMenu > .imx-gh__trigger{
+
+    color:#FFFFFF !important;
+
+    font-weight:600;
+
+}
+
+
+:host
+#imxCarsMenu > .imx-gh__trigger::after{
+
+    opacity:1;
+
+    transform:scaleX(1);
+
+}
+
+
+
+/* ARROW */
+
+.imx-gh__item:hover
+.imx-gh__trigger svg,
+
+.imx-gh__item:focus-within
+.imx-gh__trigger svg{
+
+    transform:rotate(180deg);
+
+}
+
+
+
+/* =========================================================
+   MEGA MENU
+========================================================= */
+
+.imx-gh__mega{
+
+    position:fixed;
+
+    z-index:100001;
+
+    top:82px;
+    left:50%;
+
+    width:
+        min(1000px,calc(100vw - 40px));
+
+    padding-top:12px;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    pointer-events:none;
+
+    transform:
+        translate(-50%,9px);
+
+    transition:
+        top .28s ease,
+        opacity .22s ease,
+        visibility .22s ease,
+        transform .22s ease;
+
+}
+
+
+.imx-global-header.is-scrolled
+.imx-gh__mega{
+    top:72px;
+}
+
+
+.imx-gh__item:hover
+.imx-gh__mega,
+
+.imx-gh__item:focus-within
+.imx-gh__mega{
+
+    opacity:1;
+
+    visibility:visible;
+
+    pointer-events:auto;
+
+    transform:
+        translate(-50%,0);
+
+}
+
+
+
+/* =========================================================
+   MEGA BOX
+========================================================= */
+
+.imx-gh__mega-box{
+
+    display:grid;
+
+    grid-template-columns:
+        1.22fr 1.14fr .88fr .88fr;
+
+    gap:10px;
+
+    padding:13px;
+
+    background:
+        rgba(251,252,252,.99);
+
+    border:
+        1px solid rgba(255,255,255,.72);
+
+    border-radius:16px;
+
+    box-shadow:
+        0 28px 75px rgba(3,15,25,.25);
+
+    backdrop-filter:blur(20px);
+
+    -webkit-backdrop-filter:blur(20px);
+
+}
+
+
+
+/* =========================================================
+   INTRO
+========================================================= */
+
+.imx-gh__mega-intro{
+
+    min-height:280px;
+
+    padding:24px;
+
+    overflow:hidden;
+
+    color:#FFFFFF;
+
+    border-radius:12px;
+
+    background:
+
+        radial-gradient(
+            circle at 110% -10%,
+            rgba(85,174,59,.28),
+            transparent 43%
+        ),
+
+        linear-gradient(
+            145deg,
+            #0D1B2A,
+            #10283B
+        );
+
+}
+
+
+.imx-gh__eyebrow{
+
+    display:block;
+
+    margin-bottom:11px;
+
+    color:var(--imx-green-light);
+
+    font-size:10px;
+
+    line-height:1.35;
+
+    font-weight:700;
+
+    letter-spacing:.13em;
+
+}
+
+
+.imx-gh__mega-intro h3{
+
+    margin:0 0 12px;
+
+    color:#FFFFFF;
+
+    font-size:22px;
+
+    line-height:1.28;
+
+    font-weight:600;
+
+    letter-spacing:-.025em;
+
+}
+
+
+.imx-gh__mega-intro p{
+
+    margin:0 0 20px;
+
+    color:
+        rgba(255,255,255,.88);
+
+    font-size:13px;
+
+    line-height:1.65;
+
+}
+
+
+.imx-gh__mega-cars-logo{
+    margin-bottom:16px;
+}
+
+
+.imx-gh__mega-cars-logo img{
+
+    display:block;
+
+    width:165px;
+
+    height:auto;
+
+}
+
+
+.imx-gh__intro-link{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    color:#FFFFFF !important;
+
+    font-size:13px;
+
+    line-height:1.4;
+
+    font-weight:600;
+
+}
+
+
+.imx-gh__intro-link > span{
+
+    color:var(--imx-green-light);
+
+    font-size:15px;
+
+    transition:
+        transform .2s ease;
+
+}
+
+
+.imx-gh__intro-link:hover > span{
+    transform:translateX(3px);
+}
+
+
+
+/* =========================================================
+   MEGA COLUMNS
+========================================================= */
+
+.imx-gh__mega-column{
+
+    min-width:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    padding:9px 6px;
+
+}
+
+
+.imx-gh__column-title{
+
+    display:block;
+
+    margin:4px 9px 10px;
+
+    color:#4C9F36;
+
+    font-size:10.5px;
+
+    line-height:1.35;
+
+    font-weight:700;
+
+    letter-spacing:.13em;
+
+}
+
+
+.imx-gh__mega-column
+> a:not(.imx-gh__service){
+
+    min-height:42px;
+
+    display:flex;
+
+    align-items:center;
+
+    padding:8px 9px;
+
+    color:#35444F !important;
+
+    border-radius:8px;
+
+    font-size:13.5px;
+
+    line-height:1.42;
+
+    font-weight:500;
+
+    transition:
+        color .2s ease,
+        background .2s ease,
+        transform .2s ease;
+
+}
+
+
+.imx-gh__mega-column
+> a:not(.imx-gh__service):hover{
+
+    color:#0D1B2A !important;
+
+    background:#F0F4F1;
+
+    transform:translateX(2px);
+
+}
+
+
+
+/* =========================================================
+   SERVICE CARDS
+========================================================= */
+
+.imx-gh__service{
+
+    min-height:68px;
+
+    display:grid;
+
+    grid-template-columns:
+        36px minmax(0,1fr);
+
+    align-items:center;
+
+    gap:11px;
+
+    margin-bottom:3px;
+
+    padding:8px;
+
+    color:#0D1B2A !important;
+
+    border-radius:9px;
+
+    transition:
+        background .2s ease,
+        transform .2s ease;
+
+}
+
+
+.imx-gh__service:hover{
+
+    background:#F0F4F1;
+
+    transform:translateX(2px);
+
+}
+
+
+.imx-gh__service-icon{
+
+    width:36px;
+    height:36px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    color:#4C9F36;
+
+    background:
+        rgba(85,174,59,.10);
+
+    border:
+        1px solid rgba(85,174,59,.08);
+
+    border-radius:8px;
+
+    font-size:8.5px;
+
+    font-weight:700;
+
+}
+
+
+.imx-gh__service strong{
+
+    display:block;
+
+    color:#21313D;
+
+    font-size:13.5px;
+
+    line-height:1.4;
+
+    font-weight:600;
+
+}
+
+
+.imx-gh__service small{
+
+    display:block;
+
+    margin-top:3px;
+
+    color:#62717B;
+
+    font-size:11.5px;
+
+    line-height:1.4;
+
+}
+
+
+
+/* USED CAR ICON */
+
+.imx-gh__service-icon--car svg{
+
+    display:block;
+
+    width:23px;
+    height:23px;
+
+}
+
+
+
+/* =========================================================
+   KNOWLEDGE BASE LINK
+========================================================= */
+
+.imx-gh__knowledge-link{
+
+    justify-content:space-between;
+
+    gap:12px;
+
+}
+
+
+.imx-gh__knowledge-link > span{
+
+    margin-left:auto;
+
+    color:#55AE3B;
+
+    font-size:14px;
+
+    line-height:1;
+
+    transition:
+        transform .2s ease;
+
+}
+
+
+.imx-gh__knowledge-link:hover > span{
+    transform:translateX(3px);
+}
+
+
+
+/* =========================================================
+   NOTE
+========================================================= */
+
+.imx-gh__mega-note{
+
+    margin:auto 8px 6px;
+
+    padding-top:13px;
+
+    color:#61707A;
+
+    border-top:
+        1px solid rgba(13,27,42,.08);
+
+    font-size:11px;
+
+    line-height:1.5;
+
+}
+
+
+.imx-gh__mega-note > span{
+
+    width:6px;
+    height:6px;
+
+    display:inline-block;
+
+    margin-right:6px;
+
+    border-radius:50%;
+
+    background:var(--imx-green);
+
+}
+
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.imx-gh__actions{
+
+    height:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:13px;
+
+}
+
+
+
+/* =========================================================
+   PHONE
+========================================================= */
+
+.imx-gh__phone-wrap{
+
+    position:relative;
+
+    height:100%;
+
+    display:flex;
+
+    align-items:center;
+
+}
+
+
+.imx-gh__phone{
+
+    min-height:54px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+    padding:4px 2px;
+
+    color:#FFFFFF !important;
+
+    white-space:nowrap;
+
+}
+
+
+.imx-gh__phone-copy{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:flex-end;
+
+}
+
+
+.imx-gh__phone small{
+
+    margin-bottom:4px;
+
+    color:
+        rgba(255,255,255,.92);
+
+    font-size:11px;
+
+    line-height:1.15;
+
+    font-weight:500;
+
+    letter-spacing:.015em;
+
+}
+
+
+.imx-gh__phone strong{
+
+    color:#FFFFFF;
+
+    font-size:17.5px;
+
+    line-height:1.2;
+
+    font-weight:650;
+
+    letter-spacing:-.025em;
+
+}
+
+
+.imx-gh__phone-chevron{
+
+    width:23px;
+    height:23px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    color:
+        rgba(255,255,255,.75);
+
+    border-radius:50%;
+
+    transition:
+        color .22s ease,
+        background .22s ease,
+        transform .22s ease;
+
+}
+
+
+.imx-gh__phone-chevron svg{
+
+    width:9px;
+    height:6px;
+
+}
+
+
+.imx-gh__phone-wrap:hover
+.imx-gh__phone-chevron,
+
+.imx-gh__phone-wrap:focus-within
+.imx-gh__phone-chevron{
+
+    color:var(--imx-green-light);
+
+    background:
+        rgba(85,174,59,.11);
+
+    transform:rotate(180deg);
+
+}
+
+
+
+/* =========================================================
+   PHONE DROPDOWN
+========================================================= */
+
+.imx-gh__phone-dropdown{
+
+    position:absolute;
+
+    z-index:100010;
+
+    top:calc(100% - 2px);
+    right:-10px;
+
+    width:320px;
+
+    padding-top:12px;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    pointer-events:none;
+
+    transform:translateY(9px);
+
+    transition:
+        opacity .22s ease,
+        visibility .22s ease,
+        transform .22s ease;
+
+}
+
+
+.imx-gh__phone-dropdown::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:14px;
+
+}
+
+
+.imx-gh__phone-wrap:hover
+.imx-gh__phone-dropdown,
+
+.imx-gh__phone-wrap:focus-within
+.imx-gh__phone-dropdown{
+
+    opacity:1;
+
+    visibility:visible;
+
+    pointer-events:auto;
+
+    transform:translateY(0);
+
+}
+
+
+.imx-gh__phone-card{
+
+    overflow:hidden;
+
+    background:
+        rgba(251,252,252,.99);
+
+    border:
+        1px solid rgba(13,27,42,.09);
+
+    border-radius:14px;
+
+    box-shadow:
+        0 25px 65px rgba(3,15,25,.22);
+
+}
+
+
+.imx-gh__phone-dropdown-head{
+
+    padding:19px 18px 15px;
+
+}
+
+
+.imx-gh__phone-dropdown-head > span{
+
+    display:block;
+
+    margin-bottom:4px;
+
+    color:#55AE3B;
+
+    font-size:10px;
+
+    line-height:1.3;
+
+    font-weight:700;
+
+    letter-spacing:.13em;
+
+}
+
+
+.imx-gh__phone-dropdown-head > strong{
+
+    display:block;
+
+    color:#0D1B2A;
+
+    font-size:17px;
+
+    line-height:1.3;
+
+    font-weight:600;
+
+}
+
+
+
+/* OFFICE PHONES */
+
+.imx-gh__phone-list{
+
+    padding:2px 8px 7px;
+
+}
+
+
+.imx-gh__office-phone{
+
+    min-height:63px;
+
+    display:grid;
+
+    grid-template-columns:
+        36px minmax(0,1fr) auto;
+
+    align-items:center;
+
+    gap:11px;
+
+    padding:7px 9px;
+
+    color:#0D1B2A !important;
+
+    border-radius:9px;
+
+    transition:
+        background .2s ease,
+        transform .2s ease;
+
+}
+
+
+.imx-gh__office-phone
++ .imx-gh__office-phone{
+
+    border-top:
+        1px solid rgba(13,27,42,.06);
+
+}
+
+
+.imx-gh__office-phone:hover{
+
+    background:#F0F4F1;
+
+    transform:translateX(2px);
+
+}
+
+
+.imx-gh__office-code{
+
+    width:36px;
+    height:36px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    color:#4C9F36;
+
+    background:
+        rgba(85,174,59,.10);
+
+    border-radius:8px;
+
+    font-size:8.5px;
+
+    font-weight:700;
+
+}
+
+
+.imx-gh__office-phone-copy small{
+
+    display:block;
+
+    margin-bottom:3px;
+
+    color:#5F6D77;
+
+    font-size:11.5px;
+
+    line-height:1.3;
+
+    font-weight:500;
+
+}
+
+
+.imx-gh__office-phone-copy strong{
+
+    display:block;
+
+    color:#172833;
+
+    font-size:14.5px;
+
+    line-height:1.35;
+
+    font-weight:600;
+
+    white-space:nowrap;
+
+}
+
+
+.imx-gh__office-phone > i{
+
+    color:#55AE3B;
+
+    font-size:11px;
+
+    font-style:normal;
+
+    transition:
+        transform .2s ease;
+
+}
+
+
+.imx-gh__office-phone:hover > i{
+    transform:translate(2px,-2px);
+}
+
+
+.imx-gh__phone-dropdown-bottom{
+
+    min-height:43px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+    padding:0 18px;
+
+    color:#64737D;
+
+    background:#F7F9F8;
+
+    border-top:
+        1px solid rgba(13,27,42,.06);
+
+    font-size:11px;
+
+}
+
+
+.imx-gh__phone-dropdown-bottom > span{
+
+    width:6px;
+    height:6px;
+
+    border-radius:50%;
+
+    background:#55AE3B;
+
+}
+
+
+
+/* =========================================================
+   CTA
+========================================================= */
+
+.imx-gh__cta{
+
+    min-height:48px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:10px;
+
+    padding:0 18px;
+
+    color:#FFFFFF !important;
+
+    background:var(--imx-green);
+
+    border:
+        1px solid rgba(255,255,255,.06);
+
+    border-radius:8px;
+
+    box-shadow:
+        0 9px 24px rgba(0,0,0,.14);
+
+    font-size:15px;
+
+    line-height:1;
+
+    font-weight:550;
+
+    letter-spacing:-.015em;
+
+    white-space:nowrap;
+
+    transition:
+        background .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+
+.imx-gh__cta > span{
+
+    font-size:16px;
+
+    transition:
+        transform .2s ease;
+
+}
+
+
+.imx-gh__cta:hover{
+
+    transform:translateY(-2px);
+
+    background:#4C9F36;
+
+    box-shadow:
+        0 12px 28px rgba(0,0,0,.19);
+
+}
+
+
+.imx-gh__cta:hover > span{
+    transform:translateX(2px);
+}
+
+
+.imx-gh__cta--cars{
+    display:none;
+}
+
+
+:host
+.imx-gh__cta--main{
+    display:none;
+}
+
+
+:host
+.imx-gh__cta--cars{
+    display:flex;
+}
+
+
+
+/* =========================================================
+   BURGER
+========================================================= */
+
+.imx-gh__burger{
+
+    width:42px;
+    height:42px;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    flex-direction:column;
+
+    gap:5px;
+
+    padding:0;
+
+    cursor:pointer;
+
+    background:
+        rgba(255,255,255,.07);
+
+    border:
+        1px solid rgba(255,255,255,.13);
+
+    border-radius:8px;
+
+}
+
+
+.imx-gh__burger > span{
+
+    width:18px;
+    height:1.5px;
+
+    display:block;
+
+    background:#FFFFFF;
+
+    border-radius:20px;
+
+    transition:
+        transform .25s ease,
+        opacity .2s ease;
+
+}
+
+
+.imx-global-header.is-menu-open
+.imx-gh__burger > span:nth-child(1){
+
+    transform:
+        translateY(6.5px)
+        rotate(45deg);
+
+}
+
+
+.imx-global-header.is-menu-open
+.imx-gh__burger > span:nth-child(2){
+    opacity:0;
+}
+
+
+.imx-global-header.is-menu-open
+.imx-gh__burger > span:nth-child(3){
+
+    transform:
+        translateY(-6.5px)
+        rotate(-45deg);
+
+}
+
+
+
+
+/* =========================================================
+   IMKONEX GLOBAL HEADER
+   BLOCK 03 — FINAL RESPONSIVE / MOBILE
+========================================================= */
+
+
+/* =========================================================
+   MOBILE PANEL
+========================================================= */
+
+.imx-gh__mobile{
+
+    position:fixed;
+
+    z-index:99998;
+
+    top:72px;
+    left:0;
+
+    width:100%;
+
+    max-height:
+        calc(100vh - 72px);
+
+    overflow-y:auto;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    pointer-events:none;
+
+    transform:translateY(-8px);
+
+    background:#F6F8F7;
+
+    box-shadow:
+        0 30px 65px rgba(0,0,0,.18);
+
+    transition:
+        opacity .24s ease,
+        visibility .24s ease,
+        transform .24s ease;
+
+}
+
+
+.imx-global-header.is-menu-open
+.imx-gh__mobile{
+
+    opacity:1;
+
+    visibility:visible;
+
+    pointer-events:auto;
+
+    transform:translateY(0);
+
+}
+
+
+.imx-gh__mobile-inner{
+
+    width:100%;
+
+    max-width:720px;
+
+    margin:0 auto;
+
+    padding:17px 18px 25px;
+
+}
+
+
+
+/* =========================================================
+   BUSINESS SECTIONS
+========================================================= */
+
+.imx-gh__mobile-section{
+
+    overflow:hidden;
+
+    margin-bottom:8px;
+
+    background:#FFFFFF;
+
+    border:
+        1px solid rgba(13,27,42,.08);
+
+    border-radius:11px;
+
+}
+
+
+:host(.ved-page)
+.imx-gh__mobile-section--ved{
+
+    border-color:
+        rgba(85,174,59,.38);
+
+    box-shadow:
+        0 8px 25px rgba(85,174,59,.08);
+
+}
+
+
+:host
+.imx-gh__mobile-section--cars{
+
+    border-color:
+        rgba(85,174,59,.38);
+
+    box-shadow:
+        0 8px 25px rgba(85,174,59,.08);
+
+}
+
+
+
+/* =========================================================
+   MOBILE TRIGGER
+========================================================= */
+
+.imx-gh__mobile-trigger{
+
+    width:100%;
+
+    min-height:70px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    gap:20px;
+
+    padding:13px 15px;
+
+    cursor:pointer;
+
+    color:#0D1B2A;
+
+    background:none;
+
+    border:0;
+
+    font-family:inherit;
+
+    text-align:left;
+
+}
+
+
+.imx-gh__mobile-trigger small{
+
+    display:block;
+
+    margin-bottom:4px;
+
+    color:#55AE3B;
+
+    font-size:9.5px;
+
+    line-height:1.3;
+
+    font-weight:700;
+
+    letter-spacing:.11em;
+
+}
+
+
+.imx-gh__mobile-trigger strong{
+
+    color:#0D1B2A;
+
+    font-size:17px;
+
+    line-height:1.3;
+
+    font-weight:600;
+
+}
+
+
+.imx-gh__mobile-trigger > i{
+
+    width:30px;
+    height:30px;
+
+    flex:0 0 auto;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    color:#55AE3B;
+
+    background:
+        rgba(85,174,59,.09);
+
+    border-radius:50%;
+
+    font-size:17px;
+
+    font-style:normal;
+
+    transition:
+        transform .25s ease;
+
+}
+
+
+.imx-gh__mobile-section.is-open
+.imx-gh__mobile-trigger > i{
+
+    transform:
+        rotate(45deg);
+
+}
+
+
+
+/* =========================================================
+   SUBMENU
+========================================================= */
+
+.imx-gh__mobile-submenu{
+
+    max-height:0;
+
+    overflow:hidden;
+
+    padding:0 15px;
+
+    opacity:0;
+
+    transition:
+        max-height .35s ease,
+        opacity .25s ease,
+        padding-bottom .25s ease;
+
+}
+
+
+.imx-gh__mobile-section.is-open
+.imx-gh__mobile-submenu{
+
+    max-height:950px;
+
+    opacity:1;
+
+    padding-bottom:12px;
+
+}
+
+
+.imx-gh__mobile-submenu > a{
+
+    min-height:49px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    color:#34424D !important;
+
+    border-top:
+        1px solid rgba(13,27,42,.07);
+
+    font-size:14px;
+
+    line-height:1.4;
+
+    font-weight:500;
+
+}
+
+
+.imx-gh__mobile-all{
+
+    color:#0D1B2A !important;
+
+    font-weight:600 !important;
+
+}
+
+
+.imx-gh__mobile-all > span{
+    color:#55AE3B;
+}
+
+
+
+/* =========================================================
+   GENERAL
+========================================================= */
+
+.imx-gh__mobile-general{
+
+    display:grid;
+
+    margin-top:13px;
+
+    border-top:
+        1px solid rgba(13,27,42,.08);
+
+}
+
+
+.imx-gh__mobile-general > a{
+
+    min-height:51px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    color:#34424D !important;
+
+    border-bottom:
+        1px solid rgba(13,27,42,.07);
+
+    font-size:14px;
+
+    font-weight:500;
+
+}
+
+
+.imx-gh__mobile-general > a span{
+    color:#55AE3B;
+}
+
+
+
+/* =========================================================
+   CONTACT
+========================================================= */
+
+.imx-gh__mobile-contact{
+
+    margin-top:17px;
+
+    padding:18px;
+
+    color:#FFFFFF;
+
+    background:
+
+        radial-gradient(
+            circle at 110% -20%,
+            rgba(85,174,59,.24),
+            transparent 40%
+        ),
+
+        linear-gradient(
+            145deg,
+            #0D1B2A,
+            #10283B
+        );
+
+    border-radius:11px;
+
+}
+
+
+.imx-gh__mobile-contact > small{
+
+    display:block;
+
+    margin-bottom:6px;
+
+    color:#8AD45D;
+
+    font-size:10.5px;
+
+    line-height:1.3;
+
+    font-weight:700;
+
+    letter-spacing:.08em;
+
+}
+
+
+.imx-gh__mobile-phone{
+
+    display:block;
+
+    color:#FFFFFF !important;
+
+    font-size:23px;
+
+    line-height:1.25;
+
+    font-weight:650;
+
+    letter-spacing:-.02em;
+
+}
+
+
+
+/* =========================================================
+   MOBILE OFFICE PHONES
+========================================================= */
+
+.imx-gh__mobile-phones{
+
+    margin-top:14px;
+
+    border-top:
+        1px solid rgba(255,255,255,.13);
+
+}
+
+
+.imx-gh__mobile-phones summary{
+
+    min-height:49px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    gap:15px;
+
+    cursor:pointer;
+
+    list-style:none;
+
+    color:
+        rgba(255,255,255,.90);
+
+    font-size:13.5px;
+
+    line-height:1.4;
+
+    font-weight:500;
+
+}
+
+
+.imx-gh__mobile-phones summary::-webkit-details-marker{
+    display:none;
+}
+
+
+.imx-gh__mobile-phones summary i{
+
+    width:26px;
+    height:26px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    color:#79C953;
+
+    background:
+        rgba(85,174,59,.10);
+
+    border-radius:50%;
+
+    font-size:15px;
+
+    font-style:normal;
+
+    transition:
+        transform .2s ease;
+
+}
+
+
+.imx-gh__mobile-phones[open]
+summary i{
+
+    transform:
+        rotate(45deg);
+
+}
+
+
+.imx-gh__mobile-phone-list{
+
+    display:grid;
+
+    padding-bottom:8px;
+
+}
+
+
+.imx-gh__mobile-phone-list > a{
+
+    min-height:52px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    gap:15px;
+
+    color:#FFFFFF !important;
+
+    border-top:
+        1px solid rgba(255,255,255,.09);
+
+}
+
+
+.imx-gh__mobile-phone-list span{
+
+    color:
+        rgba(255,255,255,.74);
+
+    font-size:12.5px;
+
+}
+
+
+.imx-gh__mobile-phone-list strong{
+
+    color:#FFFFFF;
+
+    font-size:14px;
+
+    font-weight:600;
+
+}
+
+
+
+/* =========================================================
+   MOBILE CTA
+========================================================= */
+
+.imx-gh__mobile-cta{
+
+    min-height:50px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    margin-top:15px;
+
+    padding:0 16px;
+
+    color:#FFFFFF !important;
+
+    background:#55AE3B;
+
+    border-radius:8px;
+
+    font-size:14px;
+
+    font-weight:600;
+
+}
+
+
+.imx-gh__mobile-cta i{
+
+    font-size:15px;
+
+    font-style:normal;
+
+}
+
+
+.imx-gh__mobile-cta--cars{
+    display:none;
+}
+
+
+:host
+.imx-gh__mobile-cta--main{
+    display:none;
+}
+
+
+:host
+.imx-gh__mobile-cta--cars{
+    display:flex;
+}
+
+
+
+/* =========================================================
+   COMPACT DESKTOP
+========================================================= */
+
+@media(max-width:1280px){
+
+    .imx-gh__container{
+        gap:16px;
+    }
+
+
+    .imx-gh__brand--main{
+        width:120px;
+    }
+
+
+    .imx-gh__brand--cars{
+        width:162px;
+    }
+
+
+    .imx-gh__brandslot{
+        min-width:120px;
+    }
+
+
+    :host
+    .imx-gh__brandslot{
+        min-width:162px;
+    }
+
+
+    .imx-gh__link{
+
+        padding-left:7px;
+        padding-right:7px;
+
+        font-size:14px;
+
+    }
+
+
+    .imx-gh__link::after{
+
+        left:7px;
+        right:7px;
+
+    }
+
+
+    .imx-gh__phone strong{
+        font-size:16.5px;
+    }
+
+
+    .imx-gh__phone small{
+        font-size:10.5px;
+    }
+
+
+    .imx-gh__cta{
+
+        padding-left:14px;
+        padding-right:14px;
+
+        font-size:14px;
+
+    }
+
+}
+
+
+
+/* =========================================================
+   HIDE PHONE
+========================================================= */
+
+@media(max-width:1100px){
+
+    .imx-gh__phone-wrap{
+        display:none;
+    }
+
+}
+
+
+
+/* =========================================================
+   TABLET / MOBILE HEADER
+========================================================= */
+
+@media(max-width:1030px){
+
+    .imx-gh__shell{
+        height:72px;
+    }
+
+
+    .imx-global-header::after{
+        height:72px;
+    }
+
+
+    .imx-global-header.is-scrolled
+    .imx-gh__shell{
+        height:72px;
+    }
+
+
+    .imx-gh__container{
+
+        grid-template-columns:
+            1fr auto;
+
+    }
+
+
+    .imx-gh__nav{
+        display:none;
+    }
+
+
+    .imx-gh__cta{
+        display:none !important;
+    }
+
+
+    .imx-gh__burger{
+        display:flex;
+    }
+
+
+    .imx-gh__brand--main{
+        width:122px;
+    }
+
+
+    .imx-gh__brand--cars{
+        width:168px;
+    }
+
+
+    .imx-gh__brandslot{
+        min-width:122px;
+    }
+
+
+    :host
+    .imx-gh__brandslot{
+        min-width:168px;
+    }
+
+}
+
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:520px){
+
+    .imx-gh__container{
+        padding:0 14px;
+    }
+
+
+    .imx-gh__brand--main{
+        width:104px;
+    }
+
+
+    .imx-gh__brand--cars{
+        width:145px;
+    }
+
+
+    .imx-gh__brandslot{
+        min-width:104px;
+    }
+
+
+    :host
+    .imx-gh__brandslot{
+        min-width:145px;
+    }
+
+
+    .imx-gh__burger{
+
+        width:40px;
+        height:40px;
+
+    }
+
+
+    .imx-gh__mobile-inner{
+        padding:14px 14px 22px;
+    }
+
+}
+
+
+
+/* SMALL MOBILE */
+
+@media(max-width:380px){
+
+    .imx-gh__brand--main{
+        width:95px;
+    }
+
+
+    .imx-gh__brand--cars{
+        width:132px;
+    }
+
+
+    .imx-gh__brandslot{
+        min-width:95px;
+    }
+
+
+    :host
+    .imx-gh__brandslot{
+        min-width:132px;
+    }
+
+
+    .imx-gh__mobile-phone{
+        font-size:21px;
+    }
+
+
+    .imx-gh__mobile-phone-list > a{
+
+        align-items:flex-start;
+
+        flex-direction:column;
+
+        justify-content:center;
+
+        gap:3px;
+
+    }
+
+}
+
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+@media(prefers-reduced-motion:reduce){
+
+    .imx-global-header *,
+    .imx-global-header *::before,
+    .imx-global-header *::after{
+
+        animation:none !important;
+
+        transition:none !important;
+
+    }
+
+
+    .imx-gh__brand-shine{
+        display:none !important;
+    }
+
+}
+
+
+
+
+/* =========================================================
+   IMKONEX PREMIUM FOOTER
+   BLOCK 02 — FINAL DESKTOP CSS
+========================================================= */
+
+
+/* =========================================================
+   01. VARIABLES
+========================================================= */
+
+.imx-pf{
+
+    --green:#55AE3B;
+    --green-light:#7BC64E;
+
+    --navy:#0D1B2A;
+    --navy-light:#102233;
+    --deep:#07131E;
+    --technical:#050D14;
+
+    width:100%;
+
+    margin:0;
+    padding:0;
+
+    color:#FFFFFF;
+
+    font-family:inherit;
+
+}
+
+
+.imx-pf *,
+.imx-pf *::before,
+.imx-pf *::after{
+
+    box-sizing:border-box;
+
+}
+
+
+.imx-pf a{
+
+    text-decoration:none;
+
+}
+
+
+
+/* =========================================================
+   02. CONTAINER
+========================================================= */
+
+.imx-pf__container{
+
+    position:relative;
+
+    z-index:2;
+
+    width:100%;
+
+    max-width:1200px;
+
+    margin:0 auto;
+
+}
+
+
+
+/* =========================================================
+   03. MAIN PREMIUM BACKGROUND
+
+   ВАЖНО:
+   НЕТ СЕТКИ
+   НЕТ КВАДРАТИКОВ
+   НЕТ ГОРИЗОНТАЛЬНЫХ ЛИНИЙ
+========================================================= */
+
+.imx-pf__main{
+
+    position:relative;
+
+    overflow:hidden;
+
+    padding:
+        44px 20px 0;
+
+    background:
+
+        radial-gradient(
+            circle at 92% -12%,
+            rgba(85,174,59,.14),
+            transparent 31%
+        ),
+
+        radial-gradient(
+            circle at 5% 115%,
+            rgba(85,174,59,.045),
+            transparent 28%
+        ),
+
+        linear-gradient(
+            145deg,
+            #0B1825 0%,
+            #0D1B2A 52%,
+            #07131E 100%
+        );
+
+}
+
+
+
+/* ГАРАНТИРОВАННО УБИРАЕМ СЕТКУ */
+
+.imx-pf__main::before{
+
+    content:none !important;
+
+    display:none !important;
+
+}
+
+
+
+/* =========================================================
+   04. TOP AREA
+========================================================= */
+
+.imx-pf__top{
+
+    display:grid;
+
+    grid-template-columns:
+        minmax(0,1fr) auto;
+
+    align-items:center;
+
+    gap:50px;
+
+    padding-bottom:30px;
+
+}
+
+
+
+/* =========================================================
+   05. BRANDS
+========================================================= */
+
+.imx-pf__brands{
+
+    width:max-content;
+
+    display:grid;
+
+    grid-template-columns:
+        auto 1px auto;
+
+    align-items:center;
+
+    gap:28px;
+
+}
+
+
+.imx-pf__brand{
+
+    min-width:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+
+
+/* =========================================================
+   06. LOGOS
+========================================================= */
+
+.imx-pf__logo{
+
+    position:relative;
+
+    display:flex;
+
+    align-items:center;
+
+    overflow:visible;
+
+    transition:
+        transform .32s cubic-bezier(.16,1,.3,1),
+        filter .32s ease;
+
+}
+
+
+.imx-pf__logo--imkonex{
+
+    width:148px;
+
+}
+
+
+.imx-pf__logo--cars{
+
+    width:202px;
+
+}
+
+
+
+/* STACK */
+
+.imx-pf__logo-stack{
+
+    position:relative;
+
+    display:block;
+
+    width:100%;
+
+}
+
+
+.imx-pf__logo-img{
+
+    display:block;
+
+    width:100%;
+    height:auto;
+
+    margin:0;
+
+    object-fit:contain;
+
+    transition:
+        opacity .30s ease,
+        transform .38s cubic-bezier(.16,1,.3,1);
+
+}
+
+
+
+/* NORMAL */
+
+.imx-pf__logo-img--base{
+
+    position:relative;
+
+    z-index:1;
+
+    opacity:1;
+
+}
+
+
+
+/* ACTIVE GREEN */
+
+.imx-pf__logo-img--active{
+
+    position:absolute;
+
+    z-index:2;
+
+    top:0;
+    left:0;
+
+    opacity:0;
+
+    pointer-events:none;
+
+}
+
+
+
+/* =========================================================
+   07. LOGO HOVER
+========================================================= */
+
+.imx-pf__logo:hover{
+
+    transform:
+        translateY(-3px);
+
+    filter:
+        drop-shadow(
+            0 10px 24px rgba(85,174,59,.22)
+        );
+
+}
+
+
+.imx-pf__logo:hover
+.imx-pf__logo-img--base{
+
+    opacity:0;
+
+    transform:
+        scale(.985);
+
+}
+
+
+.imx-pf__logo:hover
+.imx-pf__logo-img--active{
+
+    opacity:1;
+
+    transform:
+        scale(1.04);
+
+}
+
+
+
+/* KEYBOARD */
+
+.imx-pf__logo:focus-visible
+.imx-pf__logo-img--base{
+
+    opacity:0;
+
+}
+
+
+.imx-pf__logo:focus-visible
+.imx-pf__logo-img--active{
+
+    opacity:1;
+
+}
+
+
+
+/* =========================================================
+   08. LOGO SHINE
+========================================================= */
+
+.imx-pf__logo-shine{
+
+    position:absolute;
+
+    z-index:4;
+
+    top:-55%;
+    left:-65%;
+
+    width:32%;
+    height:210%;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transform:
+        rotate(13deg);
+
+    background:
+
+        linear-gradient(
+            110deg,
+            transparent,
+            rgba(255,255,255,.04),
+            rgba(255,255,255,.40),
+            rgba(255,255,255,.04),
+            transparent
+        );
+
+}
+
+
+.imx-pf__logo:hover
+.imx-pf__logo-shine{
+
+    animation:
+        imxFooterLogoShine
+        .78s cubic-bezier(.16,1,.3,1)
+        forwards;
+
+}
+
+
+@keyframes imxFooterLogoShine{
+
+    0%{
+
+        left:-65%;
+        opacity:0;
+
+    }
+
+    18%{
+
+        opacity:.72;
+
+    }
+
+    100%{
+
+        left:140%;
+        opacity:0;
+
+    }
+
+}
+
+
+
+/* =========================================================
+   09. BRAND DESCRIPTIONS
+========================================================= */
+
+.imx-pf__brand p{
+
+    margin:
+        13px 0 0;
+
+    color:
+        rgba(255,255,255,.88);
+
+    font-size:14px;
+
+    line-height:1.55;
+
+    font-weight:400;
+
+}
+
+
+
+/* =========================================================
+   10. ONLY VERTICAL BRAND DIVIDER
+========================================================= */
+
+.imx-pf__brand-divider{
+
+    width:1px;
+    height:84px;
+
+    background:
+
+        linear-gradient(
+            180deg,
+            transparent 0%,
+            rgba(255,255,255,.20) 50%,
+            transparent 100%
+        );
+
+}
+
+
+
+/* =========================================================
+   11. TOP CONTACT
+========================================================= */
+
+.imx-pf__contact{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:24px;
+
+}
+
+
+
+/* PHONE */
+
+.imx-pf__main-phone{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:flex-end;
+
+    white-space:nowrap;
+
+}
+
+
+.imx-pf__main-phone small{
+
+    margin-bottom:5px;
+
+    color:
+        var(--green-light);
+
+    font-size:11px;
+
+    line-height:1.25;
+
+    font-weight:700;
+
+    letter-spacing:.09em;
+
+}
+
+
+.imx-pf__main-phone strong{
+
+    color:#FFFFFF;
+
+    font-size:22px;
+
+    line-height:1.25;
+
+    font-weight:600;
+
+    letter-spacing:-.025em;
+
+    transition:
+        color .2s ease;
+
+}
+
+
+.imx-pf__main-phone:hover strong{
+
+    color:
+        var(--green-light);
+
+}
+
+
+
+/* =========================================================
+   12. SOCIALS
+========================================================= */
+
+.imx-pf__socials{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+
+.imx-pf__social{
+
+    min-height:44px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+    padding:
+        6px 11px 6px 6px;
+
+    color:#FFFFFF !important;
+
+    background:
+        rgba(255,255,255,.055);
+
+    border:
+        1px solid rgba(255,255,255,.10);
+
+    border-radius:8px;
+
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        border-color .2s ease;
+
+}
+
+
+.imx-pf__social:hover{
+
+    transform:
+        translateY(-2px);
+
+    background:
+        rgba(255,255,255,.085);
+
+    border-color:
+        rgba(85,174,59,.34);
+
+}
+
+
+
+/* ICON */
+
+.imx-pf__social-icon{
+
+    min-width:31px;
+    height:31px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:
+        0 5px;
+
+    color:
+        var(--green-light);
+
+    background:
+        rgba(85,174,59,.12);
+
+    border-radius:6px;
+
+    font-size:8.5px;
+
+    line-height:1;
+
+    font-weight:700;
+
+}
+
+
+.imx-pf__social strong{
+
+    color:#FFFFFF;
+
+    font-size:13px;
+
+    line-height:1;
+
+    font-weight:500;
+
+}
+
+
+.imx-pf__social i{
+
+    color:
+        var(--green-light);
+
+    font-size:10px;
+
+    line-height:1;
+
+    font-style:normal;
+
+}
+
+
+
+/* =========================================================
+   13. MAIN CONTENT
+
+   БЕЗ BORDER-TOP
+   БЕЗ BORDER-BOTTOM
+========================================================= */
+
+.imx-pf__content{
+
+    display:grid;
+
+    grid-template-columns:
+        .64fr 1.36fr;
+
+    gap:58px;
+
+    padding:
+        32px 0 31px;
+
+    border:0 !important;
+
+}
+
+
+
+/* =========================================================
+   14. NAVIGATION
+========================================================= */
+
+.imx-pf__navigation{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+    gap:34px;
+
+}
+
+
+.imx-pf__caption{
+
+    display:block;
+
+    margin-bottom:14px;
+
+    color:
+        var(--green-light);
+
+    font-size:11px;
+
+    line-height:1.3;
+
+    font-weight:700;
+
+    letter-spacing:.13em;
+
+}
+
+
+.imx-pf__nav-column nav{
+
+    display:grid;
+
+    gap:5px;
+
+}
+
+
+.imx-pf__nav-column nav a{
+
+    position:relative;
+
+    width:max-content;
+
+    max-width:100%;
+
+    padding:
+        4px 0;
+
+    color:
+        rgba(255,255,255,.90) !important;
+
+    font-size:14.5px;
+
+    line-height:1.45;
+
+    font-weight:400;
+
+    transition:
+        color .2s ease,
+        transform .2s ease;
+
+}
+
+
+.imx-pf__nav-column nav a::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:50%;
+    left:-11px;
+
+    width:4px;
+    height:4px;
+
+    opacity:0;
+
+    border-radius:50%;
+
+    background:
+        var(--green-light);
+
+    transform:
+        translateY(-50%);
+
+    transition:
+        opacity .2s ease;
+
+}
+
+
+.imx-pf__nav-column nav a:hover{
+
+    color:#FFFFFF !important;
+
+    transform:
+        translateX(7px);
+
+}
+
+
+.imx-pf__nav-column nav a:hover::before{
+
+    opacity:1;
+
+}
+
+
+
+/* =========================================================
+   15. OFFICES
+========================================================= */
+
+.imx-pf__office-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,minmax(0,1fr));
+
+    gap:10px;
+
+}
+
+
+.imx-pf__office{
+
+    min-width:0;
+
+    padding:18px;
+
+    background:
+        rgba(255,255,255,.052);
+
+    border:
+        1px solid rgba(255,255,255,.095);
+
+    border-radius:10px;
+
+    transition:
+        transform .22s ease,
+        background .22s ease,
+        border-color .22s ease,
+        box-shadow .22s ease;
+
+}
+
+
+.imx-pf__office:hover{
+
+    transform:
+        translateY(-3px);
+
+    background:
+        rgba(255,255,255,.078);
+
+    border-color:
+        rgba(85,174,59,.28);
+
+    box-shadow:
+        0 12px 32px rgba(0,0,0,.10);
+
+}
+
+
+
+/* OFFICE HEAD */
+
+.imx-pf__office-head{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-bottom:12px;
+
+}
+
+
+.imx-pf__country{
+
+    width:31px;
+    height:31px;
+
+    flex:0 0 auto;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    color:
+        var(--green-light);
+
+    background:
+        rgba(85,174,59,.12);
+
+    border:
+        1px solid rgba(85,174,59,.10);
+
+    border-radius:7px;
+
+    font-size:8.5px;
+
+    line-height:1;
+
+    font-weight:700;
+
+}
+
+
+.imx-pf__office-head strong{
+
+    color:#FFFFFF;
+
+    font-size:15.5px;
+
+    line-height:1.3;
+
+    font-weight:600;
+
+}
+
+
+
+/* ADDRESS */
+
+.imx-pf__office address{
+
+    min-height:62px;
+
+    margin:
+        0 0 14px;
+
+    color:
+        rgba(255,255,255,.83);
+
+    font-size:13px;
+
+    line-height:1.58;
+
+    font-style:normal;
+
+}
+
+
+
+/* CONTACTS */
+
+.imx-pf__office-links{
+
+    display:grid;
+
+    gap:5px;
+
+}
+
+
+.imx-pf__office-links a{
+
+    width:max-content;
+
+    max-width:100%;
+
+    color:
+        rgba(255,255,255,.98) !important;
+
+    font-size:13.5px;
+
+    line-height:1.45;
+
+    font-weight:500;
+
+    transition:
+        color .2s ease;
+
+}
+
+
+.imx-pf__office-links a:hover{
+
+    color:
+        var(--green-light) !important;
+
+}
+
+
+
+/* =========================================================
+   16. SERVICE BAR
+
+   НИКАКОЙ ГОРИЗОНТАЛЬНОЙ ЛИНИИ
+========================================================= */
+
+.imx-pf__service-bar{
+
+    min-height:61px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:30px;
+
+    border:0 !important;
+
+}
+
+
+
+/* SINCE */
+
+.imx-pf__since{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    color:
+        rgba(255,255,255,.86);
+
+    font-size:13px;
+
+    line-height:1.4;
+
+    font-weight:400;
+
+}
+
+
+.imx-pf__since > span{
+
+    width:7px;
+    height:7px;
+
+    flex:0 0 auto;
+
+    border-radius:50%;
+
+    background:
+        var(--green);
+
+    box-shadow:
+        0 0 0 5px rgba(85,174,59,.08);
+
+}
+
+
+
+/* UP BUTTON */
+
+.imx-pf__up{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:0;
+
+    color:
+        rgba(255,255,255,.84);
+
+    background:none;
+
+    border:0;
+
+    cursor:pointer;
+
+    font-family:inherit;
+
+    font-size:13px;
+
+    line-height:1;
+
+    font-weight:500;
+
+}
+
+
+.imx-pf__up i{
+
+    width:32px;
+    height:32px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    color:
+        var(--green-light);
+
+    border:
+        1px solid rgba(85,174,59,.35);
+
+    border-radius:50%;
+
+    font-size:14px;
+
+    line-height:1;
+
+    font-style:normal;
+
+    transition:
+        transform .2s ease,
+        background .2s ease;
+
+}
+
+
+.imx-pf__up:hover i{
+
+    transform:
+        translateY(-3px);
+
+    background:
+        rgba(85,174,59,.10);
+
+}
+
+
+
+/* =========================================================
+   17. TECHNICAL AREA
+========================================================= */
+
+.imx-pf__legal{
+
+    position:relative;
+
+    overflow:hidden;
+
+    padding:
+        27px 20px 29px;
+
+    background:
+
+        radial-gradient(
+            ellipse at 50% 0%,
+            rgba(85,174,59,.035) 0%,
+            transparent 44%
+        ),
+
+        linear-gradient(
+            180deg,
+            #07111A 0%,
+            #050D14 100%
+        );
+
+    box-shadow:
+        inset 0 18px 36px rgba(0,0,0,.11);
+
+}
+
+
+
+/* БЕЗ ЛИШНЕГО СВЕЧЕНИЯ / СЕТКИ */
+
+.imx-pf__legal::before{
+
+    content:none !important;
+
+    display:none !important;
+
+}
+
+
+
+/* =========================================================
+   18. PREMIUM GREEN SEPARATOR
+
+   ЕДИНСТВЕННАЯ ГОРИЗОНТАЛЬНАЯ
+   ДЕКОРАТИВНАЯ ЛИНИЯ В FOOTER
+========================================================= */
+
+.imx-pf__legal-accent{
+
+    position:absolute;
+
+    z-index:3;
+
+    top:0;
+    left:50%;
+
+    width:
+        min(1200px,calc(100% - 40px));
+
+    height:1px;
+
+    transform:
+        translateX(-50%);
+
+    background:
+
+        linear-gradient(
+            90deg,
+
+            transparent 0%,
+
+            rgba(85,174,59,.10) 8%,
+
+            rgba(85,174,59,.42) 29%,
+
+            #55AE3B 47%,
+
+            #7BC64E 52%,
+
+            rgba(85,174,59,.42) 71%,
+
+            rgba(85,174,59,.10) 92%,
+
+            transparent 100%
+        );
+
+    box-shadow:
+        0 0 14px rgba(85,174,59,.13);
+
+}
+
+
+
+/* =========================================================
+   19. LEGAL GRID
+========================================================= */
+
+.imx-pf__legal-grid{
+
+    position:relative;
+
+    z-index:2;
+
+    display:grid;
+
+    grid-template-columns:
+        1.16fr 1.45fr auto;
+
+    align-items:start;
+
+    gap:42px;
+
+}
+
+
+
+/* COPYRIGHT */
+
+.imx-pf__copyright p{
+
+    margin:0;
+
+    color:
+        rgba(255,255,255,.80);
+
+    font-size:12px;
+
+    line-height:1.65;
+
+}
+
+
+.imx-pf__copyright strong{
+
+    color:
+        rgba(255,255,255,.98);
+
+    font-weight:600;
+
+}
+
+
+
+/* LEGAL TEXT */
+
+.imx-pf__legal-text{
+
+    display:grid;
+
+    gap:5px;
+
+}
+
+
+.imx-pf__legal-text p{
+
+    margin:0;
+
+    color:
+        rgba(255,255,255,.70);
+
+    font-size:11.5px;
+
+    line-height:1.65;
+
+}
+
+
+.imx-pf__legal-text strong{
+
+    color:
+        rgba(255,255,255,.90);
+
+    font-weight:600;
+
+}
+
+
+
+/* LEGAL NAV */
+
+.imx-pf__legal-nav{
+
+    display:grid;
+
+    justify-items:end;
+
+    gap:9px;
+
+}
+
+
+.imx-pf__legal-nav a{
+
+    color:
+        rgba(255,255,255,.77) !important;
+
+    font-size:11.5px;
+
+    line-height:1.45;
+
+    white-space:nowrap;
+
+    transition:
+        color .2s ease;
+
+}
+
+
+.imx-pf__legal-nav a:hover{
+
+    color:
+        var(--green-light) !important;
+
+}
+
+
+
+
+/* =========================================================
+   IMKONEX PREMIUM FOOTER
+   BLOCK 03 — FINAL RESPONSIVE / MOBILE CSS
+========================================================= */
+
+
+/* =========================================================
+   01. TABLET
+========================================================= */
+
+@media(max-width:1000px){
+
+
+    .imx-pf__top{
+
+        grid-template-columns:
+            1fr;
+
+        gap:29px;
+
+    }
+
+
+    .imx-pf__contact{
+
+        justify-content:space-between;
+
+    }
+
+
+    .imx-pf__main-phone{
+
+        align-items:flex-start;
+
+    }
+
+
+    .imx-pf__content{
+
+        grid-template-columns:
+            1fr;
+
+        gap:31px;
+
+    }
+
+
+    .imx-pf__navigation{
+
+        max-width:520px;
+
+    }
+
+
+    .imx-pf__legal-grid{
+
+        grid-template-columns:
+            1fr 1fr;
+
+        gap:
+            23px 35px;
+
+    }
+
+
+    .imx-pf__legal-nav{
+
+        grid-column:
+            1 / -1;
+
+        display:flex;
+
+        justify-content:flex-start;
+
+        gap:25px;
+
+    }
+
+}
+
+
+
+/* =========================================================
+   02. MOBILE
+========================================================= */
+
+@media(max-width:700px){
+
+
+    /* =============================================
+       MAIN
+    ============================================== */
+
+    .imx-pf__main{
+
+        padding:
+            35px 15px 0;
+
+    }
+
+
+
+    /* =============================================
+       BRANDS
+    ============================================== */
+
+    .imx-pf__brands{
+
+        width:100%;
+
+        grid-template-columns:
+            1fr 1px 1fr;
+
+        gap:16px;
+
+    }
+
+
+    .imx-pf__brand{
+
+        min-width:0;
+
+    }
+
+
+    .imx-pf__logo--imkonex{
+
+        width:110px;
+
+    }
+
+
+    .imx-pf__logo--cars{
+
+        width:150px;
+
+    }
+
+
+    .imx-pf__brand p{
+
+        margin-top:10px;
+
+        color:
+            rgba(255,255,255,.89);
+
+        font-size:12.5px;
+
+        line-height:1.55;
+
+    }
+
+
+    .imx-pf__brand-divider{
+
+        height:77px;
+
+    }
+
+
+
+    /* =============================================
+       CONTACT
+    ============================================== */
+
+    .imx-pf__contact{
+
+        align-items:flex-start;
+
+        flex-direction:column;
+
+        gap:17px;
+
+    }
+
+
+    .imx-pf__main-phone small{
+
+        font-size:10.5px;
+
+    }
+
+
+    .imx-pf__main-phone strong{
+
+        font-size:22px;
+
+    }
+
+
+
+    /* =============================================
+       SOCIALS
+    ============================================== */
+
+    .imx-pf__socials{
+
+        width:100%;
+
+    }
+
+
+    .imx-pf__social{
+
+        flex:1;
+
+        justify-content:center;
+
+    }
+
+
+    .imx-pf__social strong{
+
+        font-size:12.5px;
+
+    }
+
+
+
+    /* =============================================
+       CONTENT
+    ============================================== */
+
+    .imx-pf__content{
+
+        padding:
+            27px 0 27px;
+
+    }
+
+
+
+    /* =============================================
+       NAVIGATION
+    ============================================== */
+
+    .imx-pf__navigation{
+
+        grid-template-columns:
+            repeat(2,minmax(0,1fr));
+
+        gap:27px;
+
+    }
+
+
+    .imx-pf__caption{
+
+        font-size:10.5px;
+
+    }
+
+
+    .imx-pf__nav-column nav a{
+
+        font-size:14px;
+
+        line-height:1.45;
+
+    }
+
+
+
+    /* =============================================
+       OFFICES
+    ============================================== */
+
+    .imx-pf__office-grid{
+
+        grid-template-columns:
+            1fr;
+
+        gap:9px;
+
+    }
+
+
+    .imx-pf__office{
+
+        padding:18px;
+
+    }
+
+
+    .imx-pf__office-head strong{
+
+        font-size:15.5px;
+
+    }
+
+
+    .imx-pf__office address{
+
+        min-height:0;
+
+        color:
+            rgba(255,255,255,.84);
+
+        font-size:13px;
+
+        line-height:1.58;
+
+    }
+
+
+    .imx-pf__office-links a{
+
+        font-size:13.5px;
+
+    }
+
+
+
+    /* =============================================
+       SERVICE BAR
+    ============================================== */
+
+    .imx-pf__service-bar{
+
+        min-height:61px;
+
+    }
+
+
+    .imx-pf__since{
+
+        font-size:12px;
+
+    }
+
+
+    .imx-pf__up{
+
+        font-size:12px;
+
+    }
+
+
+
+    /* =============================================
+       GREEN SEPARATOR
+    ============================================== */
+
+    .imx-pf__legal-accent{
+
+        width:
+            calc(100% - 30px);
+
+    }
+
+
+
+    /* =============================================
+       LEGAL
+    ============================================== */
+
+    .imx-pf__legal{
+
+        padding:
+            25px 15px 27px;
+
+    }
+
+
+    .imx-pf__legal-grid{
+
+        grid-template-columns:
+            1fr;
+
+        gap:13px;
+
+    }
+
+
+    .imx-pf__copyright p{
+
+        font-size:11.5px;
+
+        line-height:1.65;
+
+    }
+
+
+    .imx-pf__legal-text p{
+
+        font-size:11px;
+
+        line-height:1.65;
+
+    }
+
+
+    .imx-pf__legal-nav{
+
+        grid-column:auto;
+
+        display:flex;
+
+        flex-wrap:wrap;
+
+        justify-content:flex-start;
+
+        gap:
+            9px 20px;
+
+        margin-top:4px;
+
+    }
+
+
+    .imx-pf__legal-nav a{
+
+        font-size:11px;
+
+    }
+
+}
+
+
+
+/* =========================================================
+   03. SMALL MOBILE
+========================================================= */
+
+@media(max-width:430px){
+
+
+    /* =============================================
+       BRANDS VERTICAL
+    ============================================== */
+
+    .imx-pf__brands{
+
+        grid-template-columns:
+            1fr;
+
+        gap:17px;
+
+    }
+
+
+    .imx-pf__brand-divider{
+
+        width:72px;
+        height:1px;
+
+        background:
+
+            linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,.22),
+                transparent
+            );
+
+    }
+
+
+    .imx-pf__brand p br{
+
+        display:none;
+
+    }
+
+
+    .imx-pf__logo--imkonex{
+
+        width:114px;
+
+    }
+
+
+    .imx-pf__logo--cars{
+
+        width:156px;
+
+    }
+
+
+
+    /* =============================================
+       NAVIGATION
+    ============================================== */
+
+    .imx-pf__navigation{
+
+        gap:21px;
+
+    }
+
+
+    .imx-pf__nav-column nav a{
+
+        font-size:13.5px;
+
+    }
+
+
+
+    /* =============================================
+       SOCIAL
+    ============================================== */
+
+    .imx-pf__social strong{
+
+        display:none;
+
+    }
+
+
+
+    /* =============================================
+       SCROLL UP
+    ============================================== */
+
+    .imx-pf__up > span{
+
+        display:none;
+
+    }
+
+}
+
+
+
+/* =========================================================
+   04. REDUCED MOTION
+========================================================= */
+
+@media(prefers-reduced-motion:reduce){
+
+
+    .imx-pf *,
+    .imx-pf *::before,
+    .imx-pf *::after{
+
+        animation:none !important;
+
+        transition:none !important;
+
+    }
+
+
+    .imx-pf__logo-shine{
+
+        display:none !important;
+
+    }
+
+}
+
+
+.imx-gh__item:focus-within .imx-gh__mega{opacity:1;visibility:visible;pointer-events:auto;transform:none}button:focus-visible,a:focus-visible{outline:2px solid #79c953;outline-offset:4px}

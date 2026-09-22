@@ -6,8 +6,9 @@ import time
 def refresh_markups(store, api, by_id, stop, invalidate):
     if not api.configured:
         return
-    codes = list(dict.fromkeys(by_id[id]['sku'] for id,rule in store.rules().items()
-                              if id in by_id and rule.get('mode') == 'markup'))
+    rules=list(store.rules().items())+[(pid,rule) for (pid,wid),rule in store.offer_rules().items()]
+    codes = list(dict.fromkeys(by_id[id]['sku'] for id,rule in rules
+                              if id in by_id and rule.get('mode') in ('markup','profit')))
     deadline = time.monotonic() + 600
     for start in range(0, len(codes), 50):
         if stop.is_set() or time.monotonic() > deadline:

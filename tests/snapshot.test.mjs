@@ -43,7 +43,7 @@ async function browser(url='https://catalog.imkonex.test/'){
  w.HTMLDialogElement.prototype.close=function(){this.removeAttribute('open');};
  if(!url.startsWith('file:'))w.localStorage.setItem('imx:requests',JSON.stringify([{id:'OLD-DEMO',total:1}]));
  const domain=(await readFile(new URL('../frontend/domain.js',import.meta.url),'utf8')).replace(/^export /gm,'');
- const app=(await readFile(new URL('../frontend/app.js',import.meta.url),'utf8')).replace(/^import .*;\n/,'');
+ const app=(await readFile(new URL('../frontend/app.js',import.meta.url),'utf8')).replace(/^import .*;\n/gm,'');
  w.eval(domain+'\nconst h=escapeHTML;\n'+app);
  return {w,dom,errors,$:s=>w.document.querySelector(s),click:s=>w.document.querySelector(s).click(),route:async path=>{w.location.hash=path;await new Promise(r=>w.setTimeout(r,10));}};
 }

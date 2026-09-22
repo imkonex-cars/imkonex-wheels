@@ -12,7 +12,7 @@ const data=JSON.parse(raw);
 if(mode==='snapshot')validateSnapshot(data);
 if(!Array.isArray(data.products)||!data.products.length) throw new Error('Catalog is empty');
 for(const p of data.products){
- if(!p.id||!['tires','wheels','tubes'].includes(p.kind))throw new Error(`Invalid product ${p.id}`);
+ if(!p.id||!['tires','wheels','tubes','sensors','consumables','oils'].includes(p.kind))throw new Error(`Invalid product ${p.id}`);
  if(p.image.startsWith('assets/'))await readFile(path.join(root,'frontend',p.image));
  else if(mode!=='snapshot')throw new Error('Demo images must be local');
 }
@@ -35,7 +35,7 @@ try{
   release:`IMKONEX-WHEELS-${version}-WORKSPACE-1`,version,mode,products:data.products.length,
   tyres:data.products.filter(p=>p.kind==='tires').length,wheels:data.products.filter(p=>p.kind==='wheels').length,
   dataUpdatedAt:data.updatedAt,builtAt:new Date().toISOString(),photos,
-  dataScope:[3,4].includes(data.schemaVersion)?'account_catalog':'verified_sample',
+  dataScope:[3,4,5].includes(data.schemaVersion)?'account_catalog':'verified_sample',
   sync:data.sync||null,
  },null,2)+'\n');
  await rm(path.join(root,'dist'),{recursive:true,force:true});

@@ -13,8 +13,10 @@ async function open({manager=false,data=sample,fetch}={}){
  w.HTMLDialogElement.prototype.showModal=function(){this.setAttribute('open','');};
  w.HTMLDialogElement.prototype.close=function(){this.removeAttribute('open');this.dispatchEvent(new w.Event('close'));};
  const domain=(await readFile(new URL('../frontend/domain.js',import.meta.url),'utf8')).replace(/^export /gm,'');
- const app=(await readFile(new URL('../frontend/'+(manager?'manager/manager.js':'app.js'),import.meta.url),'utf8')).replace(/^import .*;\n/,'');
- await w.eval('(async()=>{'+domain+'\nconst h=escapeHTML;\n'+app+'\n})()');
+ const shared=(await readFile(new URL('../frontend/share.js',import.meta.url),'utf8')).replace(/^import .*;\n/gm,'').replace(/^export /gm,'');
+ const pricing=(await readFile(new URL('../frontend/manager/pricing.js',import.meta.url),'utf8')).replace(/^export /gm,'');
+ const app=(await readFile(new URL('../frontend/'+(manager?'manager/manager.js':'app.js'),import.meta.url),'utf8')).replace(/^import .*;\n/gm,'');
+ await w.eval('(async()=>{'+domain+'\nconst h=escapeHTML;\n'+shared+'\n'+pricing+'\n'+app+'\n})()');
  const $=s=>w.document.querySelector(s),tick=()=>new Promise(r=>w.setTimeout(r,20));
  return {dom,w,errors,$,tick,click:async s=>{$(s).click();await tick();},change:async(s,v)=>{$(s).value=v;$(s).dispatchEvent(new w.Event('change',{bubbles:true}));await tick();},submit:async s=>{$(s).dispatchEvent(new w.Event('submit',{bubbles:true,cancelable:true}));await tick();}};
 }
@@ -60,6 +62,7 @@ test('manager calculates no client prices and confirms exact server preview',asy
  const b=await open({manager:true,fetch:async(url,options)=>{requests.push([url,options]);
   if(url.endsWith('/session'))return ok({csrf:'synthetic-csrf'});
   if(url.endsWith('/status'))return ok({version:'0.5.0',products:1,updatedAt:'2026-09-22',supplierConfigured:true,ordersEnabled:true,rules:0,orders:0});
+  if(url.endsWith('/catalog-filters'))return ok({warehouses:[],facets:{kind:['tires']}});
   if(url.includes('/products?'))return ok({items:[p],total:1,page:1});
   if(url.endsWith('/preview'))return ok({...order,status:'draft'});
   if(url.endsWith('/submit')){created++;return ok({...order,status:'submitted',providerId:123,providerNumber:'TEST'});}
@@ -68,12 +71,25 @@ test('manager calculates no client prices and confirms exact server preview',asy
  }});
  try{
   await b.click('[data-tab="products"]');assert.match(b.$('#manager-app').textContent,/6\s*000/);
-  await b.click('[data-action="add-order"]');await b.submit('#add-order-form');await b.click('[data-tab="order"]');await b.submit('#preview-order-form');
+  const qty=b.$('[data-row-quantity]');qty.value='4';qty.dispatchEvent(new b.w.Event('input',{bubbles:true}));await b.click('[data-action="selection-order"]');await b.submit('#preview-order-form');
   assert.match(b.$('#manager-dialog-content').textContent,/24\s*000/);
   const payload=JSON.parse(requests.find(([url])=>url.endsWith('/preview'))[1].body);
   assert.deepEqual(payload.lines,[{productId:p.id,warehouseId:2017,quantity:4}]);assert.equal(payload.test,true);
   assert.equal(created,0);await b.click('[data-action="submit-order"]');assert.equal(created,1);
   assert.match(b.$('#manager-dialog-content').textContent,/Создан у поставщика/);
   assert.equal(b.w.localStorage.length,0);assert.deepEqual(b.errors,[]);
+ }finally{b.dom.window.close();}
+});
+
+test('customer card loads real characteristics, labels missing fields and escapes API text',async()=>{
+ const b=await open({fetch:async url=>{assert.match(url,/\/api\/products\/.*\/details/);return ok({attributes:[{label:'Шумность',value:'72 дБ'},{label:'Сцепление',value:'B'},{label:'Комфорт',value:'<img src=x onerror=alert(1)>'}]});}});
+ try{
+  await b.click('[data-action="detail"]');
+  const text=b.$('#technical-characteristics').textContent;
+  assert.match(text,/Шумность72 дБ/);assert.match(text,/СцеплениеB/);
+  assert.match(text,/Индекс износостойкостиНет данных/);
+  assert.equal(b.$('#technical-characteristics img'),null);
+  assert.equal(b.$('#technical-status').textContent,'');
+  assert.deepEqual(b.errors,[]);
  }finally{b.dom.window.close();}
 });

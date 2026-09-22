@@ -1,7 +1,7 @@
-"""Same-origin storefront and authenticated manager portal, version 0.5.0."""
+"""Same-origin storefront and authenticated manager portal, version 0.6.0."""
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
-from decimal import Decimal, ROUND_CEILING
+from decimal import Decimal, ROUND_CEILING, ROUND_HALF_UP
 import hashlib
 import hmac
 import json
@@ -36,10 +36,12 @@ class Login(Input):
 
 
 class Rule(Input):
-    mode: Literal['supplier', 'fixed', 'markup']
+    mode: Literal['supplier', 'fixed', 'markup', 'profit']
     price: float = Field(default=0, ge=0, le=100000000)
     percent: float = Field(default=0, ge=0, le=1000)
     minimum: float = Field(default=0, ge=0, le=1000000)
+    amount: float = Field(default=0, ge=-100000000, le=100000000)
+    roundTo: Literal[0.01, 10] = 10
 
 
 class Ids(Input):
@@ -59,6 +61,14 @@ class Draft(Input):
     clientName: str = Field(default='', max_length=150)
     clientPhone: str = Field(default='', max_length=80)
 
+
+class SelectionLine(Input):
+    productId: str = Field(min_length=1,max_length=160)
+    quantity: int = Field(ge=1,le=1000)
+    warehouseId: int | None = Field(default=None,gt=0)
+
+class Selection(Input):
+    lines: list[SelectionLine] = Field(min_length=1,max_length=50)
 
 class Confirm(Input):
     confirmation: str = Field(min_length=1, max_length=100)
@@ -80,19 +90,20 @@ def warehouse_id(offer):
 
 
 def sale_price(offer, rule, cost, now=None):
-    if not rule or rule['mode'] == 'supplier':
-        return offer['price']
-    if rule['mode'] == 'fixed':
-        return rule['price']
-    if not cost or cost['cost'] <= 0 or (now or time.time())-cost['updated'] > 86400:
-        return None
-    base = Decimal(str(cost['cost']))
-    markup = max(base*Decimal(str(rule['percent']))/100, Decimal(str(rule['minimum'])))
-    return float(((base+markup)/10).quantize(Decimal('1'), rounding=ROUND_CEILING)*10)
+    fresh=cost and (now if now is not None else time.time())-cost['updated']<=86400
+    if not rule or rule['mode']=='supplier':
+        return cost['retail'] if fresh and cost.get('retail') and cost['retail']>0 else offer['price']
+    if rule['mode']=='fixed':return rule['price']
+    if not fresh or cost['cost']<=0:return None
+    base=Decimal(str(cost['cost']))
+    gain=Decimal(str(rule['amount'])) if rule['mode']=='profit' else max(base*Decimal(str(rule['percent']))/100,Decimal(str(rule['minimum'])))
+    step=Decimal(str(rule.get('roundTo',10)))
+    result=((base+gain)/step).quantize(Decimal('1'),rounding=ROUND_CEILING if step==10 else ROUND_HALF_UP)*step
+    return float(result) if 0<result<=100000000 else None
 
 
 def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None, local=False):
-    app = FastAPI(title='IMKONEX', version='0.5.0', docs_url=None, redoc_url=None, openapi_url=None)
+    app = FastAPI(title='IMKONEX', version='0.6.0', docs_url=None, redoc_url=None, openapi_url=None)
     app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=5)
     store = Store(db_path or os.getenv('MANAGER_DB_PATH', str(ROOT/'runtime/manager.sqlite3')))
     api = supplier or PortalSupplier()
@@ -107,8 +118,28 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
     buckets = defaultdict(deque)
     lock = threading.RLock()
     fitment_cache = {}
+    details_cache = {}
     rendered = {'data': None, 'until': 0}
     app.state.store, app.state.supplier = store, api
+    from .site_shell import SiteShell, ORIGINS
+    from .manager_catalog import search, fallback_warehouse
+    fallback=ROOT/'dist/shared/fallback.json'
+    if not fallback.exists():fallback=ROOT/'frontend/shared/fallback.json'
+    site_shell=SiteShell(store.path.parent/'shared-shell.json',fallback)
+    app.state.site_shell=site_shell
+
+    def all_rules():return store.rules(),store.offer_rules()
+    def chosen_rule(p,wid,rules,offer_rules):return offer_rules.get((p['id'],wid),rules.get(p['id']))
+
+    base_warehouses={}
+    for p in catalog['products']:
+        for o in p['offers']:
+            wid=warehouse_id(o)
+            if wid not in base_warehouses:base_warehouses[wid]=fallback_warehouse(wid,o['warehouse'])
+    def warehouse_list():
+        known={**base_warehouses,**{r['id']:r for r in store.setting('warehouses',[])}}
+        return sorted(known.values(),key=lambda w:(w['logisticDays'] if w['logisticDays'] is not None else 999,w['name']))
+
 
     def throttle(request, scope, limit, seconds=60):
         # Ignore arbitrary X-Forwarded-For headers. One server worker is configured.
@@ -149,6 +180,7 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
     async def lifespan(app):
         from .portal_jobs import start_refresh
         stop = start_refresh(store, api, by_id, invalidate)
+        site_shell.start(stop)
         try:
             yield
         finally:
@@ -159,16 +191,19 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
         with lock:
             if rendered['until'] > time.time():
                 return rendered['data']
-        rules, costs = store.rules(), store.costs()
+        rules, offer_rules = all_rules()
+        costs=store.costs()
         products = []
         for p in catalog['products']:
             rule = rules.get(p['id'])
             offers = []
             for o in p['offers']:
                 wid = warehouse_id(o)
-                price = sale_price(o, rule, costs.get((p['sku'], wid)))
+                cost=costs.get((p['sku'],wid))
+                if cost and time.time()-cost['updated']<=86400 and cost['stock']<=0:continue
+                price = sale_price(o, chosen_rule(p,wid,rules,offer_rules), cost)
                 if price is not None:
-                    offers.append({**o, 'price': price})
+                    offers.append({**o, 'price': price, 'stock':cost['stock'] if cost and time.time()-cost['updated']<=86400 else o['stock']})
             products.append({**p, 'offers': offers})
         result = {**catalog, 'products': products}
         with lock:
@@ -186,19 +221,24 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
         invalidate()
         return store.costs(codes)
 
-    def manager_product(p, rules, costs):
-        rule = rules.get(p['id'])
-        offers = []
+    def manager_product(p, rules, costs, offer_rules=None):
+        offer_rules=offer_rules if offer_rules is not None else store.offer_rules()
+        meta={r['id']:r for r in warehouse_list()}
+        offers=[]
         for o in p['offers']:
-            wid = warehouse_id(o)
-            cost = costs.get((p['sku'], wid))
-            sale = sale_price(o, rule, cost)
-            offers.append({**o, 'warehouseId': wid, 'salePrice': sale,
-                'purchasePrice': cost['cost'] if cost else None,
-                'purchaseCheckedAt': cost['updated'] if cost else None,
-                'liveStock': cost['stock'] if cost else None,
-                'profit': round(sale-cost['cost'],2) if sale is not None and cost else None})
-        return {**p, 'offers': offers, 'priceRule': rule or {'mode':'supplier'}}
+            wid=warehouse_id(o);cost=costs.get((p['sku'],wid))
+            rule=chosen_rule(p,wid,rules,offer_rules);sale=sale_price(o,rule,cost)
+            gain=round(sale-cost['cost'],2) if sale is not None and cost and cost['cost']>0 else None
+            offers.append({**o,'warehouseId':wid,'warehouseInfo':meta[wid],
+                'priceRule':rule or {'mode':'supplier'},'salePrice':sale,
+                'purchasePrice':cost['cost'] if cost else None,
+                'supplierRetailPrice':cost.get('retail') if cost else None,
+                'purchaseCheckedAt':cost['updated'] if cost else None,
+                'purchaseStale':not cost or time.time()-cost['updated']>86400,
+                'liveStock':cost['stock'] if cost and time.time()-cost['updated']<=86400 else None,'profit':gain,
+                'markupPercent':round(gain/cost['cost']*100,2) if gain is not None else None,
+                'marginPercent':round(gain/sale*100,2) if gain is not None and sale else None})
+        return {**p,'offers':offers,'priceRule':rules.get(p['id']) or {'mode':'supplier'}}
 
     @app.middleware('http')
     async def headers(request, call_next):
@@ -219,11 +259,17 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
         response.headers.update({'X-Content-Type-Options':'nosniff', 'X-Frame-Options':'DENY',
             'Referrer-Policy':'strict-origin-when-cross-origin',
             'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://www.4tochki.ru https://api-b2b.pwrs.ru data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"})
-        if request.url.path.startswith(('/api/manager','/manager')):
+        if request.url.path.startswith(('/api/manager','/manager','/api/selections','/s/')):
             response.headers['Cache-Control']='no-store'
             response.headers['X-Robots-Tag']='noindex, nofollow'
         if request.url.path in ('/data/catalog.js','/config.js'):
             response.headers['Cache-Control']='no-cache'
+        if request.url.path=='/api/site-shell' or request.url.path.startswith('/shared/'):
+            incoming=request.headers.get('origin','')
+            if incoming in ORIGINS:
+                response.headers['Access-Control-Allow-Origin']=incoming
+                response.headers['Vary']='Origin'
+            response.headers['Cache-Control']='public, max-age=60'
         return response
 
     @app.exception_handler(RequestValidationError)
@@ -237,17 +283,64 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
 
     @app.get('/health')
     def health():
-        return {'status':'ok','version':'0.5.0'}
+        return {'status':'ok','version':'0.6.0'}
 
     @app.get('/config.js')
     def runtime_config():
-        value = {'mode':'snapshot','version':'0.5.0','apiBase':'','portal':True}
+        value = {'mode':'snapshot','version':'0.6.0','apiBase':'','portal':True}
         return Response('window.IMKONEX_CONFIG = Object.freeze('+json.dumps(value)+');', media_type='text/javascript')
 
     @app.get('/data/catalog.js')
     def catalog_script():
         value = json.dumps(public_catalog(),ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
         return Response('window.IMKONEX_DATA = '+value+';',media_type='text/javascript')
+
+    @app.get('/api/site-shell')
+    def shared_shell():return site_shell.value
+
+    @app.get('/api/products/{id}/details')
+    def product_details(id:str, request:Request):
+        p=product(id)
+        with lock:cached=details_cache.get(id)
+        if cached and cached[0]>time.time():return cached[1]
+        throttle(request,'product_details',30,60)
+        attributes=api.details(p['sku'],p['kind'])
+        result={'id':p['id'],'attributes':attributes}
+        with lock:
+            if len(details_cache)>=1000:details_cache.pop(next(iter(details_cache)))
+            details_cache[id]=(time.time()+86400,result)
+        return result
+
+    @app.post('/api/selections')
+    def make_selection(body:Selection,request:Request):
+        origin(request);throttle(request,'selection',30,3600)
+        current={p['id']:p for p in public_catalog()['products']};lines=[];pairs=set()
+        for line in body.lines:
+            pair=(line.productId,line.warehouseId)
+            if pair in pairs:raise HTTPException(422,'duplicate_selection_line')
+            pairs.add(pair);p=current.get(line.productId)
+            if not p:raise HTTPException(404,'product_not_found')
+            offers=[o for o in p['offers'] if o['stock']>=line.quantity and (line.warehouseId is None or warehouse_id(o)==line.warehouseId)]
+            if not offers:raise HTTPException(409,'selection_stock_changed')
+            o=min(offers,key=lambda x:(x.get('days') if x.get('days') is not None else 999,x['price']))
+            lines.append({'productId':p['id'],'sku':p['sku'],'name':p['brand']+' '+p['model'],
+                          'description':p['description'],'image':p['image'],'quantity':line.quantity,
+                          'price':o['price'],'subtotal':round(o['price']*line.quantity,2)})
+        payload={'createdAt':time.time(),'lines':lines,'total':round(sum(l['subtotal'] for l in lines),2)}
+        token,expires=store.save_selection(payload)
+        return {'url':'/s/'+token,'expiresAt':expires,**payload}
+
+    @app.get('/api/selections/{token}')
+    def view_selection(token:str):
+        if len(token)>100:raise HTTPException(404,'selection_not_found')
+        item=store.selection(token)
+        if not item:raise HTTPException(404,'selection_expired')
+        return item
+
+    @app.get('/s/{token}')
+    def selection_page(token:str):
+        from fastapi.responses import FileResponse
+        return FileResponse(ROOT/'dist/selection/index.html',headers={'X-Robots-Tag':'noindex, nofollow','Cache-Control':'no-store'})
 
     @app.get('/api/fitment/{stage}')
     def fitment(request: Request, stage: Literal['makes','models','years','modifications','products'],
@@ -306,34 +399,62 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
 
     @app.get('/api/manager/status')
     def status(session=Depends(authenticated)):
-        return {'version':'0.5.0','products':len(by_id),'updatedAt':catalog['updatedAt'],
+        return {'version':'0.6.0','products':len(by_id),'updatedAt':catalog['updatedAt'],
                 'supplierConfigured':api.configured,'ordersEnabled':os.getenv('SUPPLIER_ORDERS_ENABLED')=='true',
-                'rules':len(store.rules()),'orders':len(store.order_list())}
+                'rules':len(store.rules())+len(store.offer_rules()),'orders':len(store.order_list()),
+                'navigationCheckedAt':site_shell.value.get('checkedAt'), 'navigationStatus':'cached' if site_shell.last_error else 'ready'}
+
+    @app.get('/api/manager/catalog-filters')
+    def manager_filters(session=Depends(authenticated)):
+        fields=['kind','brand','season','width','profile','diameter','pcd']
+        return {'warehouses':warehouse_list(),'facets':{k:sorted({str(p[k]) for p in by_id.values() if p.get(k) is not None}) for k in fields}}
+
+    @app.post('/api/manager/warehouses/refresh')
+    def refresh_warehouses(request:Request,session=Depends(authenticated)):
+        throttle(request,'warehouses',4,300)
+        rows=api.warehouses();store.set_setting('warehouses',rows)
+        return {'warehouses':warehouse_list()}
 
     @app.get('/api/manager/products')
-    def manager_products(q: str=Query('',max_length=200),page: int=Query(1,ge=1),session=Depends(authenticated)):
-        words=q.casefold().split()
-        rows=[p for p in by_id.values() if all(w in (p['sku']+' '+p['brand']+' '+p['model']+' '+p['description']).casefold() for w in words)]
-        shown=rows[(page-1)*20:page*20];rules=store.rules();costs=store.costs([p['sku'] for p in shown])
-        return {'total':len(rows),'page':page,'items':[manager_product(p,rules,costs) for p in shown]}
+    def manager_products(q:str=Query('',max_length=200),page:int=Query(1,ge=1),kind:str='',brand:str='',season:str='',
+                         width:str='',profile:str='',diameter:str='',pcd:str='',warehouses:str=Query('',max_length=4000),
+                         min_stock:int=Query(1,ge=1,le=1000),session=Depends(authenticated)):
+        costs=store.costs()
+        # Availability filters honor the latest private cache where fresh.
+        available=[]
+        for p in by_id.values():
+            offers=[]
+            for o in p['offers']:
+                c=costs.get((p['sku'],warehouse_id(o)))
+                offers.append({**o,'stock':c['stock'] if c and time.time()-c['updated']<=86400 else o['stock']})
+            available.append({**p,'offers':offers})
+        rows=search(available,q=q,kind=kind,brand=brand,season=season,width=width,profile=profile,diameter=diameter,pcd=pcd,warehouses=warehouses,min_stock=min_stock)
+        shown=rows[(page-1)*20:page*20];rules,offer_rules=all_rules()
+        return {'total':len(rows),'page':page,'items':[manager_product(p,rules,costs,offer_rules) for p in shown]}
 
     @app.post('/api/manager/purchase/refresh')
     def refresh_purchase(body: Ids,request: Request,session=Depends(authenticated)):
         throttle(request,'purchase',20)
         rows=[product(id) for id in dict.fromkeys(body.ids)]
         costs=purchase([p['sku'] for p in rows]);rules=store.rules()
+        if not store.setting('warehouses'):
+            try:store.set_setting('warehouses',api.warehouses())
+            except (SupplierFailure,AttributeError):pass
         return {'items':[manager_product(p,rules,costs) for p in rows]}
 
     @app.put('/api/manager/prices/{id}')
-    def price(id: str,body: Rule,session=Depends(authenticated)):
+    def price(id: str,body: Rule,warehouse:int|None=Query(default=None,gt=0),session=Depends(authenticated)):
         p=product(id)
         if body.mode=='fixed' and body.price<=0:
             raise HTTPException(422,'positive_price_required')
-        if body.mode=='markup':
+        if warehouse is not None and not any(warehouse_id(o)==warehouse for o in p['offers']):raise HTTPException(409,'warehouse_mapping_unavailable')
+        if body.mode in ('markup','profit'):
             costs=purchase([p['sku']])
-            if not any(r['cost']>0 and r['stock']>0 for r in costs.values()):
+            if not any(r['cost']>0 and r['stock']>0 and (warehouse is None or r['warehouse']==warehouse) for r in costs.values()):
                 raise HTTPException(409,'purchase_price_unavailable')
-        store.set_rule(id,None if body.mode=='supplier' else body.model_dump());invalidate()
+        if warehouse is None:store.set_rule(id,None if body.mode=='supplier' else body.model_dump())
+        else:store.set_offer_rule(id,warehouse,body.model_dump())
+        invalidate()
         return {'ok':True}
 
     @app.get('/api/manager/orders')
@@ -347,13 +468,13 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
         if len(set(pairs))!=len(pairs):
             raise HTTPException(422,'duplicate_order_line')
         selected=[product(l.productId) for l in body.lines]
-        costs=purchase([p['sku'] for p in selected]);rules=store.rules();lines=[]
+        costs=purchase([p['sku'] for p in selected]);rules,offer_rules=all_rules();lines=[]
         for line,p in zip(body.lines,selected):
             original=next((o for o in p['offers'] if warehouse_id(o)==line.warehouseId),None)
             cost=costs.get((p['sku'],line.warehouseId))
             if not original or not cost or cost['stock']<line.quantity or cost['cost']<=0:
                 raise HTTPException(409,'insufficient_supplier_stock')
-            sale=sale_price(original,rules.get(p['id']),cost)
+            sale=sale_price(original,chosen_rule(p,line.warehouseId,rules,offer_rules),cost)
             if sale is None:
                 raise HTTPException(409,'sale_price_unavailable')
             lines.append({'productId':p['id'],'sku':p['sku'],'name':p['brand']+' '+p['model'],

@@ -1,0 +1,5 @@
+.imkonex-old-shell[hidden]{display:none!important}
+imkonex-header{display:block;position:relative;z-index:1000}
+imkonex-footer{display:block}
+imkonex-header[hidden],imkonex-footer[hidden]{display:none}
+.site-header:has(.imkonex-old-shell){position:relative;z-index:20}

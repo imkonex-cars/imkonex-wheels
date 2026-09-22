@@ -17,7 +17,7 @@ export function effectiveOffer(product, quantity=1) {
   }
   return best;
 }
-export function formatSize(p) { return p.kind==='tubes'||p.width==null&&p.kind==='tires'||p.profile==null&&p.kind==='tires'||p.kind==='tires'&&(p.diameter==null||!p.construction) ? (p.sizeLabel||p.description) : p.kind === 'tires' ? `${p.width}/${p.profile} ${p.construction||'R'}${p.diameter}` : `${p.wheelWidth}${p.isDemo===false?'':'J'} × ${p.diameter} · ${p.pcd}`; }
+export function formatSize(p) { if(['sensors','consumables','oils'].includes(p.kind))return p.sizeLabel||p.description; return p.kind==='tubes'||p.width==null&&p.kind==='tires'||p.profile==null&&p.kind==='tires'||p.kind==='tires'&&(p.diameter==null||!p.construction) ? (p.sizeLabel||p.description) : p.kind === 'tires' ? `${p.width}/${p.profile} ${p.construction||'R'}${p.diameter}` : `${p.wheelWidth}${p.isDemo===false?'':'J'} × ${p.diameter} · ${p.pcd}`; }
 export function filterProducts(products, filters, {favorites=[], compare=[], sort=true}={}) {
   const q=normalize(filters.q);
   const found=products.filter(p => {
@@ -87,7 +87,7 @@ export function cartTotals(lines,products) {
 }
 export function fitmentMessage() {return 'Применимость не подтверждена. Нужна проверка параметров автомобиля.';}
 export function parseFilters(search='') {
- const p=new URLSearchParams(search); const f={kind:['wheels','tubes'].includes(p.get('kind'))?p.get('kind'):'tires',sort:p.get('sort')||'recommended',brands:p.getAll('brand')};
+ const p=new URLSearchParams(search); const f={kind:['wheels','tubes','sensors','consumables','oils'].includes(p.get('kind'))?p.get('kind'):'tires',sort:p.get('sort')||'recommended',brands:p.getAll('brand')};
  for(const k of ['q','category','width','profile','diameter','season','pcd','wheelWidth','et','dia','min','max','type']) f[k]=p.get(k)||'';
  for(const k of ['inSet','fast','studded','runflat','xl'])f[k]=p.get(k)==='1';
  return f;

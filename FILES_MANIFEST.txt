@@ -1,9 +1,4 @@
-﻿IMKONEX CARS — полная рабочая область 0.5.0
-Всего файлов: 219. Все пути указаны от корня GitHub-репозитория.
-Загрузите содержимое архива с сохранением папок.
-Render: витрина Static Site или Web Service Dockerfile.portal с постоянным диском для кабинета.
-dist и node_modules создаются локально/на сервере и в этот список не входят.
-
+IMKONEX WHEELS 0.6.0 — complete source inventory
 .dockerignore
 .env.example
 .github/workflows/ci
@@ -14,24 +9,29 @@ BUILD_RENDER.mjs
 Dockerfile
 Dockerfile.portal
 FILES_MANIFEST.txt
+FIX_GITHUB.txt
 README.md
 START_HERE_PC1.txt
 SYNC_CATALOG_WORKFLOW.txt
 UPGRADE_v0.5.0.txt
 backend/__init__.py
 backend/app.py
+backend/catalog_accessories.py
 backend/catalog_check.py
 backend/catalog_photos.py
 backend/catalog_sync.py
 backend/catalog_types.py
 backend/export_snapshot.py
+backend/manager_catalog.py
 backend/models.py
 backend/portal.py
 backend/portal_jobs.py
 backend/portal_store.py
 backend/portal_supplier.py
+backend/product_attributes.py
 backend/repository.py
 backend/schema.sql
+backend/site_shell.py
 backend/supplier.py
 backend/supplier_check.py
 backend/worker.py
@@ -41,6 +41,7 @@ data/demo-catalog.json
 data/supplier-snapshot.json
 deploy/Caddyfile
 docs/API.md
+docs/API_FIELDS_v0.6.0.md
 docs/ASSET_SOURCES.json
 docs/FOURTOCHKI.md
 docs/FOURTOCHKI_CATALOG_CHECK_README.txt
@@ -52,6 +53,7 @@ docs/PHOTOS_PC1.txt
 docs/PRODUCT_PHOTO_SOURCES.json
 docs/RENDER.md
 docs/SYNC_SETUP.md
+docs/UPDATE_v0.6.0.md
 docs/VALIDATION.md
 docs/VALIDATION_0_2.md
 docs/VALIDATION_0_3.md
@@ -176,13 +178,25 @@ frontend/assets/products/hankook-w330-card.jpg
 frontend/assets/products/michelin-primacy-4.webp
 frontend/assets/products/triangle-sportex-th201-card.png
 frontend/config.js
-frontend/data/catalog.js
 frontend/domain.js
 frontend/index.html
 frontend/manager/index.html
 frontend/manager/manager.css
 frontend/manager/manager.js
+frontend/manager/pricing.js
 frontend/premium.css
+frontend/selection/index.html
+frontend/selection/selection.css
+frontend/selection/selection.js
+frontend/share.js
+frontend/shared/brand/Imkonex-cars3-active.svg
+frontend/shared/brand/Imkonex-cars3.svg
+frontend/shared/brand/imkonex-logo-active.svg
+frontend/shared/brand/imkonex-logo-no-acti.svg
+frontend/shared/bridge.css
+frontend/shared/fallback.json
+frontend/shared/shell.css
+frontend/shared/shell.js
 frontend/styles.css
 package-lock.json
 package.json
@@ -212,6 +226,7 @@ tests/fixtures/fourtochki_inputs_20260917.json
 tests/fixtures/public-sample.json
 tests/frontend.test.mjs
 tests/full_release.test.mjs
+tests/manager-v06.test.mjs
 tests/premium.test.mjs
 tests/snapshot.test.mjs
 tests/test_api.py
@@ -222,4 +237,5 @@ tests/test_export_snapshot.py
 tests/test_portal.py
 tests/test_supplier_check.py
 tests/test_supplier_schema_imports.py
+tests/test_v06.py
 tests/workspace.test.mjs

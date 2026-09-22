@@ -20,7 +20,7 @@ class SupplierFailure(RuntimeError):
 
 READS = frozenset({'GetMarkaAvto', 'GetModelAvto', 'GetYearAvto',
     'GetModificationAvto', 'GetGoodsByCar', 'GetGoodsPriceRestByCode',
-    'GetWarehouses', 'GetOrderInfo2'})
+    'GetWarehouses', 'GetOrderInfo2', 'GetGoodsInfo'})
 
 
 def pack(type_, value):
@@ -152,9 +152,32 @@ class PortalSupplier:
                     raise SupplierFailure('supplier_response_changed')
                 if type(stock) is not int or stock < 0 or type(warehouse) is not int or warehouse <= 0:
                     raise SupplierFailure('supplier_response_changed')
+                retail = offer.get('price_rozn')
+                if retail is not None:
+                    retail = Decimal(str(retail))
+                    if not retail.is_finite() or not 0 <= retail <= 100000000:
+                        raise SupplierFailure('supplier_response_changed')
                 rows.append({'sku': code, 'warehouseId': warehouse,
-                             'purchasePrice': float(cost), 'stock': stock})
+                             'purchasePrice': float(cost), 'supplierRetailPrice': float(retail) if retail is not None else None, 'stock': stock})
         return rows
+
+    def warehouses(self):
+        from .manager_catalog import warehouse_meta
+        result=self.call('GetWarehouses')
+        rows=array(result,'warehouses')
+        if not rows or any(type(r.get('id')) is not int or r['id']<=0 for r in rows):
+            raise SupplierFailure('supplier_response_changed')
+        return [warehouse_meta(r) for r in rows]
+
+    def details(self, code, kind):
+        from .product_attributes import product_attributes
+        containers={'tires':['tyreList'],'wheels':['rimList'],'tubes':['cameraList'],
+                    'sensors':['pressureSensorList'],'oils':['oilList'],
+                    'consumables':['fastenerList','sparePartList','cameraList']}
+        result=self.call('GetGoodsInfo',{'code_list':[code]})
+        rows=[r for name in containers.get(kind,[]) for r in array(result,name) if r.get('code')==code]
+        if len(rows)!=1:raise SupplierFailure('supplier_response_changed')
+        return product_attributes(kind,rows[0])
 
     def create_order(self, draft):
         order = {'product_list': [{'code': r['sku'], 'quantity': r['quantity'],
