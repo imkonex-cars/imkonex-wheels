@@ -3,6 +3,8 @@ from copy import deepcopy
 import json
 from pathlib import Path
 import shutil
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -300,6 +302,43 @@ class CatalogSyncTests(unittest.TestCase):
         ]))
         with self.assertRaises(MappingRequired):
             validate_payload(type_, {'unsignedByte': [0]})
+
+    def test_cli_skips_only_unsupported_products_and_keeps_publication_guards(self):
+        # Run the __main__ entry point in a separate interpreter, just as -m
+        # does. Import-only tests cannot catch duplicated exception classes.
+        baseline = sync.collect_catalog(FakeSupplier(), config())
+        previous = json.dumps(baseline, ensure_ascii=False).encode()
+        for scenario, expected in (
+            ('parameters', None), ('retail', 'invalid_retail_or_stock'),
+            ('stock', 'invalid_retail_or_stock'), ('warehouse', 'warehouse_mapping_changed'),
+            ('drop', 'large_catalog_drop'),
+        ):
+            with self.subTest(scenario=scenario), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp)
+                shutil.copytree(ROOT / 'backend', root / 'backend', ignore=shutil.ignore_patterns('__pycache__'))
+                for folder in ('scripts', 'config', 'data', 'frontend'):
+                    (root / folder).mkdir()
+                for name in ('validate-public.mjs', 'public-catalog.mjs'):
+                    shutil.copyfile(ROOT / 'scripts' / name, root / 'scripts' / name)
+                shutil.copyfile(ROOT / 'tests/fixtures/sync_cli_provider.py', root / 'run_cli.py')
+                cfg = config();cfg['extended_categories'] = True
+                (root / 'config/sync.json').write_text(json.dumps(cfg))
+                target = root / 'data/supplier-snapshot.json';target.write_bytes(previous)
+                result = subprocess.run([sys.executable, str(root / 'run_cli.py'), str(ROOT), scenario],
+                                        cwd=root, capture_output=True, text=True, timeout=30)
+                self.assertEqual(result.returncode, 0 if expected is None else 1, result.stdout + result.stderr)
+                report = json.loads((root / 'runtime/sync-summary.json').read_text())
+                self.assertEqual(target.read_bytes(), previous)
+                self.assertNotIn('fixture-password', result.stdout + result.stderr + json.dumps(report))
+                if expected is None:
+                    self.assertEqual(report['status'], 'verified')
+                    self.assertEqual(report['products'], 13)
+                    self.assertEqual(report['sync']['excludedReasons'], {'unsupportedParameters': 1})
+                    self.assertEqual(report['sync']['sourceProducts'], 14)
+                    self.assertIn('SYNC_OK', result.stdout)
+                else:
+                    self.assertEqual(report['status'], 'failed')
+                    self.assertEqual(report['error'], expected)
 
 
 if __name__ == '__main__':

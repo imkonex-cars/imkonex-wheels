@@ -16,6 +16,7 @@ import tempfile
 import time
 
 from .export_snapshot import number, text, public_offers
+from .catalog_errors import SyncError, ProviderError, AuthenticationError, UnsupportedProduct
 
 ROOT = Path(__file__).resolve().parent.parent
 GROUPS = {
@@ -23,22 +24,6 @@ GROUPS = {
     'wheels': ('GetFindDisk', 'DiskPriceRest', 'rimList', 'RimContainer'),
     'tubes': ('GetFindCamera', 'CameraPriceRest', 'cameraList', 'CameraContainer'),
 }
-
-
-class SyncError(RuntimeError):
-    """A fixed, public error identifier, never a provider exception message."""
-
-
-class ProviderError(SyncError):
-    pass
-
-
-class AuthenticationError(SyncError):
-    pass
-
-
-class UnsupportedProduct(ValueError):
-    pass
 
 
 def utc_now():
