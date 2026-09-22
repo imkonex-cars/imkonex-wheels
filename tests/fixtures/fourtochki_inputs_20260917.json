@@ -979,5 +979,70 @@
         ]
       }
     ]
+  },
+  "GetRest": {
+    "type": "{Wcf.ClientService.Client.WebAPI.TS3}GetRest",
+    "fields": [
+      {
+        "name": "login",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "password",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://www.w3.org/2001/XMLSchema}string"
+      },
+      {
+        "name": "filter",
+        "minOccurs": 0,
+        "maxOccurs": "1",
+        "nillable": true,
+        "type": "{http://schemas.datacontract.org/2004/07/TS3.Domain.Models.Client.ClientSoapService.GetRest}getRestFilter",
+        "fields": [
+          {
+            "name": "wrh",
+            "minOccurs": 1,
+            "maxOccurs": "1",
+            "nillable": false,
+            "type": "{http://www.w3.org/2001/XMLSchema}int"
+          },
+          {
+            "name": "code",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://www.w3.org/2001/XMLSchema}string"
+          },
+          {
+            "name": "page",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": false,
+            "type": "{http://www.w3.org/2001/XMLSchema}int"
+          },
+          {
+            "name": "types",
+            "minOccurs": 0,
+            "maxOccurs": "1",
+            "nillable": true,
+            "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+            "fields": [
+              {
+                "name": "string",
+                "minOccurs": 0,
+                "maxOccurs": "unbounded",
+                "nillable": true,
+                "type": "{http://www.w3.org/2001/XMLSchema}string"
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 }

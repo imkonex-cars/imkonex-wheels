@@ -37,7 +37,7 @@ class ExtendedTests(unittest.TestCase):
         row={'code':'T1','type':'selhoz','whpr':{'wh_price_rest':[{'wrh':2017,'rest':4,'price_rozn':5000}]}}
         p=extended_product('tires',d,row,{2017:'Test'},[])
         self.assertEqual((p['vehicleCategory'],p['season'],p['profile'],p['construction']),('special','allseason',None,None))
-        self.assertEqual(sync.request_arguments('GetFindCamera','x','y')['filter'],{'subtype_id_list':{'int':[0]}})
+        self.assertEqual(sync.request_arguments('GetFindCamera','x','y')['filter'],{'subtype_id_list':{'unsignedByte':[0]}})
         self.assertEqual(sync.request_arguments('GetFindTyre','x','y',extended=True)['filter']['quality'],0)
 
     def test_extended_import_is_complete_and_passes_public_contract(self):

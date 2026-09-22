@@ -1,0 +1,143 @@
+{
+  "type": "{Wcf.ClientService.Client.WebAPI.TS3}GetFindCamera",
+  "fields": [
+    {
+      "name": "login",
+      "minOccurs": 0,
+      "maxOccurs": "1",
+      "nillable": true,
+      "type": "{http://www.w3.org/2001/XMLSchema}string"
+    },
+    {
+      "name": "password",
+      "minOccurs": 0,
+      "maxOccurs": "1",
+      "nillable": true,
+      "type": "{http://www.w3.org/2001/XMLSchema}string"
+    },
+    {
+      "name": "filter",
+      "minOccurs": 0,
+      "maxOccurs": "1",
+      "nillable": true,
+      "type": "{http://schemas.datacontract.org/2004/07/TS3.Domain.Models.Client.ClientSoapService.GetFindCamera}GetFindCameraFilter",
+      "fields": [
+        {
+          "name": "address_id",
+          "minOccurs": 0,
+          "maxOccurs": "1",
+          "nillable": true,
+          "type": "{http://www.w3.org/2001/XMLSchema}int"
+        },
+        {
+          "name": "brand_list",
+          "minOccurs": 0,
+          "maxOccurs": "1",
+          "nillable": true,
+          "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+          "fields": [
+            {
+              "name": "string",
+              "minOccurs": 0,
+              "maxOccurs": "unbounded",
+              "nillable": true,
+              "type": "{http://www.w3.org/2001/XMLSchema}string"
+            }
+          ]
+        },
+        {
+          "name": "code_list",
+          "minOccurs": 0,
+          "maxOccurs": "1",
+          "nillable": true,
+          "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring",
+          "fields": [
+            {
+              "name": "string",
+              "minOccurs": 0,
+              "maxOccurs": "unbounded",
+              "nillable": true,
+              "type": "{http://www.w3.org/2001/XMLSchema}string"
+            }
+          ]
+        },
+        {
+          "name": "diameter_list",
+          "minOccurs": 0,
+          "maxOccurs": "1",
+          "nillable": true,
+          "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfdecimal",
+          "fields": [
+            {
+              "name": "decimal",
+              "minOccurs": 0,
+              "maxOccurs": "unbounded",
+              "nillable": false,
+              "type": "{http://www.w3.org/2001/XMLSchema}decimal"
+            }
+          ]
+        },
+        {
+          "name": "sort",
+          "minOccurs": 0,
+          "maxOccurs": "1",
+          "nillable": true,
+          "type": "{http://www.w3.org/2001/XMLSchema}int"
+        },
+        {
+          "name": "subtype_id_list",
+          "minOccurs": 0,
+          "maxOccurs": "1",
+          "nillable": true,
+          "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfunsignedByte",
+          "fields": [
+            {
+              "name": "unsignedByte",
+              "minOccurs": 0,
+              "maxOccurs": "unbounded",
+              "nillable": false,
+              "type": "{http://www.w3.org/2001/XMLSchema}unsignedByte"
+            }
+          ]
+        },
+        {
+          "name": "wrh_list",
+          "minOccurs": 0,
+          "maxOccurs": "1",
+          "nillable": true,
+          "type": "{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfint",
+          "fields": [
+            {
+              "name": "int",
+              "minOccurs": 0,
+              "maxOccurs": "unbounded",
+              "nillable": false,
+              "type": "{http://www.w3.org/2001/XMLSchema}int"
+            }
+          ]
+        },
+        {
+          "name": "include_paid_delivery",
+          "minOccurs": 0,
+          "maxOccurs": "1",
+          "nillable": true,
+          "type": "{http://www.w3.org/2001/XMLSchema}boolean"
+        }
+      ]
+    },
+    {
+      "name": "page",
+      "minOccurs": 0,
+      "maxOccurs": "1",
+      "nillable": false,
+      "type": "{http://www.w3.org/2001/XMLSchema}int"
+    },
+    {
+      "name": "pageSize",
+      "minOccurs": 0,
+      "maxOccurs": "1",
+      "nillable": true,
+      "type": "{http://www.w3.org/2001/XMLSchema}int"
+    }
+  ]
+}

@@ -66,6 +66,9 @@ def validate_payload(type_, payload, path=''):
             elif isinstance(element.type, xsd.Boolean):
                 if type(item) is not bool:
                     raise MappingRequired('Boolean field changed: ' + path + name)
+            elif isinstance(element.type, xsd.UnsignedByte):
+                if type(item) is not int or not 0 <= item <= 255:
+                    raise MappingRequired('Unsigned byte field changed: ' + path + name)
             elif isinstance(element.type, xsd.Int):
                 if type(item) is not int:
                     raise MappingRequired('Integer field changed: ' + path + name)

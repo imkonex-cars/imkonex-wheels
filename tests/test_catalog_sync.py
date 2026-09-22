@@ -245,6 +245,7 @@ class CatalogSyncTests(unittest.TestCase):
         from lxml import etree
         from backend.catalog_check import validate_payload
         schemas = json.loads((ROOT / 'tests/fixtures/fourtochki_inputs_20260917.json').read_text())
+        schemas['GetFindCamera'] = json.loads((ROOT / 'tests/fixtures/fourtochki_camera_input_20260922.json').read_text())
         def to_type(description):
             if not description.get('fields'):
                 return xsd.Schema().get_type(description['type'])
@@ -252,9 +253,11 @@ class CatalogSyncTests(unittest.TestCase):
                 xsd.Element(f['name'], to_type(f), min_occurs=f['minOccurs'],
                             max_occurs=f['maxOccurs'] if f['maxOccurs'] == 'unbounded' else int(f['maxOccurs']),
                             nillable=f['nillable']) for f in description['fields']]))
-        for name in ('GetWarehouses', 'GetFindTyre', 'GetFindDisk', 'GetGoodsInfo'):
+        for name in ('GetWarehouses', 'GetFindTyre', 'GetFindDisk', 'GetGoodsInfo',
+                     'GetFindCamera', 'GetRest', 'GetGoodsPriceRestByCode'):
             args = sync.request_arguments(name, 'synthetic-login', 'synthetic-password', page=0,
-                                          codes=[f'T{i:05}' for i in range(50)], warehouse_ids=[2017])
+                                          codes=[f'T{i:05}' for i in range(50)], warehouse_ids=[2017],
+                                          extended=True, warehouse=2017)
             type_ = to_type(schemas[name]);validate_payload(type_, args)
             element = xsd.Element(name, type_);root = etree.Element('Envelope')
             element.render(root, element(**args))
@@ -264,6 +267,39 @@ class CatalogSyncTests(unittest.TestCase):
                 self.assertEqual(root.find('.//wrh_list/int').text, '2017')
             if name == 'GetGoodsInfo':
                 self.assertEqual(len(root.findall('.//code_list/string')), 50)
+            if name == 'GetFindCamera':
+                self.assertEqual(root.find('.//subtype_id_list/unsignedByte').text, '0')
+                self.assertIsNone(root.find('.//subtype_id_list/int'))
+            if name == 'GetRest':
+                self.assertEqual(root.find('.//filter/wrh').text, '2017')
+            if name == 'GetGoodsPriceRestByCode':
+                self.assertEqual(len(root.findall('.//filter/code_list/string')), 50)
+
+    def test_unsigned_byte_contract_rejects_out_of_range_and_non_integer_values(self):
+        from zeep import xsd
+        from backend.catalog_check import validate_payload
+        from backend.supplier_check import MappingRequired
+        # The user's 2026-09-22 schema uses xsd:unsignedByte, not xsd:int.
+        type_ = xsd.ComplexType(xsd.Sequence([
+            xsd.Element('unsignedByte', xsd.UnsignedByte(), min_occurs=0, max_occurs='unbounded')
+        ]))
+        validate_payload(type_, {'unsignedByte': [0, 255]})
+        for value in (-1, 256, True, False, 0.0, '0', None):
+            with self.subTest(value=value), self.assertRaises(MappingRequired):
+                validate_payload(type_, {'unsignedByte': [value]})
+        for envelope in ({'int': [0]}, {'unsignedByte': 0}):
+            with self.subTest(envelope=envelope), self.assertRaises(MappingRequired):
+                validate_payload(type_, envelope)
+
+    def test_unsigned_byte_support_does_not_allow_unreviewed_integer_types(self):
+        from zeep import xsd
+        from backend.catalog_check import validate_payload
+        from backend.supplier_check import MappingRequired
+        type_ = xsd.ComplexType(xsd.Sequence([
+            xsd.Element('unsignedByte', xsd.UnsignedShort(), max_occurs='unbounded')
+        ]))
+        with self.assertRaises(MappingRequired):
+            validate_payload(type_, {'unsignedByte': [0]})
 
 
 if __name__ == '__main__':

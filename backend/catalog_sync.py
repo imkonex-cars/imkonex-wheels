@@ -91,7 +91,8 @@ def request_arguments(name, login, password, *, page=1, page_size=100, codes=(),
     if name in ('GetFindTyre', 'GetFindDisk', 'GetFindCamera'):
         args.update(filter={}, page=page, pageSize=page_size)
         if name == 'GetFindCamera':
-            args['filter']['subtype_id_list'] = {'int': [0]}
+            # Observed 2026-09-22 WSDL: ArrayOfunsignedByte, not ArrayOfint.
+            args['filter']['subtype_id_list'] = {'unsignedByte': [0]}
         if extended and name == 'GetFindTyre':
             args['filter']['quality'] = 0
         if warehouse_ids:
