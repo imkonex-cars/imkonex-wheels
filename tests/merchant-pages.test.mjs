@@ -33,8 +33,14 @@ test('seller contacts survive replacement of the Tilda footer on each buyer surf
   doc.querySelector('footer.site-footer')?.remove();
   const block=doc.querySelector('.merchant-info');assert.ok(block,rel);
   assert.match(block.textContent,/7447231956/);assert.match(block.textContent,/Ленина, 89/);
-  assert.match(block.textContent,/Энтузиастов/);assert.ok(block.querySelector('a[href="/info/returns/"]'));
-  assert.ok(block.querySelector('a[href="https://www.tbank.ru/"] img'));
+  assert.match(block.textContent,/Энтузиастов/);
+  assert.equal(block.tagName,'DETAILS');assert.equal(block.hasAttribute('open'),false);
+  assert.equal(block.firstElementChild.tagName,'SUMMARY');
+  const section=block.closest('.merchant-summary');assert.ok(section,rel);
+  assert.ok(section.querySelector('.merchant-summary__identity a[href="/info/contacts/"]'));
+  const purchaseNav=section.querySelector('nav[aria-label="Условия покупки"]');assert.ok(purchaseNav);
+  assert.equal(block.contains(purchaseNav),false);assert.ok(purchaseNav.querySelector('a[href="/info/returns/"]'));
+  assert.equal(section.querySelector('a[href="https://www.tbank.ru/"]'),null);
  }
 });
 
@@ -47,7 +53,10 @@ test('local consent version and links are sent with checkout; no preselected con
  assert.doesNotMatch(source,/<input[^>]*name="consent"[^>]*checked/);
 });
 
-test('bank logo is a local inert vector asset',async()=>{
+test('required bank identity remains once on payment page with a local inert vector asset',async()=>{
+ const payment=new JSDOM(await readFile(path.join(root,'info/payment/index.html'),'utf8')).window.document;
+ assert.equal(payment.querySelectorAll('a[href="https://www.tbank.ru/"]').length,1);
+ assert.ok(payment.querySelector('.bank-identity img[src="/assets/payments/tbank.svg"]'));
  const source=await readFile(path.join(root,'assets/payments/tbank.svg'),'utf8');
  assert.match(source,/<svg/);assert.doesNotMatch(source,/<script|<image|<foreignObject|\bonload=/i);
 });

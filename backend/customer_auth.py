@@ -171,7 +171,7 @@ class CustomerAuth:
             con.execute('INSERT INTO customer_privacy_consents(challenge_id,phone_digest,purpose,version,accepted_at) VALUES (?,?,?,?,?)',
                         (challenge, self.digest('consent-phone', phone), 'account_sms_login', consent_version, now))
         try:
-            self.sender.send(phone, f'IMKONEX CARS: код входа {code}. Действует 5 минут. Никому не сообщайте код.', challenge)
+            self.sender.send(phone, f'Шины и диски: код входа {code}. Действует 5 минут. Никому не сообщайте код.', challenge)
         except Exception:
             with self.connect() as con:
                 con.execute("UPDATE customer_auth_codes SET state='failed' WHERE id=? AND state='pending'", (challenge,))

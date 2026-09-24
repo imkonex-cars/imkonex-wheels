@@ -1,7 +1,7 @@
 import {withLoading} from './loading.js';
 import {money} from './domain.js';
 export function selectionText(selection,url){
-  return ['IMKONEX CARS · Ваш подбор','',...selection.lines.map((l,i)=>`${i+1}. ${l.name}\n${l.description}\nАртикул: ${l.sku}\n${l.quantity} шт. × ${money(l.price)} = ${money(l.subtotal)}`),
+  return ['Шины и диски · Ваш подбор','',...selection.lines.map((l,i)=>`${i+1}. ${l.name}\n${l.description}\nАртикул: ${l.sku}\n${l.quantity} шт. × ${money(l.price)} = ${money(l.subtotal)}`),
     '',`Итого: ${money(selection.total)}`,'Цена и наличие подтверждаются при оформлении. Доставка рассчитывается отдельно.',url||''].join('\n');
 }
 export async function copyText(text){

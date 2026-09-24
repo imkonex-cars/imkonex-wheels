@@ -11,18 +11,18 @@ for(const file of new Set(['assets/product-unavailable.svg',...data.products.map
 let html=await readFile('dist/index.html','utf8');
 const css=await readFile('dist/styles.css','utf8');
 html=html.replace('<link rel="stylesheet" href="./styles.css">',()=>`<style>${css}</style>`);
-for(const file of ['assets/imkonex-cars.svg','assets/favicon.svg'])html=html.replaceAll('./'+file,await uri('dist/'+file));
+for(const file of ['assets/favicon.svg'])html=html.replaceAll('./'+file,await uri('dist/'+file));
 const safe=value=>JSON.stringify(value).replaceAll('<','\\u003c');
 const config=await readFile('dist/config.js','utf8');
 html=html.replace('<script src="./config.js"></script>',()=>`<script>${config}\nwindow.IMKONEX_IMAGE_MAP=${safe(map)};</script>`);
 html=html.replace('<script src="./data/catalog.js"></script>',()=>`<script>window.IMKONEX_DATA=${safe(data)};</script>`);
 const code=await bundleBrowser('app.js',pathToFileURL(path.resolve('dist')+'/'));
 html=html.replace('<script type="module" src="./app.js"></script>',()=>`<script>${code.replaceAll('</script','<\\/script')}</script>`);
-for(const file of ['premium.css','shop.css','shared/bridge.css']){
+for(const file of ['premium.css','shop.css','shared/bridge.css','shared/merchant.css']){
  const content=await readFile('dist/'+file,'utf8');
- html=html.replace(`<link rel="stylesheet" href="./${file}">`,()=>`<style>${content}</style>`);
+ for(const prefix of ['./','/'])html=html.replace(`<link rel="stylesheet" href="${prefix}${file}">`,()=>`<style>${content}</style>`);
 }
-html=html.replace(/<script[^>]*src="\.\/shared\/shell.js"[^>]*><\/script>/g,'');
+html=html.replace(/<script[^>]*src="(?:\.\/|\/)shared\/shell.js"[^>]*><\/script>/g,'');
 for(const file of ['assets/products/R5019.png','assets/products/WHS121894.png']){
  try{const image=await uri('dist/'+file);html=html.replaceAll('./'+file,image);}catch{}
 }
