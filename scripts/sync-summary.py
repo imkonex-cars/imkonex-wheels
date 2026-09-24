@@ -13,7 +13,8 @@ if path.exists():
     rows = ['## IMKONEX CARS · выгрузка каталога', '',
             f'Статус выгрузки: {status}', f'Подготовлено товаров: {count}',
             f'Запросов API: {report.get("apiCalls", 0)}', '',
-            'Публикация на Render проверяется отдельно в журнале сервиса.']
+            'Снимок публикуется в GitHub. Обновление каталога на REG.ru '
+            'проверяется отдельно командой wheels status; Render не вызывается.']
     if status == 'failed':
         rows += ['', 'Рабочий снимок сохранён. Код: ' + report.get('error', 'unknown_error')]
     for kind, data in report.get('sync', {}).get('categories', {}).items():
