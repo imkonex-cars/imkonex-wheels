@@ -6,6 +6,7 @@ Raw SOAP responses, purchase prices and credentials are never written to disk.
 import argparse
 from collections import Counter
 from datetime import datetime, timezone
+from decimal import Decimal, InvalidOperation
 import hashlib
 import json
 import os
@@ -19,6 +20,12 @@ from .export_snapshot import number, text, public_offers
 from .catalog_errors import SyncError, ProviderError, AuthenticationError, UnsupportedProduct
 
 ROOT = Path(__file__).resolve().parent.parent
+SYNC_VERSION = '0.9.0-sync.2'
+SEARCH_ATTEMPTS = 3
+RETRYABLE_PAGING_ERRORS = frozenset({
+    'overlapping_search_pages', 'repeated_or_overlapping_search_page',
+    'page_count_changed_during_scan', 'unexpected_empty_search_page',
+})
 GROUPS = {
     'tires': ('GetFindTyre', 'TyrePriceRest', 'tyreList', 'TyreContainer'),
     'wheels': ('GetFindDisk', 'DiskPriceRest', 'rimList', 'RimContainer'),
@@ -106,7 +113,7 @@ class LiveSupplier:
             raise SyncError('credentials_missing')
         self.config, self.calls = config, 0
         self.client = create_check_client()
-        self.client.transport.session.headers['User-Agent'] = 'IMKONEX-CATALOG-SYNC/0.6.0'
+        self.client.transport.session.headers['User-Agent'] = 'IMKONEX-CATALOG-SYNC/' + SYNC_VERSION
         self.deadline = time.monotonic() + config['max_duration_seconds']
         self.client.transport.deadline = self.deadline
         self.last_call = 0
@@ -155,29 +162,177 @@ class LiveSupplier:
         self.client.transport.session.close()
 
 
-def rub_prices(response):
+def rub_prices(response, *, operation=None, page=None, row_count=None):
+    """Require explicit RUB at a unit rate; never infer currency from another page.
+
+    The provider's CurrencyRate documentation names CharCode/Nominal/Value;
+    observed tyre/disk responses use charCode/nominal/value. Accept either
+    spelling, but conflicting aliases are not a trustworthy price contract.
+    """
     rate = response.get('currencyRate')
-    try:
-        valid = (isinstance(rate, dict) and rate.get('charCode') == 'RUB'
-                 and number(rate.get('nominal')) == 1 and number(rate.get('value')) == 1)
-    except ValueError:
-        valid = False
-    if not valid:
-        raise SyncError('currency_not_confirmed_rub')
+    context = {
+        'operation': operation if operation in {v[0] for v in GROUPS.values()} else 'unknown',
+        'page': page if type(page) is int and 0 <= page <= 5000 else None,
+        'rowCount': row_count if type(row_count) is int and 0 <= row_count <= 50000 else None,
+        'ratePresent': isinstance(rate, dict),
+        'fields': {name: isinstance(rate, dict) and any(key in rate for key in (name, name[0].upper()+name[1:]))
+                   for name in ('charCode', 'nominal', 'value')},
+    }
+
+    def reject(reason):
+        # Only our fixed labels/booleans/counts enter the log. In particular,
+        # provider text, monetary values and credentials must never be logged.
+        error = SyncError('currency_not_confirmed_rub')
+        error.context = {**context, 'reason': reason}
+        raise error
+
+    if not isinstance(rate, dict):
+        reject('currency_rate_missing_or_invalid')
+    values = {}
+    for name in ('charCode', 'nominal', 'value'):
+        aliases = [rate[key] for key in (name, name[0].upper()+name[1:]) if key in rate]
+        if not aliases:
+            reject('currency_field_missing')
+        if name == 'charCode':
+            if any(not isinstance(value, str) for value in aliases):
+                reject('currency_code_invalid')
+            # Case of the field name varies; currency identifiers are not guessed.
+            parsed = aliases
+        else:
+            try:
+                if any(value is None or isinstance(value, bool) for value in aliases):
+                    raise ValueError('invalid currency number')
+                parsed = [Decimal(str(value)) for value in aliases]
+                if any(not value.is_finite() or value < 0 or value > 100000000 for value in parsed):
+                    raise ValueError('invalid currency number')
+            except (ValueError, TypeError, InvalidOperation):
+                reject('currency_number_invalid')
+        if any(value != parsed[0] for value in parsed[1:]):
+            reject('currency_aliases_conflict')
+        values[name] = parsed[0]
+    context.update(rubCode=values['charCode'] == 'RUB',
+                   nominalIsOne=values['nominal'] == 1,
+                   valueIsOne=values['value'] == 1)
+    if values['charCode'] != 'RUB':
+        reject('currency_is_not_rub')
+    if values['nominal'] != 1 or values['value'] != 1:
+        reject('currency_rate_is_not_unit')
+
+
+def pagination_error(code, kind, page, *, base=None, expected=None, actual=None,
+                     codes=(), seen=(), row_count=None):
+    """Only fixed labels and counters, never article identifiers or prices."""
+    error = SyncError(code)
+    error.context = {
+        'operation': GROUPS[kind][0], 'kind': kind, 'page': page,
+        'pageBase': base, 'expectedPages': expected, 'actualPages': actual,
+        'rowCount': len(codes) if row_count is None else row_count,
+        'duplicateRows': len(codes) - len(set(codes)),
+        'overlapRows': len(set(codes).intersection(seen)),
+    }
+    return error
+
+
+def read_category_pages(call, kind, config, stats, *, probe_only=False):
+    """Read a complete category before details; abandon inconsistent attempts.
+
+    Preflight responses are intentionally discarded: reusing them after another
+    category has been scanned would mix old first pages with fresh later pages.
+    Every retry shares the original supplier's global time and call budgets.
+    """
+    for attempt in range(1, SEARCH_ATTEMPTS + 1):
+        attempt_stats = {'published': 0, 'excluded': 0}
+        pages = search_pages(call, kind, config, attempt_stats)
+        try:
+            if probe_only:
+                next(pages, None)
+                return
+            batches = list(pages)
+            stats.clear()
+            stats.update(attempt_stats)
+            return batches
+        except SyncError as error:
+            if str(error) not in RETRYABLE_PAGING_ERRORS:
+                raise
+            error.context = {
+                **getattr(error, 'context', {}),
+                'operation': GROUPS[kind][0], 'kind': kind,
+                'reason': str(error),
+                'attempt': attempt, 'maxAttempts': SEARCH_ATTEMPTS,
+                'phase': 'preflight' if probe_only else 'search',
+            }
+            if attempt == SEARCH_ATTEMPTS:
+                raise
+            print('SYNC_RETRY ' + json.dumps(error.context, sort_keys=True), flush=True)
+        finally:
+            pages.close()
+
+
+def camera_pages(call, config, stats, first_response):
+    """Current GetFindCamera XSD has ResultItems and no totalPages.
+
+    Read documented zero-based pages through an explicit successful empty
+    result. A short nonempty page alone is not evidence of completeness.
+    """
+    stats.update(pages=0, pageBase=0, scanned=0)
+    seen = set()
+    for page in range(config['max_pages_per_category'] + 1):
+        response = first_response if page == 0 else call('GetFindCamera', page=page)
+        if not isinstance(response, dict) or response.get('success') is not True:
+            raise SyncError('camera_response_not_verified')
+        if any(key in response for key in ('currencyRate', 'price_rest_list', 'totalPages')):
+            raise SyncError('camera_response_shape_changed')
+        rows = rows_at(response, 'ResultItems', 'GetFindCameraContainer')
+        if len(rows) > config['page_size']:
+            raise SyncError('page_size_not_honoured')
+        if not rows:
+            return
+        if page >= config['max_pages_per_category']:
+            raise SyncError('page_budget_or_shape_changed')
+        rub_prices({'currencyRate': response.get('CurrencyRateItem')},
+                   operation='GetFindCamera', page=page, row_count=len(rows))
+        codes = [code_of(row) for row in rows]
+        if len(codes) != len(set(codes)) or seen.intersection(codes):
+            raise pagination_error('repeated_or_overlapping_search_page', 'tubes', page,
+                                   base=0, codes=codes, seen=seen)
+        seen.update(codes)
+        if len(seen) > config['max_products']:
+            raise SyncError('product_budget_exceeded')
+        stats.update(pages=page + 1, scanned=len(seen))
+        if page == 0 or (page + 1) % 10 == 0:
+            print(f'tubes: page {page + 1}, articles {len(seen)}', flush=True)
+        yield rows
 
 
 def search_pages(call, kind, config, stats):
     operation, item, _, _ = GROUPS[kind]
+    first_camera = None
+    if kind == 'tubes':
+        # The 2026-09-24 live XSD differs from the legacy Help example.
+        # Inspect page zero once, then retain it for the selected reader.
+        try:
+            first_camera = call(operation, page=0)
+        except ProviderError as error:
+            first_camera = error
+        if isinstance(first_camera, dict) and any(
+                key in first_camera for key in ('CurrencyRateItem', 'ResultItems', 'WarehouseLogisticEnumerable')):
+            yield from camera_pages(call, config, stats, first_camera)
+            return
 
     def get(page):
-        response = call(operation, page=page)
-        rub_prices(response)
+        response = first_camera if kind == 'tubes' and page == 0 else call(operation, page=page)
+        if isinstance(response, ProviderError):
+            raise response
         total = response.get('totalPages')
         if type(total) is not int or not 0 <= total <= config['max_pages_per_category']:
             raise SyncError('page_budget_or_shape_changed')
         rows = rows_at(response, 'price_rest_list', item)
         if len(rows) > config['page_size']:
             raise SyncError('page_size_not_honoured')
+        # Empty pages contribute no prices. Providers can return currencyRate=nil
+        # for an empty result; pagination/empty-page checks still run below.
+        if rows:
+            rub_prices(response, operation=operation, page=page, row_count=len(rows))
         return total, rows
 
     # Distinguish zero-based paging, one-based paging and a page-0 alias.
@@ -197,13 +352,15 @@ def search_pages(call, kind, config, stats):
             raise
     total = one[0] if zero is None else zero[0]
     if one[0] != total:
-        raise SyncError('page_count_changed_during_scan')
+        raise pagination_error('page_count_changed_during_scan', kind, 1,
+                               expected=total, actual=one[0], row_count=len(one[1]))
     zero_codes = [code_of(row) for row in zero[1]] if zero else []
     one_codes = [code_of(row) for row in one[1]]
     if zero_codes and zero_codes != one_codes:
         base, first = 0, zero[1]
         if set(zero_codes) & set(one_codes):
-            raise SyncError('overlapping_search_pages')
+            raise pagination_error('overlapping_search_pages', kind, 1, base=0,
+                                   expected=total, actual=total, codes=one_codes, seen=zero_codes)
     else:
         base, first = 1, one[1]
     if total == 0:
@@ -216,12 +373,15 @@ def search_pages(call, kind, config, stats):
     for page in range(base, base + total):
         count, rows = (total, first) if page == base else (one if page == 1 else get(page))
         if count != total:
-            raise SyncError('page_count_changed_during_scan')
+            raise pagination_error('page_count_changed_during_scan', kind, page,
+                                   base=base, expected=total, actual=count, row_count=len(rows))
         if not rows:
-            raise SyncError('unexpected_empty_search_page')
+            raise pagination_error('unexpected_empty_search_page', kind, page,
+                                   base=base, expected=total, actual=count)
         codes = [code_of(row) for row in rows]
         if len(codes) != len(set(codes)) or seen.intersection(codes):
-            raise SyncError('repeated_or_overlapping_search_page')
+            raise pagination_error('repeated_or_overlapping_search_page', kind, page,
+                                   base=base, expected=total, actual=count, codes=codes, seen=seen)
         seen.update(codes)
         if len(seen) > config['max_products']:
             raise SyncError('product_budget_exceeded')
@@ -300,10 +460,24 @@ def collect_catalog(call, config):
     if not warehouses or set(config['warehouse_ids']) - warehouses.keys():
         raise SyncError('configured_warehouse_not_available')
     products, categories, excluded = [], {}, Counter()
-    for kind, (_, _, container, item) in GROUPS.items():
-        if kind == 'tubes' and not config.get('include_tubes'): continue
+    enabled = [kind for kind in GROUPS if kind != 'tubes' or config.get('include_tubes')]
+    # Check all enabled endpoints early, then discard these initial responses.
+    for kind in enabled:
+        print(f'PREFLIGHT {kind}: {GROUPS[kind][0]}', flush=True)
+        read_category_pages(call, kind, config, {}, probe_only=True)
+    # Complete each category's search consecutively, with no GetGoodsInfo calls
+    # in between pages. No details are requested until every scan has passed.
+    prepared = {}
+    scanned = 0
+    for kind in enabled:
         stats = categories[kind] = {'published': 0, 'excluded': 0}
-        for rows in search_pages(call, kind, config, stats):
+        scan_config = {**config, 'max_products': config['max_products'] - scanned}
+        prepared[kind] = read_category_pages(call, kind, scan_config, stats)
+        scanned += stats['scanned']
+    for kind in enabled:
+        _, _, container, item = GROUPS[kind]
+        stats = categories[kind]
+        for rows in prepared.pop(kind):
             batch_size = config['detail_batch_size']
             for offset in range(0, len(rows), batch_size):
                 batch = rows[offset:offset + batch_size]
@@ -432,8 +606,9 @@ def main():
     parser.add_argument('--allow-large-drop', action='store_true')
     args = parser.parse_args()
     report_path = ROOT / 'runtime/sync-summary.json'
-    report = {'version': '0.6.0', 'startedAt': utc_now(), 'status': 'failed', 'published': False}
+    report = {'version': SYNC_VERSION, 'startedAt': utc_now(), 'status': 'failed', 'published': False}
     supplier = None
+    print(f'IMKONEX_SYNC {SYNC_VERSION}: sequential search with bounded retries', flush=True)
     try:
         config = load_config(args.config)
         target = ROOT / 'data/supplier-snapshot.json'
@@ -447,6 +622,9 @@ def main():
         print(f'SYNC_OK {len(data["products"])} products; all search pages read; retail prices only.', flush=True)
     except Exception as error:
         report['error'] = str(error) if isinstance(error, SyncError) else 'sync_failed_' + type(error).__name__
+        if isinstance(error, SyncError) and hasattr(error, 'context'):
+            report['diagnostic'] = error.context
+            print('SYNC_DIAGNOSTIC ' + json.dumps(error.context, ensure_ascii=True, sort_keys=True), flush=True)
         print('SYNC_FAILED ' + report['error'] + '. Previous public snapshot retained.', flush=True)
     finally:
         if supplier:
