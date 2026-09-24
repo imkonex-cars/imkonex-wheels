@@ -39,13 +39,13 @@ test('customer can select both axles and add exactly two plus two',async()=>{
 
 test('checkout displays server total, creates one request, and exposes status link',async()=>{
  let requests=0,success=0;const calls=[];
- const b=await open('shop.js',async(url,opts)=>{calls.push([url,opts]);if(url.endsWith('/quote'))return {ok:true,json:async()=>({quoteId:'q'.repeat(32),total:28000,lines:[{name:'Test tire',sku:'front',quantity:4,price:7000,subtotal:28000}]})};requests++;return {ok:true,json:async()=>({id:'IMX-TEST',token:'t'.repeat(43),status:'new'})};});
+ const b=await open('shop.js',async(url,opts)=>{calls.push([url,opts]);if(url==='/api/customer/session')return {ok:false,status:401,json:async()=>({detail:'customer_login_required'})};if(url.endsWith('/quote'))return {ok:true,json:async()=>({quoteId:'q'.repeat(32),total:28000,lines:[{name:'Test tire',sku:'front',quantity:4,price:7000,subtotal:28000}]})};requests++;return {ok:true,json:async()=>({id:'IMX-TEST',token:'t'.repeat(43),status:'new'})};});
  try{
   await b.module.startCheckout([{productId:'front',quantity:4}],()=>success++);
   const form=b.$('#checkout-form');for(const [key,v] of Object.entries({name:'Иван',phone:'+79999999999',city:'Москва'}))form.elements[key].value=v;form.elements.consent.checked=true;
   form.dispatchEvent(new b.w.Event('submit',{bubbles:true,cancelable:true}));form.dispatchEvent(new b.w.Event('submit',{bubbles:true,cancelable:true}));await b.tick();
   assert.equal(requests,1);assert.equal(success,1);assert.ok(b.$('a[href$="/order/#'+('t'.repeat(43))+'"]'));assert.match(b.$('#dialog-content').textContent,/Спасибо/);
-  const payload=JSON.parse(calls[1][1].body);assert.equal(payload.consent,true);assert.equal(payload.price,undefined);assert.equal(payload.total,undefined);assert.deepEqual(b.errors,[]);
+  const payload=JSON.parse(calls.find(([url])=>url==='/api/shop/orders')[1].body);assert.equal(payload.consent,true);assert.equal(payload.price,undefined);assert.equal(payload.total,undefined);assert.deepEqual(b.errors,[]);
  }finally{b.w.close();}
 });
 

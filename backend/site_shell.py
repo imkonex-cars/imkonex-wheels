@@ -1,6 +1,7 @@
 """Published main-site navigation, sanitized and cached; no remote scripts execute."""
 import hashlib
 import json
+import re
 from pathlib import Path
 import threading
 import time
@@ -14,9 +15,34 @@ TAGS = {'header','footer','div','span','a','img','button','nav','section','artic
 ATTRS = {'id','class','href','src','alt','title','type','role','target','width','height','loading','tabindex','viewbox','fill','stroke','stroke-width','stroke-linecap','stroke-linejoin','d','cx','cy','r','x','y','x1','y1','x2','y2','rx','ry','points','xmlns'}
 LOGOS = {'imkonex-logo-no-acti.svg','imkonex-logo-active.svg','Imkonex-cars3.svg','Imkonex-cars3-active.svg'}
 
+def extract_contacts(doc):
+    """Read known main-site messenger destinations, never its scripts or arbitrary URLs."""
+    contacts = {}
+    anchors = doc.xpath('//*[@id="imxMessenger"]//a[@href] | //*[contains(concat(" ",normalize-space(@class)," ")," t898 ")]//a[@href]')
+    for anchor in anchors:
+        value = anchor.get('href', '')
+        if len(value) > 400:
+            continue
+        try:
+            parsed = urlsplit(value)
+            if parsed.username or parsed.password or parsed.port:
+                continue
+            if parsed.scheme == 'tel' and re.fullmatch(r'tel:\+?\d{7,15}', value):
+                contacts['phone'] = value
+            elif parsed.scheme == 'https':
+                channel = {'wa.me':'whatsapp','t.me':'telegram','iimax.ru':'max','max.ru':'max'}.get(parsed.hostname)
+                if channel:
+                    contacts[channel] = value
+        except ValueError:
+            continue
+    return [{'channel':key,'url':contacts[key]} for key in ('whatsapp','max','telegram','phone') if key in contacts]
+
 def extract(raw):
     doc = html.fromstring(raw)
     result = {}
+    contacts = extract_contacts(doc)
+    if contacts:
+        result['contacts'] = contacts
     for key, identity in [('header','imxGlobalHeader'),('footer','imxPremiumFooter')]:
         nodes = doc.xpath('//*[@id=$id]', id=identity)
         if len(nodes) != 1:
@@ -62,7 +88,7 @@ def extract(raw):
                 nav[0].append(html.fromstring('<a href="https://wheels.imkonex.com/">Шины и диски</a>'))
         result[key] = html.tostring(root,encoding='unicode',with_tail=False)
         if len(root.xpath('.//a[@href]')) < 5: raise ValueError('incomplete_main_navigation')
-    result['version'] = hashlib.sha256((result['header']+result['footer']).encode()).hexdigest()[:20]
+    result['version'] = hashlib.sha256((result['header']+result['footer']+json.dumps(contacts,sort_keys=True)).encode()).hexdigest()[:20]
     result['checkedAt'] = int(time.time())
     result['formatVersion'] = 2
     return result

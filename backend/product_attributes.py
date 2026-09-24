@@ -1,4 +1,10 @@
-"""Public technical characteristics only. Preserve supplier units and scales."""
+"""Public technical characteristics only. Preserve supplier units and scales.
+
+The supplied GetGoodsInfo output schema (2026-09-17) has no verified country of
+manufacture field. Do not infer it from a brand, article or manufacturer code,
+or add guessed country aliases here. Until an explicit per-product source is
+verified, the storefront describes the country as requiring confirmation.
+"""
 FIELDS={
     'tires': [('width','Ширина'),('height','Профиль'),('diameter','Диаметр'),('constr','Конструкция'),
               ('load_index','Индекс нагрузки'),('speed_index','Индекс скорости'),('tonnage','Усиление'),

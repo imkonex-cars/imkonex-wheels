@@ -8,7 +8,7 @@ from decimal import Decimal
 from typing import Literal
 from fastapi import Depends, HTTPException, Request
 from fastapi.responses import FileResponse
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from .pricing import category
 
 STATUSES={'new':'Заявка получена','confirmed':'Подтверждён менеджером','preparing':'Комплектуем',
@@ -39,6 +39,13 @@ class Checkout(Input):
     delivery:Literal['delivery','pickup','discuss']='discuss'
     comment:str=Field(default='',max_length=1000)
     consent:Literal[True]
+    consentVersion:Literal['2026-09-24']
+
+    @field_validator('consent', mode='before')
+    @classmethod
+    def affirmative_consent(cls,value):
+        if value is not True:raise ValueError('consent_required')
+        return value
 class Settings(Input):
     delivery:str=Field(min_length=20,max_length=5000)
     payment:str=Field(min_length=20,max_length=5000)
@@ -106,7 +113,15 @@ def install_shop(app,store,by_id,purchase,quoted_products,authenticated,origin,t
     def checkout(body:Checkout,request:Request):
         origin(request);throttle(request,'checkout',20,60)
         if not 7<=len(re.sub(r'\D','',body.phone))<=15 or not body.name.strip() or not body.city.strip():raise HTTPException(422,'invalid_request')
-        digest=hashlib.sha256(json.dumps(body.model_dump(),sort_keys=True).encode()).hexdigest()
+        auth=getattr(app.state,'customer_auth',None)
+        customer=auth.current(request,required=False) if auth else None
+        if customer:
+            from .customer_auth import normalize_phone
+            if normalize_phone(body.phone)!=customer['phone']:raise HTTPException(422,'checkout_phone_mismatch')
+        customer_id=customer['id'] if customer else None
+        digest_payload=body.model_dump()
+        if customer_id:digest_payload['customerAccountId']=customer_id
+        digest=hashlib.sha256(json.dumps(digest_payload,sort_keys=True).encode()).hexdigest()
         previous=store.customer_by_key(body.key)
         if previous:
             if previous['_requestHash']!=digest:raise HTTPException(409,'checkout_key_conflict')
@@ -119,8 +134,9 @@ def install_shop(app,store,by_id,purchase,quoted_products,authenticated,origin,t
         order={'id':'IMX-'+time.strftime('%y%m%d')+'-'+secrets.token_hex(4).upper(),
                'createdAt':now,'updatedAt':now,'status':'new','lines':lines,'total':cached['total'],
                'customer':{'name':body.name.strip(),'phone':body.phone,'city':body.city.strip(),'delivery':body.delivery,'comment':body.comment},
-               'consentAt':now,'consentVersion':'shop-0.7.0','history':[{'status':'new','at':now,'note':'Менеджер проверит наличие и свяжется с вами.'}],
+               'consentAt':now,'consentVersion':body.consentVersion,'consentPurpose':'order_request','history':[{'status':'new','at':now,'note':'Менеджер проверит наличие и свяжется с вами.'}],
                '_token':token,'_requestHash':digest,'_key':body.key,'_quote':body.quoteId}
+        if customer_id:order['customerAccountId']=customer_id
         saved=store.save_customer_order(order)
         if saved['_requestHash']!=digest:raise HTTPException(409,'checkout_key_conflict')
         return {'id':saved['id'],'token':saved['_token'],'status':saved['status']}

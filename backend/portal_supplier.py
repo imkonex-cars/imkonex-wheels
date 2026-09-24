@@ -8,6 +8,7 @@ import os
 import threading
 import time
 from decimal import Decimal
+from urllib.parse import urlsplit
 
 from .supplier_check import create_check_client, provider_error
 
@@ -20,7 +21,7 @@ class SupplierFailure(RuntimeError):
 
 READS = frozenset({'GetMarkaAvto', 'GetModelAvto', 'GetYearAvto',
     'GetModificationAvto', 'GetGoodsByCar', 'GetGoodsPriceRestByCode',
-    'GetWarehouses', 'GetOrderInfo2', 'GetGoodsInfo'})
+    'GetWarehouses', 'GetOrderInfo2', 'GetGoodsInfo', 'GetCustomerList', 'GetAddressList'})
 
 
 def pack(type_, value):
@@ -71,13 +72,23 @@ def public_text(value, limit=300):
 
 
 class PortalSupplier:
-    def __init__(self):
+    def __init__(self, *, login=None, password=None):
+        # Explicit profiles never fall back to the global account.
+        if (login is None) != (password is None):
+            raise ValueError("Both explicit credentials are required")
+        self._explicit = login is not None
+        self._login, self._password = login, password
         self.lock = threading.RLock()
         self.client = None
 
     @property
     def configured(self):
-        return bool(os.getenv('FOURTOCHKI_LOGIN') and os.getenv('FOURTOCHKI_PASSWORD'))
+        return bool(self._credentials()[0] and self._credentials()[1])
+
+    def _credentials(self):
+        if self._explicit:
+            return self._login, self._password
+        return os.getenv('FOURTOCHKI_LOGIN', ''), os.getenv('FOURTOCHKI_PASSWORD', '')
 
     def call(self, name, arguments=None, *, write=False):
         if (write and name != 'CreateOrder') or (not write and name not in READS):
@@ -92,8 +103,9 @@ class PortalSupplier:
                 operations = self.client.service._binding._operations
                 if name not in operations:
                     raise SupplierFailure('supplier_method_unavailable')
-                values = {'login': os.environ['FOURTOCHKI_LOGIN'],
-                          'password': os.environ['FOURTOCHKI_PASSWORD'], **(arguments or {})}
+                login, password = self._credentials()
+                # Callers cannot replace the selected account through arguments.
+                values = {**(arguments or {}), 'login': login, 'password': password}
                 packed = pack(operations[name].input.body.type, values)
                 # Build XML before making a write: shape errors cannot create an order.
                 self.client.create_message(self.client.service, name, **packed)
@@ -161,9 +173,11 @@ class PortalSupplier:
                              'purchasePrice': float(cost), 'supplierRetailPrice': float(retail) if retail is not None else None, 'stock': stock})
         return rows
 
-    def warehouses(self):
+    def warehouses(self, address_id=None):
         from .manager_catalog import warehouse_meta
-        result=self.call('GetWarehouses')
+        if address_id is not None and (type(address_id) is not int or address_id <= 0):
+            raise SupplierFailure('invalid_address_id')
+        result=self.call('GetWarehouses', {'address_id': address_id} if address_id is not None else None)
         rows=array(result,'warehouses')
         if not rows or any(type(r.get('id')) is not int or r['id']<=0 for r in rows):
             raise SupplierFailure('supplier_response_changed')
@@ -204,3 +218,67 @@ class PortalSupplier:
             'statusName', 'statusKey', 'paymentPercent', 'shipmentDate', 'shipmentType',
             'deliveryAddress', 'pickupWarehouseName', 'pickupWarehouseAddress',
             'deliveryIntervalStart', 'deliveryIntervalEnd', 'payBefore', 'parent')}
+
+
+    def customers(self):
+        """Private buyer identities returned by the selected API account."""
+        rows = array(self.call('GetCustomerList'), 'Items')
+        if any(type(r.get('ID')) is not int or r['ID'] <= 0 or not isinstance(r.get('name'), str)
+               or type(r.get('isLegal')) is not bool for r in rows):
+            raise SupplierFailure('supplier_response_changed')
+        return [{'id': r['ID'], 'name': public_text(r['name'], 300), 'isLegal': r['isLegal']} for r in rows]
+
+    def addresses(self):
+        """Address book, including receiving schedules; not promised delivery slots."""
+        # The outer filter is required; 0 explicitly means any payment type.
+        rows = array(self.call('GetAddressList', {'filter': {'paymentType': 0}}), 'getAddressListItems')
+        result = []
+        for row in rows:
+            if type(row.get('addressId')) is not int or row['addressId'] <= 0:
+                raise SupplierFailure('supplier_response_changed')
+            customer_id = row.get('customerId')
+            if customer_id is not None and (type(customer_id) is not int or customer_id <= 0):
+                raise SupplierFailure('supplier_response_changed')
+            schedule = array(row, 'schedule')
+            result.append({'id': row['addressId'], 'customerId': customer_id,
+                **{key: public_text(row.get(key), 500) for key in (
+                    'addressName', 'cityName', 'streetName', 'houseNumber', 'housing',
+                    'building', 'office', 'paymentType', 'contactName', 'phoneNumber')},
+                'schedule': [{key: public_text(day.get(key), 100) for key in
+                    ('dayOfWeek', 'hourFrom', 'hourTo')} | {'enabled': day.get('enabled') is True}
+                    for day in schedule]})
+        return result
+
+    def order_fulfillment(self, provider_id):
+        """Private pickup secret DTO; NEVER publish based on paymentPercent.
+
+        The retail payment ledger and authenticated customer/order ownership must
+        gate any future customer endpoint. No URL is fetched by this method.
+        """
+        if type(provider_id) is not int or provider_id <= 0:
+            raise SupplierFailure('invalid_provider_order_id')
+        result = self.call('GetOrderInfo2', {'orderId': provider_id})
+        dto = {key: public_text(result.get(key), 1000) for key in (
+            'statusName', 'statusKey', 'shipmentDate', 'shipmentType',
+            'deliveryAddress', 'pickupWarehouseName', 'pickupWarehouseAddress',
+            'deliveryIntervalStart', 'deliveryIntervalEnd')}
+        code = result.get('verificationCode')
+        dto['verificationCode'] = public_text(code, 300) if isinstance(code, str) else ''
+        qr = result.get('verificationQR')
+        dto['verificationQR'] = safe_verification_qr(qr)
+        return dto
+
+
+def safe_verification_qr(value):
+    """Allow only HTTPS supplier URLs; absence/unknown representation stays empty."""
+    if not isinstance(value, str) or len(value) > 2048 or any(ord(c) < 33 for c in value):
+        return ''
+    try:
+        url = urlsplit(value)
+        if url.scheme != 'https' or url.username is not None or url.password is not None:
+            return ''
+        if url.port not in (None, 443) or url.hostname not in ('b2b.4tochki.ru', 'api-b2b.4tochki.ru'):
+            return ''
+    except ValueError:
+        return ''
+    return value

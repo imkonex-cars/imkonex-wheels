@@ -27,7 +27,8 @@ test('complete source entry builds snapshot from any working directory and ignor
     await writeFile(path.join(root,'index.html'),'OLD ROOT DEMO PAGE');
     await mkdir(path.join(root,'dist'));await writeFile(path.join(root,'dist','old-file.txt'),'old');
     const result=run(root);assert.equal(result.status,0,result.stdout+result.stderr);
-    assert.match(result.stdout,/BUILD_OK IMKONEX-WHEELS-0\.7\.0-WORKSPACE-1 \| snapshot \| 6 products/);
+    const {version}=JSON.parse(await readFile(path.join(root,'package.json'),'utf8'));
+    assert.ok(result.stdout.includes(`BUILD_OK IMKONEX-WHEELS-${version}-WORKSPACE-1 | snapshot | 6 products`));
     const info=JSON.parse(await readFile(path.join(root,'dist/build-info.json'),'utf8'));
     assert.equal(info.mode,'snapshot');assert.equal(info.products,6);assert.equal(info.tyres,3);assert.equal(info.wheels,3);
     assert.deepEqual(info.photos,{local:6,remote:0,unavailable:0});

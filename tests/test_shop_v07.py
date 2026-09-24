@@ -46,7 +46,7 @@ def quote(c,lines=None):
     assert r.status_code==200,r.text
     return r.json()
 def request_payload(q):
-    return {'quoteId':q['quoteId'],'key':'synthetic-idempotency-key-1234','name':'Тестовый клиент','phone':'+79991234567','city':'Челябинск','delivery':'delivery','comment':'Тест','consent':True}
+    return {'quoteId':q['quoteId'],'key':'synthetic-idempotency-key-1234','name':'Тестовый клиент','phone':'+79991234567','city':'Челябинск','delivery':'delivery','comment':'Тест','consent':True,'consentVersion':'2026-09-24'}
 
 def test_checkout_to_status_retry_privacy_and_manager_transitions(env):
     app,c,s,path=env;q=quote(c);body=request_payload(q)
@@ -88,6 +88,28 @@ def test_shop_settings_are_persistent_and_not_publicly_writable(env):
     login(c);settings['delivery']='Доставку согласуем лично. Проверочный текст условий.'
     assert c.put('/api/manager/shop-settings',json=settings).status_code==200
     assert c.get('/api/shop/settings').json()['delivery']==settings['delivery']
+
+@pytest.mark.parametrize('consent,version',[(None,'2026-09-24'),(False,'2026-09-24'),(1,'2026-09-24'),(True,None),(True,'shop-0.7.0')])
+def test_checkout_rejects_missing_false_or_outdated_consent(env,consent,version):
+    app,c,s,path=env
+    payload=request_payload(quote(c))
+    payload.pop('consent');payload.pop('consentVersion')
+    if consent is not None:payload['consent']=consent
+    if version is not None:payload['consentVersion']=version
+    assert c.post('/api/shop/orders',json=payload).status_code==422
+    assert app.state.store.customer_orders()==[] and s.created==[]
+
+def test_checkout_records_client_consent_version_and_keeps_retry_timestamp(env):
+    app,c,s,path=env;payload=request_payload(quote(c))
+    created=c.post('/api/shop/orders',json=payload)
+    assert created.status_code==200
+    order=app.state.store.customer_orders()[0]
+    assert order['consentVersion']==payload['consentVersion']=='2026-09-24'
+    assert order['consentAt']==order['createdAt']
+    assert order['consentPurpose']=='order_request'
+    assert c.post('/api/shop/orders',json=payload).json()==created.json()
+    assert app.state.store.customer_orders()[0]['consentAt']==order['consentAt']
+    assert 'consentAt' not in c.get('/api/shop/orders/'+created.json()['token']).text
 
 def test_footer_preserves_offices_contacts_and_safe_svg():
     links=''.join('<a href="/cars/">Автомобили</a>' for _ in range(5))

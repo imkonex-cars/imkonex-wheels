@@ -1,4 +1,4 @@
-"""Same-origin storefront and authenticated manager portal, version 0.7.0."""
+"""Same-origin storefront and authenticated manager portal, version 0.9.0."""
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
 from decimal import Decimal, ROUND_CEILING, ROUND_HALF_UP
@@ -92,8 +92,8 @@ def warehouse_id(offer):
 from .pricing import sale_price, price_result, policy_for, category, CATEGORIES, fresh_cost
 
 
-def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None, local=False):
-    app = FastAPI(title='IMKONEX', version='0.7.0', docs_url=None, redoc_url=None, openapi_url=None)
+def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None, local=False, customer_sender=None, customer_secret=None):
+    app = FastAPI(title='IMKONEX', version='0.9.0', docs_url=None, redoc_url=None, openapi_url=None)
     app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=5)
     store = Store(db_path or os.getenv('MANAGER_DB_PATH', str(ROOT/'runtime/manager.sqlite3')))
     api = supplier or PortalSupplier()
@@ -255,7 +255,7 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
         response.headers.update({'X-Content-Type-Options':'nosniff', 'X-Frame-Options':'DENY',
             'Referrer-Policy':'strict-origin-when-cross-origin',
             'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://www.4tochki.ru https://api-b2b.pwrs.ru data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"})
-        if request.url.path.startswith(('/api/manager','/manager','/api/selections','/s/','/api/shop','/order/')):
+        if request.url.path.startswith(('/api/manager','/manager','/api/selections','/s/','/api/shop','/order/','/api/customer','/account','/api/provider-notifications')):
             response.headers['Cache-Control']='no-store'
             response.headers['X-Robots-Tag']='noindex, nofollow'
         if request.url.path in ('/data/catalog.js','/config.js'):
@@ -266,7 +266,7 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
                 response.headers['Access-Control-Allow-Origin']=incoming
                 response.headers['Vary']='Origin'
             response.headers['Cache-Control']='public, max-age=60'
-        if request.url.path.startswith(('/api/shop','/order/')):response.headers['Referrer-Policy']='no-referrer'
+        if request.url.path.startswith(('/api/shop','/order/','/api/customer','/account','/api/provider-notifications')):response.headers['Referrer-Policy']='no-referrer'
         return response
 
     @app.exception_handler(RequestValidationError)
@@ -280,11 +280,11 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
 
     @app.get('/health')
     def health():
-        return {'status':'ok','version':'0.7.0'}
+        return {'status':'ok','version':'0.9.0'}
 
     @app.get('/config.js')
     def runtime_config():
-        value = {'mode':'snapshot','version':'0.7.0','apiBase':'','portal':True}
+        value = {'mode':'snapshot','version':'0.9.0','apiBase':'','portal':True}
         return Response('window.IMKONEX_CONFIG = Object.freeze('+json.dumps(value)+');', media_type='text/javascript')
 
     @app.get('/data/catalog.js')
@@ -399,7 +399,7 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
 
     @app.get('/api/manager/status')
     def status(session=Depends(authenticated)):
-        return {'version':'0.7.0','products':len(by_id),'updatedAt':catalog['updatedAt'],
+        return {'version':'0.9.0','products':len(by_id),'updatedAt':catalog['updatedAt'],
                 'supplierConfigured':api.configured,'ordersEnabled':os.getenv('SUPPLIER_ORDERS_ENABLED')=='true',
                 'rules':len(store.rules())+len(store.offer_rules()),'orders':len(store.order_list()),
                 'purchaseSync':store.setting('purchase_sync',{}),'customerOrders':len(store.customer_orders()),
@@ -625,6 +625,14 @@ def create_app(*, db_path=None, catalog_path=None, supplier=None, password=None,
                 if value is not None and cost['stock']>0:offers.append({**o,'price':value,'stock':cost['stock']})
             result[pid]={**p,'offers':offers}
         return result
+
+    from .customer_auth import register_customer_routes
+    register_customer_routes(app,store,origin=origin,secure_cookie=secure_cookie,
+                             sender=customer_sender,secret=customer_secret)
+    from .procurement import register_procurement_routes
+    register_procurement_routes(app,store,authenticated,throttle,by_id)
+    from .supplier_notifications import register_notification_routes
+    register_notification_routes(app,store,authenticated=authenticated,throttle=throttle)
 
     from .shop import install_shop
     install_shop(app,store,by_id,purchase,quoted_products,authenticated,origin,throttle)
