@@ -1,7 +1,11 @@
-IMKONEX WHEELS 0.7.0 — complete source inventory
+﻿IMKONEX CARS — полная рабочая область 0.9.0
+Всего файлов: 296. Все пути указаны от корня GitHub-репозитория.
+Загрузите содержимое архива с сохранением папок.
+REG.ru: Dockerfile.portal, приватная БД на постоянном томе. Обновление — по START_HERE.md полного пакета.
+dist и node_modules создаются локально/на сервере и в этот список не входят.
+
 .dockerignore
 .env.example
-.github/workflows/ci
 .github/workflows/ci.yml
 .github/workflows/sync-catalog.yml
 .gitignore
@@ -9,8 +13,8 @@ BUILD_RENDER.mjs
 Dockerfile
 Dockerfile.portal
 FILES_MANIFEST.txt
-FIX_GITHUB.txt
 README.md
+RELEASE_NOTES.md
 START_HERE_PC1.txt
 SYNC_CATALOG_WORKFLOW.txt
 UPGRADE_v0.5.0.txt
@@ -18,9 +22,11 @@ backend/__init__.py
 backend/app.py
 backend/catalog_accessories.py
 backend/catalog_check.py
+backend/catalog_errors.py
 backend/catalog_photos.py
 backend/catalog_sync.py
 backend/catalog_types.py
+backend/customer_auth.py
 backend/export_snapshot.py
 backend/manager_catalog.py
 backend/models.py
@@ -29,13 +35,16 @@ backend/portal_jobs.py
 backend/portal_store.py
 backend/portal_supplier.py
 backend/pricing.py
+backend/procurement.py
 backend/product_attributes.py
 backend/repository.py
 backend/schema.sql
 backend/shop.py
 backend/site_shell.py
+backend/sms_ru.py
 backend/supplier.py
 backend/supplier_check.py
+backend/supplier_notifications.py
 backend/worker.py
 compose.yaml
 config/sync.json
@@ -45,6 +54,8 @@ deploy/Caddyfile
 docs/API.md
 docs/API_FIELDS_v0.6.0.md
 docs/ASSET_SOURCES.json
+docs/AUTOMATION_REVIEW.md
+docs/CUSTOMER_SMS_AUTH.md
 docs/FOURTOCHKI.md
 docs/FOURTOCHKI_CATALOG_CHECK_README.txt
 docs/FOURTOCHKI_CHECK_README.txt
@@ -54,6 +65,7 @@ docs/MANAGER_RENDER.md
 docs/PHOTOS_PC1.txt
 docs/PRODUCT_PHOTO_SOURCES.json
 docs/RENDER.md
+docs/STORE_REQUIREMENTS.md
 docs/SYNC_SETUP.md
 docs/UPDATE_v0.6.0.md
 docs/UPDATE_v0.7.0.md
@@ -65,9 +77,13 @@ docs/VALIDATION_WORKSPACE.md
 docs/VERIFICATION_v0.5.0.md
 docs/VERIFICATION_v0.7.0.md
 docs/VPS.md
+frontend/account/account.css
+frontend/account/account.js
+frontend/account/index.html
 frontend/app.js
 frontend/assets/favicon.svg
 frontend/assets/imkonex-cars.svg
+frontend/assets/payments/tbank.svg
 frontend/assets/product-unavailable.svg
 frontend/assets/products/2398000.png
 frontend/assets/products/4t-083a25c7263742d8f8a2a666.png
@@ -182,14 +198,26 @@ frontend/assets/products/hankook-w330-card.jpg
 frontend/assets/products/michelin-primacy-4.webp
 frontend/assets/products/triangle-sportex-th201-card.png
 frontend/config.js
+frontend/data/catalog.js
 frontend/domain.js
 frontend/index.html
+frontend/info/consent/index.html
+frontend/info/contacts/index.html
+frontend/info/delivery/index.html
+frontend/info/info.css
+frontend/info/payment/index.html
+frontend/info/privacy/index.html
+frontend/info/returns/index.html
+frontend/info/security/index.html
+frontend/info/terms/index.html
 frontend/loading.js
 frontend/manager/index.html
 frontend/manager/management.js
 frontend/manager/manager.css
 frontend/manager/manager.js
 frontend/manager/pricing.js
+frontend/manager/procurement.css
+frontend/manager/procurement.js
 frontend/order/index.html
 frontend/order/status.js
 frontend/premium.css
@@ -203,7 +231,10 @@ frontend/shared/brand/Imkonex-cars3.svg
 frontend/shared/brand/imkonex-logo-active.svg
 frontend/shared/brand/imkonex-logo-no-acti.svg
 frontend/shared/bridge.css
+frontend/shared/contact-widget.css
+frontend/shared/contact-widget.js
 frontend/shared/fallback.json
+frontend/shared/merchant.css
 frontend/shared/shell.css
 frontend/shared/shell.js
 frontend/shop.css
@@ -223,6 +254,7 @@ scripts/browser-bundle.mjs
 scripts/build.mjs
 scripts/check-4tochki.cmd
 scripts/check-catalog.cmd
+scripts/check-company-context.py
 scripts/flat-build.template.mjs
 scripts/package-github.py
 scripts/package-workspace.py
@@ -235,22 +267,36 @@ scripts/trigger-render.py
 scripts/validate-public.mjs
 tests/browser-bundle.mjs
 tests/bulk.test.mjs
+tests/contact-widget.test.cjs
+tests/customer-account.test.mjs
+tests/fixtures/fourtochki_camera_input_20260922.json
 tests/fixtures/fourtochki_inputs_20260917.json
 tests/fixtures/public-sample.json
+tests/fixtures/sync_cli_provider.py
 tests/frontend.test.mjs
 tests/full_release.test.mjs
 tests/manager-v06.test.mjs
+tests/merchant-pages.test.mjs
 tests/premium.test.mjs
+tests/product-country.test.mjs
 tests/shop-v07.test.mjs
 tests/snapshot.test.mjs
+tests/storefront-v08.test.mjs
 tests/test_api.py
 tests/test_catalog_check.py
 tests/test_catalog_sync.py
 tests/test_categories.py
+tests/test_contact_widget.py
+tests/test_customer_auth.py
+tests/test_customer_checkout.py
 tests/test_export_snapshot.py
 tests/test_portal.py
+tests/test_procurement.py
+tests/test_product_country.py
 tests/test_shop_v07.py
+tests/test_sms_ru.py
 tests/test_supplier_check.py
+tests/test_supplier_notifications.py
 tests/test_supplier_schema_imports.py
 tests/test_v06.py
 tests/workspace.test.mjs

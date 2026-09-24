@@ -22,18 +22,18 @@ jobs:
     if: >-
       github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
       (github.event_name == 'workflow_dispatch' || vars.CATALOG_AUTO_SYNC == 'true')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 50
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.repository.default_branch }}
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
           cache: pip
           cache-dependency-path: requirements-sync.txt
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: '22'
           cache: npm
@@ -72,11 +72,6 @@ jobs:
             git push origin "HEAD:$CATALOG_BRANCH"
             echo 'changed=true' >> "$GITHUB_OUTPUT"
           fi
-      - name: Request Render publication
-        if: steps.publish.outputs.changed == 'true'
-        env:
-          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
-        run: python scripts/trigger-render.py
       - name: Write the run summary
         if: always()
         run: python scripts/sync-summary.py
