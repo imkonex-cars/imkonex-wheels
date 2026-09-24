@@ -4454,3 +4454,9 @@ summary i{
 
 
 .imx-gh__item:focus-within .imx-gh__mega{opacity:1;visibility:visible;pointer-events:auto;transform:none}button:focus-visible,a:focus-visible{outline:2px solid #79c953;outline-offset:4px}
+
+/* Keep shared navigation clear of the wider CARS logo and phone block. */
+.imx-global-header{--imx-container:1440px}
+@media(min-width:1031px) and (max-width:1439px){
+    .imx-gh__cta{display:none !important}
+}

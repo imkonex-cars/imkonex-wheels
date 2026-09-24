@@ -25,6 +25,20 @@ export function fieldsFor(kind,cat){
 }
 export const typeLabels={car:'Легковые',vned:'Внедорожные',cartruck:'Лёгкие грузовики',truck:'Грузовые',moto:'Мотоциклы',quadbike:'Квадроциклы',specteh:'Спецтехника',selhoz:'Сельхозтехника',loader:'Погрузчики',other:'Прочие'};
 export const advancedKeys=['tyreType','axle','camera','protector','layers','loadIndex','speedIndex','construction','sae','acea','api','composition','fuel','apply','volume','subtype'];
+export const winterTypes=[['','Все'],['studded','Шипы'],['friction','Без шипов']];
+// Old shared links with studded=1 remain usable; never leave a hidden winter
+// restriction active after switching to summer, all-season or another category.
+export function normalizeWinterFilters(filters){
+ const next={...filters};
+ let type=['studded','friction'].includes(next.winterType)?next.winterType:next.studded===true?'studded':'';
+ if(type&&!next.season&&(!next.kind||next.kind==='tires'))next.season='winter';
+ if(next.kind&&next.kind!=='tires'||next.season!=='winter')type='';
+ next.winterType=type;next.studded=false;
+ return next;
+}
+export function setSeason(filters,season){
+ return normalizeWinterFilters({...filters,season,winterType:season==='winter'?filters.winterType:'',studded:false});
+}
 export function matchesAxle(p,f,axle){
  const prefix=axle==='rear'?'rear':'';
  return ['width','profile','diameter'].every(k=>!f[prefix?prefix+k[0].toUpperCase()+k.slice(1):k]||String(p[k])===String(f[prefix?prefix+k[0].toUpperCase()+k.slice(1):k]));

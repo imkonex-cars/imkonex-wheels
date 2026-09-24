@@ -1,4 +1,4 @@
-import {valueFor, advancedKeys, matchesAxle} from './search-model.js';
+import {valueFor, advancedKeys, matchesAxle, normalizeWinterFilters} from './search-model.js';
 const rubFormatter = new Intl.NumberFormat('ru-RU', {maximumFractionDigits: 2});
 export const money = value => rubFormatter.format(Number(value) || 0) + ' ₽';
 export const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -20,6 +20,7 @@ export function effectiveOffer(product, quantity=1) {
 }
 export function formatSize(p) { if(['sensors','consumables','oils'].includes(p.kind))return p.sizeLabel||p.description; return p.kind==='tubes'||p.width==null&&p.kind==='tires'||p.profile==null&&p.kind==='tires'||p.kind==='tires'&&(p.diameter==null||!p.construction) ? (p.sizeLabel||p.description) : p.kind === 'tires' ? `${p.width}/${p.profile} ${p.construction||'R'}${p.diameter}` : `${p.wheelWidth}${p.isDemo===false?'':'J'} × ${p.diameter} · ${p.pcd}`; }
 export function filterProducts(products, filters, {favorites=[], compare=[], sort=true}={}) {
+  filters=normalizeWinterFilters(filters);
   const q=normalize(filters.q);
   const found=products.filter(p => {
     if (filters.kind && p.kind!==filters.kind) return false;
@@ -33,7 +34,8 @@ export function filterProducts(products, filters, {favorites=[], compare=[], sor
       if (filters[key] && String(valueFor(p,key))!==String(filters[key])) return false;
     }
     if (filters.brands?.length && !filters.brands.includes(p.brand)) return false;
-    if (filters.studded && !p.studded) return false;
+    if (filters.winterType==='studded' && p.studded!==true) return false;
+    if (filters.winterType==='friction' && p.studded!==false) return false;
     if (filters.runflat && !p.runflat) return false;
     if (filters.xl && !p.xl) return false;
     if (filters.onlyFavorites && !favorites.includes(p.id)) return false;
@@ -95,9 +97,11 @@ export function parseFilters(search='') {
  const p=new URLSearchParams(search); const f={kind:['wheels','tubes','sensors','consumables','oils'].includes(p.get('kind'))?p.get('kind'):'tires',sort:p.get('sort')||'recommended',brands:p.getAll('brand')};
  for(const k of ['q','category','width','profile','diameter','season','pcd','wheelWidth','et','dia','min','max','type','rearWidth','rearProfile','rearDiameter','minStock',...advancedKeys]) f[k]=p.get(k)||'';
  for(const k of ['inSet','fast','studded','runflat','xl','staggered','sameModel'])f[k]=p.get(k)==='1';
- return f;
+ f.winterType=p.get('winterType')||'';
+ return normalizeWinterFilters(f);
 }
 export function serializeFilters(f) {
+ f=normalizeWinterFilters(f);
  const p=new URLSearchParams();
  for(const [k,v] of Object.entries(f)) {
    if(k==='brands')v.forEach(x=>p.append('brand',x));
